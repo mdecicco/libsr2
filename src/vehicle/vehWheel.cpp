@@ -395,7 +395,7 @@ namespace sr2 {
         slip_percent_lng = 0.0f;
         position_2 = { 0.0f, 0.0f, 0.0f };
         is_on_ground = false;
-        load_identity(world_transform_1);
+        math::identity(world_transform_1);
 
         field_0x208 = 0.0f;
         field_0x244 = 0.0f;

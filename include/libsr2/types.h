@@ -27,7 +27,7 @@ namespace sr2 {
 	typedef u8                undefined;
 	typedef u16               undefined2;
 	typedef u32               undefined4;
-	typedef void*             pointer;
+	typedef undefined*        pointer;
 
 	struct vec4f {
 		f32 x, y, z, w;

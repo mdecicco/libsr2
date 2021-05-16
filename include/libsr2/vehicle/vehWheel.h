@@ -34,7 +34,7 @@ namespace sr2 {
             /*
              *  note:
              *      There is apparently a discrepancy between which of these
-             *      fields are in vehWheel and how many are in parFileIO
+             *      fields are in vehWheel and which are in parFileIO
              *
              */
 
