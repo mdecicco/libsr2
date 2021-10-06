@@ -1,62 +1,48 @@
 cmake_minimum_required(VERSION 3.15)
 project(libsr2)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/bin)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/bin)
 
-file(GLOB_RECURSE libsr2_src
-    "src/*.cpp"
-    "src/vehicle/*.cpp"
-    "src/terrain/*.cpp"
-    "src/sim/*.cpp"
-    "src/utils/*.cpp"
-    "src/gfx/*.cpp"
-    "src/loaders/*.cpp"
-    "src/math/*.cpp"
+set (all_sources "")
+macro(add_sources group dir)
+    set(_all "")
 
-    "include/libsr2/*.h"
-    "include/libsr2/*.hpp"
-    "include/vehicle/*.h"
-    "include/vehicle/*.hpp"
-    "include/terrain/*.h"
-    "include/terrain/*.hpp"
-    "include/sim/*.h"
-    "include/sim/*.hpp"
-    "include/utils/*.h"
-    "include/utils/*.hpp"
-    "include/gfx/*.h"
-    "include/gfx/*.hpp"
-    "include/loaders/*.h"
-    "include/loaders/*.hpp"
-    "include/math/*.h"
-    "include/math/*.hpp"
-)
+    file(GLOB _inc "include/libsr2/${dir}/*.h" "include/libsr2/${dir}/*.hpp" "include/libsr2/${dir}/*.inl")
+    list(APPEND _all ${_inc})
+
+    file(GLOB _src "src/${dir}/*.cpp")
+    list(APPEND _all ${_src})
+
+    list(APPEND all_sources ${_all})
+    string(REPLACE "/" "\\" group_path "${group}")
+    source_group(${group_path} FILES ${_all})
+
+    unset(_inc)
+    unset(_src)
+    unset(_all)
+endmacro(add_sources)
+
+add_sources("src"           ".")
+add_sources("src/ui"        "ui")
+add_sources("src/states"    "states")
+add_sources("src/math"      "math")
+add_sources("src/loaders"   "loaders")
+add_sources("src/gfx"       "gfx")
+add_sources("src/utils"     "utils")
+add_sources("src/sim"       "sim")
+add_sources("src/terrain"   "terrain")
+add_sources("src/vehicle"   "vehicle")
+add_sources("src/utilities" "utilities")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(libsr2 ${libsr2_src})
+add_executable(libsr2 ${all_sources})
 
-MACRO(SOURCE_GROUP_BY_FOLDER target)
-  SET(SOURCE_GROUP_DELIMITER "/")
-  SET(last_dir "")
-  SET(files "")
-  FOREACH(file ${${target}_src})
-    file(RELATIVE_PATH relative_file "${PROJECT_SOURCE_DIR}" ${file})
-    GET_FILENAME_COMPONENT(dir "${relative_file}" PATH)
-    IF (NOT "${dir}" STREQUAL "${last_dir}")
-      IF (files)
-        SOURCE_GROUP("${last_dir}" FILES ${files})
-      ENDIF (files)
-      SET(files "")
-    ENDIF (NOT "${dir}" STREQUAL "${last_dir}")
-    SET(files ${files} ${file})
-    SET(last_dir "${dir}")
-  ENDFOREACH(file)
-  IF (files)
-    SOURCE_GROUP("${last_dir}" FILES ${files})
-  ENDIF (files)
-ENDMACRO(SOURCE_GROUP_BY_FOLDER)
-SOURCE_GROUP_BY_FOLDER(libsr2)
+
 
 target_include_directories(libsr2 PUBLIC src)
 target_include_directories(libsr2 PUBLIC include)

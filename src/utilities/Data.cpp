@@ -7,6 +7,7 @@ namespace sr2 {
         m_data = nullptr;
         m_ownsData = copyData;
         m_position = 0;
+        m_size = size;
 
         if (copyData) {
             m_data = new u8[size];
@@ -41,7 +42,7 @@ namespace sr2 {
     }
 
     void Data::read(void* dest, u64 sz) {
-        if ((m_position + sz) >= m_size) {
+        if ((m_position + sz) > m_size) {
             u64 remain = m_size - m_position;
             throw std::exception(format("Data::read Cannot read %llu bytes from Data. %s%llu byte%s remain%s between the current offset and the end of the data.", sz, remain, remain == 1 || remain == 0 ? "" : "Only ", remain == 1 ? "" : "s", remain == 1 ? "s" : "").c_str());
         }
@@ -59,7 +60,7 @@ namespace sr2 {
             *str = c;
             str++;
             len++;
-        } while (c != 0);
+        } while (c != 0 && m_position != m_size);
 
         if (len < bufSz) *str = 0;
         else {
@@ -74,7 +75,7 @@ namespace sr2 {
     }
 
     void Data::position(u64 pos) {
-        if (pos >= m_size) {
+        if (pos > m_size) {
             throw std::exception(format("Data::position Cannot set Data position to %llu. Size is %llu.", pos, m_size).c_str());
         }
 
@@ -86,11 +87,11 @@ namespace sr2 {
     }
 
     Data* Data::isolate(u64 sz, bool copy) {
-        if ((m_position + sz) >= m_size) {
+        if ((m_position + sz) > m_size) {
             u64 remain = m_size - m_position;
             throw std::exception(format("Data::isolate Cannot read %llu bytes from Data. %s%llu byte%s remain%s between the current offset and the end of the data.", sz, remain, remain == 1 || remain == 0 ? "" : "Only ", remain == 1 ? "" : "s", remain == 1 ? "s" : "").c_str());
         }
-        return new Data(m_data, sz, copy);
+        return new Data(m_data + m_position, sz, copy);
     }
 
     void* Data::raw() {

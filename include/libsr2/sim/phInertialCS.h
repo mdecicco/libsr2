@@ -10,14 +10,17 @@ namespace sr2 {
             ~phInertialCS();
 
             void Init(f32 mass, f32 Ixx, f32 Iyy, f32 Izz);
-            void InitBoxMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z);
+            void InitBoxMass(f32 density, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z);
+            void InitBoxDensity(f32 mass, f32 width, f32 height, f32 length);
             void InitCylinderMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z, char axis);
+            void InitCylinderDensity(f32 density, f32 param_2, f32 param_3, f32 param_4, char axis);
             void InitHotdogMass(f32 param_1, f32 param_2, f32 param_3, char axis);
-            void InitSphereMass(f32 param_1, f32 param_2);
-            void InitFromGeometry(f32 mass, vec3f* vertices, phPolygon* polygons, i32 poly_count, mat3x4f* param_6);
             void InitHotdogDensity(f32 param_1, f32 param_2, f32 param_3, char axis);
+            void InitSphereMass(f32 param_1, f32 param_2);
+            void InitSphereDensity(f32 density, f32 param_2);
+            void InitFromGeometry(f32 mass, vec3f* vertices, phPolygon* polygons, i32 poly_count, mat3x4f* param_6);
 
-            void InitMatrix();
+            void Zero();
             void Freeze();
             void ZeroForces();
             mat3x4f* AddInertia(mat3x4f* param_1, f32 param_2, vec3f* param_4, vec3f* param_5);
@@ -39,28 +42,35 @@ namespace sr2 {
             //void Update(f32 current_time);
             //void Update(f32 delta_time);
 
-            // knowns
+            // known
+            bool active;
+            bool pushed_last_frame;
+            phInertialCS* next;
+            phInertialCS* last;
             f32 mass;
             f32 inv_mass;
+            f32 max_velocity;
+            i32 needs_oversampling;
+            f32 maybe_last_time;
             vec3f inertia_tensor;
             vec3f inv_inertia_tensor;
-            f32 max_velocity;
-            vec3f veolocity_related;
-            mat3x4f world_transform;
+            vec3f max_ang_velocity;
             vec3f world_velocity;
-            vec3f velocity_related_0; // force
-            vec3f velocity_related_1; // acceleration?
-            f32 maybe_last_time;
-            vec3f pos_delta;
+            vec3f angular_velocity;
+            vec3f momentum;
+            vec3f angular_momentum;
+            vec3f force;
+            vec3f torque;
+            vec3f oversample_force;
+            vec3f impulse;
+            vec3f angular_impulse;
+            vec3f push;
+            vec3f turn;
+            vec3f applied_push;
+            vec3f last_push;
+            mat3x4f world_transform;
 
-            // unknowns
-            f32 field_0x0;
-            undefined4 field_0x4;
-            undefined4 field_0x8;
-            f32 field_0x30;
-            f32 field_0x34;
-            f32 field_0x38;
-            vec3f field_0x48;
+            // unknown
             undefined field_0x54;
             undefined field_0x55;
             undefined field_0x56;
@@ -73,18 +83,7 @@ namespace sr2 {
             undefined field_0x5d;
             undefined field_0x5e;
             undefined field_0x5f;
-            vec3f field_0x9c;
-            vec3f field_0xb4;
-            vec3f field_0xc0;
             vec3f field_0xcc;
-            undefined4 field_0xd8;
-            vec3f field_0xe8;
-            vec3f field_0x100;
-            vec3f field_0x10c;
-            f32 field_0x118;
-            f32 field_0x11c;
-            f32 field_0x120;
-            undefined4 field_0x124;
             undefined4 field_0x128;
             undefined field_0x12c;
             undefined field_0x12d;

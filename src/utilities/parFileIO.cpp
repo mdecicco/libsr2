@@ -1,7 +1,6 @@
 #include <libsr2/utilities/parFileIO.h>
 #include <libsr2/utilities/datParser.h>
 #include <libsr2/utilities/GameArchive.h>
-#include <libsr2/libsr2.h>
 
 #include <exception>
 #include <stdio.h>
@@ -34,7 +33,7 @@ namespace sr2 {
     bool parFileIO::load() {
         Data* file = nullptr;
         try {
-            file = g_MainArchive->open(directory(), filename == nullptr ? "default" : filename, file_type());
+            file = g_Archives->open(directory(), filename == nullptr ? "default" : filename, file_type());
         } catch (const std::exception& e) {
             printf("%s\n", e.what());
             // throw e

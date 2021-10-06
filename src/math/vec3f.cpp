@@ -88,5 +88,45 @@ namespace sr2 {
             lhs.y += rhs.y;
             lhs.z += rhs.z;
         }
+
+        bool VertOrderIsOK(vec3f* verts) {
+            vec3f d10;
+            sub(d10, verts[1], verts[0]);
+            vec3f d20;
+            sub(d20, verts[2], verts[0]);
+            vec3f d21;
+            sub(d21, verts[2], verts[1]);
+
+            f32 f0 = dot(d20, d10);
+            negate(d10);
+            f32 f1 = dot(d21, d10);
+
+            if (f0 < 0.0f || f1 < 0.0f) return false;
+            return true;
+        }
+
+        void ReOrderVerts(vec3f* verts, f32* param_2) {
+            while (!VertOrderIsOK(verts)) {
+                f32 x0 = verts[0].x;
+                f32 y0 = verts[0].y;
+                f32 z0 = verts[0].z;
+                verts[0].x = verts[1].x;
+                verts[0].y = verts[1].y;
+                verts[0].z = verts[1].z;
+                verts[1].x = verts[2].x;
+                verts[1].y = verts[2].y;
+                verts[1].z = verts[2].z;
+                verts[2].x = x0;
+                verts[2].y = y0;
+                verts[2].z = z0;
+
+                if (param_2) {
+                    f32 tmp = param_2[0];
+                    param_2[0] = param_2[1];
+                    param_2[1] = param_2[2];
+                    param_2[2] = tmp;
+                }
+            }
+        }
     };
 };

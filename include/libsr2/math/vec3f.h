@@ -18,5 +18,7 @@ namespace sr2 {
         void add(vec3f& o, const vec3f& lhs, const vec3f& rhs);
         void sub(vec3f& lhs, const vec3f& rhs);
         void add(vec3f& lhs, const vec3f& rhs);
+        bool VertOrderIsOK(vec3f* verts);
+        void ReOrderVerts(vec3f* verts, f32* param_2);
     };
 };

@@ -12,6 +12,8 @@ namespace sr2 {
             Data* open(const char* path);
             Data* open(const char* directory, const char* filename, const char* extension);
 
+            GameArchive* next;
+
         protected:
             struct entry {
                 u64 name_offset;
@@ -24,5 +26,9 @@ namespace sr2 {
             Data* m_archive;
             void* m_fileMap;
     };
+
+    extern GameArchive* g_Archives;
+
+    void LoadArchives();
 };
 
