@@ -38,10 +38,16 @@ namespace sr2 {
 	struct vec2f {
 		f32 x, y;
 	};
+	struct vec2i {
+		i32 x, y;
+	};
 	struct vec2s16 {
 		s16 x, y;
 	};
 	struct mat3x4f {
 		vec3f x, y, z, w;
+	};
+	struct mat4x4f {
+		vec4f x, y, z, w;
 	};
 };

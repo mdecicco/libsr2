@@ -7,6 +7,8 @@ namespace sr2 {
     class phBound;
     class ModelBounds;
 
+    // todo: A lot more has been discovered about this class and
+    // classes that derive from it
     class parFileIO {
         public:
             parFileIO();
