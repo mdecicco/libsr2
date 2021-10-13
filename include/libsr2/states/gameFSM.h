@@ -18,8 +18,12 @@ namespace sr2 {
             ~gameFSM();
             
             GameState* current() const;
+
+            // 0x00100c70
             void change(GAME_STATE state);
+
             void deferred_change(GAME_STATE state);
+
             void update();
 
         protected:

@@ -36,6 +36,8 @@ namespace sr2 {
             m_states[m_current]->Exit();
         }
 
+        // FUN_00100d08(param_1, &local_30);
+
         m_states[state]->Enter(GameEngine::Instance());
         m_target = state;
         m_current = state;
