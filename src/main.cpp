@@ -4,6 +4,8 @@
 #include <exception>
 #include <stdio.h>
 
+void debug_testing();
+
 // 0x001001f8 
 int main(int argc, char** argv) {
     // undefined auStack32 [16];
@@ -24,6 +26,8 @@ int main(int argc, char** argv) {
         sr2::GameEngine::Create(argc, argv);
         // Utils::Timer::QuickTicks();
 
+        debug_testing();
+
         // Utils::Timer::QuickTicks();
         sr2::GameEngine::Execute();
         sr2::GameEngine::Terminate();
@@ -33,4 +37,22 @@ int main(int argc, char** argv) {
     }
 
     return 0;
+}
+
+
+#include <libsr2/io/datParser.h>
+#include <libsr2/io/datAsciiTokenizer.h>
+#include <libsr2/io/stream.h>
+#include <libsr2/vehicle/vehWheel.h>
+void debug_testing() {
+    sr2::datParser p("vehCarSim");
+    sr2::vec3f ibox;
+    sr2::vehWheel wheel;
+    p.add(sr2::PARSE_TYPE::VEC3F, "InertiaBox", &ibox, 1, 0);
+
+    sr2::datParser* wh_p = p.add_parser("WheelFront", nullptr);
+    wheel.prepare_parser(wh_p);
+    p.load("C:\\Users\\Computer\\RevEng\\sr2\\sr\\tune\\vehicle\\", "vpsuv2", "vehcarsim");
+
+    return;
 }

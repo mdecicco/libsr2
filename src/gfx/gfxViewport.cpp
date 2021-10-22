@@ -66,6 +66,8 @@ namespace sr2 {
         }
 
         void gfxViewport::DoFlush() {
+            // PS2 Graphics nonsense
+            // appears to send viewport info to GS
         }
     };
 };

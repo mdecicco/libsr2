@@ -1,17 +1,17 @@
 #pragma once
 #include <libsr2/vehicle/vehWheel.h>
-#include <libsr2/utilities/parFileIO.h>
+#include <libsr2/io/parFileIO.h>
 
 namespace sr2 {
     class vehCarSim;
-    class psInertialCS;
+    class phInertialCS;
 
     class vehWheel : public parFileIO {
         public:
             vehWheel();
             ~vehWheel();
 
-            virtual Parser::node* prepare_parser(Parser* p);
+            virtual datParserNode* prepare_parser(datParser* p);
             virtual const char* file_type() { return "vehWheel"; }
 
             void AddNormalLoad(f32 load);
@@ -241,9 +241,7 @@ namespace sr2 {
             f32 field_0x174;
             f32 field_0x178;
             f32 field_0x17c;
-            f32 field_0x1b0;
-            f32 field_0x1b4;
-            f32 field_0x1b8;
+            vec3f field_0x1b0;
             f32 field_0x1bc;
             f32 field_0x1c0;
             f32 field_0x1c4;

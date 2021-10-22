@@ -1,6 +1,8 @@
 #include <libsr2/utilities/GameArchive.h>
 #include <libsr2/utilities/Data.h>
 #include <libsr2/utilities/argParser.h>
+#include <libsr2/utilities/timer.h>
+#include <libsr2/utilities/utils.h>
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/states/GameState.h>
 #include <libsr2/gfx/gfx.h>
@@ -11,6 +13,10 @@
 #include <stdio.h>
 
 namespace sr2 {
+    u64 g_HostTimer = 1;
+    u64 g_FrameTimer = 1;
+    bool g_showFrameTime = false;
+
     GameEngine* GameEngine::instance = nullptr;
 
     GameEngine* GameEngine::Create(int argc, char** args) {
@@ -65,9 +71,26 @@ namespace sr2 {
     }
 
     void GameEngine::BeginFrame() {
+        // IO::ioInput::Poll();
+        gfx::pipeline::Manage();
+        gfx::pipeline::BeginFrame();
+        if (just_update) gfx::pipeline::Clear(3, gfx::g_clearColor, 1.0f, 0);
+        g_HostTimer = timer::Ticks();
     }
 
     void GameEngine::EndFrame() {
+        u64 t = timer::Ticks() - g_HostTimer;
+        gfx::g_HostTime = f32(t) * 3.390842e-06f;
+
+        if (g_showFrameTime) {
+            // std::string tm = format("CPU=%5.2fms VU/GS=%5.2fms FRAME=%5.2fms", gfx::g_HostTime, gfx::g_DrawTime, gfx::g_FrameTime);
+            // gfx::DrawFont(0x18, 0x18, tm.c_str(), 0x80ffffff);
+        }
+
+        gfx::pipeline::EndFrame();
+        t = timer::Ticks() - g_FrameTimer;
+        gfx::g_FrameTime = f32(t) * 3.390842e-06f;
+        g_FrameTimer = timer::Ticks();
     }
 
     bool GameEngine::Update() {
@@ -75,17 +98,20 @@ namespace sr2 {
 
         GameState* state = fsm->current();
         if (just_update) {
-            // dispatch messages
+            // msgMsgSource::Dispatch();
             state->Update();
         } else {
             state->PreUpdate();
             state->Input();
-            // dispatch messages
+            // msgMsgSource::Dispatch();
             if (state->CanUpdateTime()) {
                 // datTimeManager::Update();
                 // gfxTextureMovie::UpdateAll(datTimeManager::Seconds);
             }
 
+            // There is also a lot of time tracking going on here, but
+            // whether or not it has an effect on the game remains to
+            // be seen.
             state->Update();
             state->Draw();
             state->PostUpdate();
@@ -95,12 +121,14 @@ namespace sr2 {
 
         if (should_pause) fsm->deferred_change(IN_GAME_PAUSED);
 
-        /*
-        if (FUN_001c5540((int)&DAT_0035e7b0)) {
-            fsm->deferred_change(MENU_LOAD);
-            just_update = false;
+        if (just_update) {
+            /*
+            if (FUN_001c5540((int)&DAT_0035e7b0)) {
+                fsm->deferred_change(MENU_LOAD);
+                just_update = false;
+            }
+            */
         }
-        */
 
         fsm->update();
         return !state->Done() && !should_exit;

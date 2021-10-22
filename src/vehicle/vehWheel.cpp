@@ -1,5 +1,6 @@
 #include <libsr2/vehicle/vehWheel.h>
 #include <libsr2/math/mat3x4f.h>
+#include <libsr2/io/datParser.h>
 #include <math.h>
 
 namespace sr2 {
@@ -42,26 +43,27 @@ namespace sr2 {
     vehWheel::~vehWheel() {
     }
 
-    Parser::node* vehWheel::prepare_parser(Parser* p) {
-        p->add(Parser::FLOAT, "SuspensionExtent", &suspension_extent, 1, 0);
-        p->add(Parser::FLOAT, "SuspensionLimit", &suspension_limit, 1, 0);
-        p->add(Parser::FLOAT, "SuspensionFactor", &suspension_factor, 1, 0);
-        p->add(Parser::FLOAT, "SuspensionDampCoef", &suspension_damping_coefficient, 1, 0);
-        p->add(Parser::FLOAT, "SteeringLimit", &steering_limit, 1, 0);
-        p->add(Parser::FLOAT, "SteeringOffset", &steering_offset, 1, 0);
-        p->add(Parser::FLOAT, "BrakeCoef", &brake_coefficient, 1, 0);
-        p->add(Parser::FLOAT, "HandbrakeCoef", &handbrake_coefficient, 1, 0);
-        p->add(Parser::FLOAT, "CamberLimit", &camber_limit, 1, 0);
-        p->add(Parser::FLOAT, "WobbleLimit", &wobble_limit, 1, 0);
-        p->add(Parser::FLOAT, "AxleLimit", &axle_limit, 1, 0);
-        p->add(Parser::FLOAT, "TireDispLimitLong", &tire_displacement_limit_lng, 1, 0);
-        p->add(Parser::FLOAT, "TireDampCoefLong", &tire_damping_coefficient_lng, 1, 0);
-        p->add(Parser::FLOAT, "TireDragCoefLong", &tire_drag_coeficient_lng, 1, 0);
-        p->add(Parser::FLOAT, "TireDispLimitLat", &tire_displacement_limit_lat, 1, 0);
-        p->add(Parser::FLOAT, "TireDampCoefLat", &tire_damping_coefficient_lat, 1, 0);
-        p->add(Parser::FLOAT, "TireDragCoefLat", &tire_drag_coeficient_lat, 1, 0);
-        p->add(Parser::FLOAT, "OptimumSlipPercent", &optimum_slip_percent, 1, 0);
-        return p->add(Parser::FLOAT, "StaticFric", &static_friction, 1, 0);
+    datParserNode* vehWheel::prepare_parser(datParser* p) {
+        p->add(PARSE_TYPE::FLOAT, "SuspensionExtent", &suspension_extent, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "SuspensionLimit", &suspension_limit, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "SuspensionFactor", &suspension_factor, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "SuspensionDampCoef", &suspension_damping_coefficient, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "SteeringLimit", &steering_limit, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "SteeringOffset", &steering_offset, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "BrakeCoef", &brake_coefficient, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "HandbrakeCoef", &handbrake_coefficient, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "CamberLimit", &camber_limit, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "WobbleLimit", &wobble_limit, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "AxleLimit", &axle_limit, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "TireDispLimitLong", &tire_displacement_limit_lng, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "TireDampCoefLong", &tire_damping_coefficient_lng, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "TireDragCoefLong", &tire_drag_coeficient_lng, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "TireDispLimitLat", &tire_displacement_limit_lat, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "TireDampCoefLat", &tire_damping_coefficient_lat, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "TireDragCoefLat", &tire_drag_coeficient_lat, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "OptimumSlipPercent", &optimum_slip_percent, 1, nullptr);
+        p->add(PARSE_TYPE::FLOAT, "StaticFric", &static_friction, 1, nullptr);
+        return p->add(PARSE_TYPE::FLOAT, "SlidingFric", &sliding_friction, 1, nullptr);
     }
 
     void vehWheel::AddNormalLoad(f32 load) {

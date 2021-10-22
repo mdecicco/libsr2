@@ -63,10 +63,13 @@ namespace sr2 {
     }
 
     InMenuState::~InMenuState() {
+        delete field_0x8;
     }
 
     void InMenuState::Enter(GameEngine* eng) {
         method_0x80(eng);
+
+        field_0x8 = new WidgetStorage();
 
         auto type_a = [this](u16 idx, const char* name, u8 size, WidgetGenFunc_TypeA create) {
             StoredWidget temp;

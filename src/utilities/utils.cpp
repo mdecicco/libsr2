@@ -12,4 +12,18 @@ namespace sr2 {
         va_end(args);
         return buf;
     }
+
+    char* duplicate_string(const char* str) {
+        if (!str) return nullptr;
+
+        size_t len = strlen(str);
+        
+        if (len > 0) {
+            char* out = new char[len + 1];
+            memcpy(out, str, len + 1);
+            return out;
+        }
+
+        return nullptr;
+    }
 };
