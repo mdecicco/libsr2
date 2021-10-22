@@ -28,7 +28,8 @@ namespace sr2 {
         return status;
     }
 
-    void parFileIO::prep_parser(datParser* parser) {
+    datParserNode* parFileIO::prep_parser(datParser* parser) {
+        return nullptr;
     }
 
     void parFileIO::after_load() {

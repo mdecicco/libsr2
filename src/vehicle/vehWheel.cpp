@@ -29,9 +29,7 @@ namespace sr2 {
         steering_offset = 0.0f;
         wobble_limit = 0.0f;
         axle_limit = 0.0f;
-        field_0x1b0 = 0.0f;
-        field_0x1b8 = 0.0f;
-        field_0x1b4 = 0.0f;
+        field_0x1b0 = vec3f({ 0.0f, 0.0f, 0.0f });
         field_0x1f4 = 5000.0f;
         field_0x1f0 = 5000.0f;
         brake_coefficient = 1.0f;
@@ -138,7 +136,7 @@ namespace sr2 {
         f32 fVar3;
         vehCarSim* veh;
 
-        fVar2 = field_0x1b0;
+        fVar2 = field_0x1b0.x;
         if (field_0x1c4 < fabsf(fVar2)) {
             if (0.0f < fVar2) {
                 fVar3 = 1.0f;
@@ -158,14 +156,14 @@ namespace sr2 {
         inv_optimum_slip_percent_squared = 1.0f / (optimum_slip_percent * optimum_slip_percent);
 
         if (veh == nullptr) {
-            fVar2 = fabsf(field_0x1b8);
-            bVar1 = 0.01f < fabsf(field_0x1b0);
+            fVar2 = fabsf(field_0x1b0.z);
+            bVar1 = 0.01f < fabsf(field_0x1b0.x);
             // Yes, this is in the decompilation. Not sure why they allowed the dereferencing of a null pointer
             // fVar2 = -((veh->base).collider.pfio.field_0x30)->gravity * -9.8f * phys_obj->mass * fVar2) / (fVar2 + fVar2);
         }
         else {
-            fVar2 = fabsf(field_0x1b8);
-            bVar1 = field_0x1c4 < fabsf(field_0x1b0);
+            fVar2 = fabsf(field_0x1b0.z);
+            bVar1 = field_0x1c4 < fabsf(field_0x1b0.x);
             // fVar2 = (fabsf(field_0x1b8 - -(veh->base).collider.center_of_mass.z) / (fVar2 + fVar2)) * -((veh->base).collider.pfio.field_0x30)->gravity * -9.8f * ((veh->base).collider.pfio.solver)->mass;
         }
 
@@ -370,13 +368,13 @@ namespace sr2 {
         f32 fVar2;
 
         field_0x1f8 = -param_1 * steering_limit;
-        if (0.0f < field_0x1b0) {
+        if (0.0f < field_0x1b0.x) {
             fVar1 = 1.0f;
             fVar2 = steering_offset;
         }
         else {
             fVar1 = 0.0f;
-            if (field_0x1b0 < 0.0f) {
+            if (field_0x1b0.x < 0.0f) {
                 fVar1 = -1.0f;
             }
             fVar2 = steering_offset;
