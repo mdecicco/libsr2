@@ -1,0 +1,12 @@
+{
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "filesystem": "cpp",
+        "memory": "cpp",
+        "stop_token": "cpp",
+        "system_error": "cpp",
+        "xhash": "cpp"
+    }
+}

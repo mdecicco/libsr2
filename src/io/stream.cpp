@@ -16,6 +16,14 @@ namespace sr2 {
         m_fp = nullptr;
     }
 
+    i32 Stream::tell() {
+        return ftell(m_fp);
+    }
+
+    i32 Stream::seek(i32 pos) {
+        return fseek(m_fp, pos, SEEK_SET);
+    }
+
     i32 Stream::read(void* dst, u32 sz) {
         return fread(dst, sz, 1, m_fp) * sz;
     }
@@ -32,6 +40,10 @@ namespace sr2 {
 
     bool Stream::put_ch(char ch) {
         return write(&ch, 1) == 1;
+    }
+
+    FILE* Stream::getRaw() {
+        return m_fp;
     }
 
     Stream* Stream::open(char* path, bool unk0) {

@@ -6,7 +6,7 @@ namespace sr2 {
     class phMaterial;
     class phBoundGeometry : public phBoundPolygonal {
         public:
-            phBoundGeometry(undefined4 param_1);
+            phBoundGeometry(BOUND_TYPE type);
             ~phBoundGeometry();
 
             phMaterial* materials;

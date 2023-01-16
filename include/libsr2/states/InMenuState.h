@@ -20,7 +20,9 @@ namespace sr2 {
             ~InMenuState();
 
             virtual void Enter(GameEngine* eng);
-            virtual void method_0x80(GameEngine* eng);
+            virtual void Update();
+            virtual void Reset(GameEngine* eng);
+            virtual bool Done();
 
             WidgetStorage* field_0x8;
 

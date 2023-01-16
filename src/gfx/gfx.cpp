@@ -13,6 +13,7 @@ namespace sr2 {
 
         namespace pipeline {
             gfxViewport* Viewport;
+            gfxViewport* OrthoVP;
             u32 FrameNumber = 0;
             bool NeedBufferSwap = false;
             bool DoSwapBuffers = false;
@@ -90,6 +91,7 @@ namespace sr2 {
             }
 
             void BeginFrame() {
+                if (!Viewport) return;
                 NeedBufferSwap = true;
 
                 // lowPsxGfx::BeginDL();

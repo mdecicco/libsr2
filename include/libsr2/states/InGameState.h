@@ -5,7 +5,9 @@
 namespace sr2 {
     class InGameState : public GameState {
         public:
-            InGameState() { }
-            ~InGameState() { }
+            InGameState();
+            ~InGameState();
+
+            virtual bool Done();
     };
 };

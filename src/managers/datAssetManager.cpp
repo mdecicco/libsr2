@@ -11,6 +11,12 @@ namespace sr2 {
         return Stream::open(path, unk1);
     }
 
+    bool datAssetManager::exists(const char* dir, const char* filename, const char* ext) {
+        Stream* s = open(dir, filename, ext, 1, true);
+        if (s) s->close();
+        return s != nullptr;
+    }
+
     void datAssetManager::full_path(char* buf, u32 bufSz, const char* dir, const char* filename, const char* ext) { 
         int iVar1;
         const char *pcVar2 = nullptr;

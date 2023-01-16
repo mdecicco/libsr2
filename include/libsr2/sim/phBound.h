@@ -2,9 +2,26 @@
 #include <libsr2/types.h>
 
 namespace sr2 {
+    enum BOUND_TYPE : u32 {
+        BOUND_SPHERE = 0,
+        BOUND_HOTDOG,
+        BOUND_BOX,
+        BOUND_GEOMETRY,
+        BOUND_TERRAIN,
+        BOUND_UNK0,
+        BOUND_UNK1,
+        BOUND_UNK2,
+        BOUND_UNK3,
+        BOUND_OTGRID,
+        BOUND_ORTERRAINGRID,
+        BOUND_FORCE_SPHERE,
+        BOUND_UNK4,
+        BOUND_COMPOSITE
+    };
+
     class phBound {
         public:
-            phBound(undefined4 param_1);
+            phBound(BOUND_TYPE param_1);
             ~phBound();
 
             // knowns
@@ -12,7 +29,7 @@ namespace sr2 {
             f32 penetration_barely_moved;
 
             // unknowns
-            undefined4 field_0x0;
+            BOUND_TYPE type;
             undefined4 field_0x4;
             undefined field_0x8;
             undefined field_0x9;

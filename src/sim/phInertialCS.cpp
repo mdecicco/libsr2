@@ -3,7 +3,7 @@
 #include <libsr2/math/mat3x4f.h>
 #include <libsr2/math/vec3f.h>
 #include <libsr2/math/math.h>
-#include <libsr2/utilities/datTimeManager.h>
+#include <libsr2/managers/datTimeManager.h>
 #include <math.h>
 
 namespace sr2 {

@@ -1,4 +1,6 @@
 #include <libsr2/states/InMenuState.h>
+#include <libsr2/libsr2.h>
+#include <libsr2/states/gameFSM.h>
 
 namespace sr2 {
     typedef ui2Widget* (*WidgetGenFunc_TypeA)(const char* /* var name */, u8 /* size */, StoredWidget* /* nobody knows */);
@@ -67,7 +69,10 @@ namespace sr2 {
     }
 
     void InMenuState::Enter(GameEngine* eng) {
-        method_0x80(eng);
+        // for now
+        return;
+
+        Reset(eng);
 
         field_0x8 = new WidgetStorage();
 
@@ -203,7 +208,16 @@ namespace sr2 {
         type_e(0x3d, "LanguageAtBoot"             , Dummy_TypeE);
     }
 
-    void InMenuState::method_0x80(GameEngine* eng) {
+    void InMenuState::Update() {
+        // for now
+        GameEngine::Instance()->ChangeState(GAME_STATE::GAME_LOAD);
+    }
+
+    void InMenuState::Reset(GameEngine* eng) {
+    }
+
+    bool InMenuState::Done() {
+        return false;
     }
 
     void InMenuState::set_widget(u16 idx, ui2Widget* widget, StoredWidget* unk) {

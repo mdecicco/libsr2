@@ -178,4 +178,27 @@ namespace sr2 {
 
         return false;
     }
+
+    void datArgParser::AddReplace(const char* arg, char* value) {
+        HashElem* ptr = (HashElem*)argTable.Access(arg);
+        if (ptr) {
+            if (ptr->param) delete [] ptr->param;
+            delete ptr;
+            argTable.Delete(arg);
+        }
+
+        ptr = new HashElem({ 1, nullptr });
+        ptr->param = new char*[1];
+        ptr->param[0] = value;
+        argTable.Insert(arg, ptr);
+    }
+
+    void datArgParser::Remove(const char* arg) {
+        HashElem* ptr = (HashElem*)argTable.Access(arg);
+        if (ptr) {
+            if (ptr->param) delete [] ptr->param;
+            delete ptr;
+            argTable.Delete(arg);
+        }
+    }
 };

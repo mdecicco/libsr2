@@ -13,6 +13,7 @@ namespace sr2 {
         namespace pipeline {
             typedef void (*CopyToFrontFuncTp)(gfxViewport*);
             extern gfxViewport* Viewport;
+            extern gfxViewport* OrthoVP;
             extern bool NeedBufferSwap;
             extern bool DoSwapBuffers;
             extern bool CopyToFront;

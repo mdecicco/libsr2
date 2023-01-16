@@ -1,4 +1,4 @@
-#include <libsr2/utilities/datTimeManager.h>
+#include <libsr2/managers/datTimeManager.h>
 
 namespace sr2 {
     datTimeManager g_datTimeManager = datTimeManager();

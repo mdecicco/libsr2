@@ -38,7 +38,10 @@ add_sources("src/states"    "states")
 add_sources("src/loaders"   "loaders")
 add_sources("src/terrain"   "terrain")
 add_sources("src/vehicle"   "vehicle")
+add_sources("src/mission"   "mission")
+add_sources("src/unknown"   "unknown")
 add_sources("src/managers"  "managers")
+add_sources("src/instances" "instances")
 add_sources("src/utilities" "utilities")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -65,6 +68,7 @@ SET(release_libs
 
 target_link_libraries(libsr2 ${debug_libs})
 #target_link_libraries(libsr2 ${release_libs})
+set_target_properties(libsr2 PROPERTIES LINK_FLAGS "/ignore:4099")
 
 
 set_property(TARGET libsr2 PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}")

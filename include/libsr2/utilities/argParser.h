@@ -15,6 +15,8 @@ namespace sr2 {
             static bool GetIntegerArgument(const char* arg, i32 index, i32* dest);
             static bool GetFloatArgument(const char* arg, i32 index, f32* dest);
             static bool GetStringArgument(const char* arg, i32 index, char** dest);
+            static void AddReplace(const char* arg, char* value);
+            static void Remove(const char* arg);
 
             static i32 argc;
             static char** argv;

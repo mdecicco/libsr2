@@ -17,6 +17,10 @@ namespace sr2 {
         m_map[key] = value;
     }
 
+    void HashTable::Delete(const char* key) {
+        m_map.erase(key);
+    }
+
     void HashTable::MakePermanent() {
         // who knows
     }

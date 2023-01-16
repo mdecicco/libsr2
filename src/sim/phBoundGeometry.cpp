@@ -1,7 +1,7 @@
 #include <libsr2/sim/phBoundGeometry.h>
 
 namespace sr2 {
-    phBoundGeometry::phBoundGeometry(undefined4 param_1) : phBoundPolygonal(param_1) {                                                                            
+    phBoundGeometry::phBoundGeometry(BOUND_TYPE type) : phBoundPolygonal(type) {                                                                            
         field_0x58 = 0;
         field_0x4 = 0;
         field_0x60 = 0;

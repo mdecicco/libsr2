@@ -1,7 +1,7 @@
 #include <libsr2/sim/phBoundPolygonal.h>
 
 namespace sr2 {
-    phBoundPolygonal::phBoundPolygonal(undefined4 param_1) : phBound(param_1) {                                                 
+    phBoundPolygonal::phBoundPolygonal(BOUND_TYPE type) : phBound(type) {                                                 
         field_0x78 = 0xffffffff;
         field_0x80 = nullptr;
         field_0x64 = 0;

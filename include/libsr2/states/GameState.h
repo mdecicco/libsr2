@@ -21,7 +21,7 @@ namespace sr2 {
             virtual void Reset();
 
             virtual void method_0x60();
-            virtual void method_0x80(GameEngine* eng);
+            virtual void Reset(GameEngine* eng);
             
         protected:
             bool m_needs_reset;

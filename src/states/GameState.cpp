@@ -53,6 +53,6 @@ namespace sr2 {
         
     }
 
-    void GameState::method_0x80(GameEngine* eng) {
+    void GameState::Reset(GameEngine* eng) {
     }
 };

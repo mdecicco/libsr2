@@ -6,7 +6,7 @@ namespace sr2 {
     class phPolygon;
     class phBoundPolygonal : public phBound {
         public:
-            phBoundPolygonal(undefined4 param_1);
+            phBoundPolygonal(BOUND_TYPE type);
             ~phBoundPolygonal();
 
             phPolygon* polygons;

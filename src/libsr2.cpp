@@ -10,6 +10,7 @@
 
 #include <string>
 #include <filesystem>
+#include <thread>
 #include <stdio.h>
 
 namespace sr2 {
@@ -41,11 +42,24 @@ namespace sr2 {
     }
 
     void GameEngine::Execute() {
-        bool success;
+        bool do_continue = true;
+        // windows doesn't like sleeping for less time than this
+        // otherwise I'd set it to 60 FPS
+        f32 target = 1.0f / 20.0f;
+        while (do_continue) {
+            auto begin = std::chrono::high_resolution_clock::now();
 
-        do {
-            success = GameEngine::instance->Update();
-        } while (success);
+            do_continue = GameEngine::instance->Update();
+
+            auto end = std::chrono::high_resolution_clock::now();
+
+            // this time stuff isn't in the game, it's just to
+            // not use 100% CPU while doing nothing.
+            f32 seconds = std::chrono::duration<sr2::f32>(end - begin).count();
+            if (seconds < target) {
+                std::this_thread::sleep_for(std::chrono::duration<sr2::f32>(target - seconds));
+            }
+        }
     }
 
     GameEngine* GameEngine::Instance() {

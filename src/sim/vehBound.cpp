@@ -3,7 +3,7 @@
 #include <libsr2/sim/lvlMaterial.h>
 
 namespace sr2 {
-    vehBound::vehBound() : phBoundGeometry(3) {
+    vehBound::vehBound() : phBoundGeometry(BOUND_GEOMETRY) {
         material = new lvlMaterial();
         penetration = 0.0f;
         field_0x9c = nullptr;

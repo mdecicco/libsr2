@@ -2,8 +2,8 @@
 #include <libsr2/sim/phBoundCollision.h>
 
 namespace sr2 {
-    phBound::phBound(undefined4 param_1) {    
-        field_0x0 = param_1;
+    phBound::phBound(BOUND_TYPE tp) {    
+        type = tp;
         field_0x4 = 0;
         field_0x20 = 0;
         field_0x24.x = 0.0f;
