@@ -29,7 +29,7 @@ namespace sr2 {
             void setPenetration();
 
             BOUND_TYPE type;
-            u32 material_count;
+            u32 materialCount;
             vec3f aabb_min;
             vec3f aabb_max;
             bool centroid_is_set;

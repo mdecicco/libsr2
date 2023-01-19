@@ -7,7 +7,7 @@
 namespace sr2 {
     phBound::phBound(BOUND_TYPE tp) {    
         type = tp;
-        material_count = 0;
+        materialCount = 0;
         centroid_is_set = false;
         centroid.x = 0.0f;
         centroid.z = 0.0f;

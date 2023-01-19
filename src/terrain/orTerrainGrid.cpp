@@ -1,12 +1,5 @@
 #include <libsr2/terrain/orTerrainGrid.h>
-#include <libsr2/managers/datAssetManager.h>
-#include <libsr2/managers/phMaterialMgr.h>
 #include <libsr2/sim/phBound.h>
-#include <libsr2/utilities/utils.h>
-#include <libsr2/io/datAsciiTokenizer.h>
-#include <libsr2/io/stream.h>
-#include <libsr2/io/TaggedStream.h>
-#include <libsr2/gfx/gfxTexture.h>
 
 namespace sr2 {
     f32 orTerrainGrid::LODDist[8] = { 0.0f };
@@ -26,9 +19,9 @@ namespace sr2 {
     void orTerrainGrid::calculateBoundingBox() {
         aabb_min = { 0.0f, -10.0f, 0.0f };
         aabb_max = {
-            scale * width,
+            f32(scale * width),
             500.0f,
-            scale * height
+            f32(scale * height)
         };
 
         setPenetration();

@@ -1,18 +1,17 @@
 #include <libsr2/sim/phBoundPolygonal.h>
 
 namespace sr2 {
-    phBoundPolygonal::phBoundPolygonal(BOUND_TYPE type) : phBound(type) {                                                 
-        field_0x78 = 0xffffffff;
-        field_0x80 = nullptr;
-        field_0x64 = 0;
-        field_0x68 = 0xffffffff;
-        field_0x70 = 0xffffffff;
-        field_0x6c = 0;
-        field_0x74 = 0;
-        field_0x7c = 0;
-
+    phBoundPolygonal::phBoundPolygonal(BOUND_TYPE type) : phBound(type) {
+        vertices = nullptr;
         polygons = nullptr;
-        field_0x88 = nullptr;
+        edges = nullptr;
+        unk0 = nullptr;
+        unk1 = -1;
+        unk2 = 0;
+        unk3 = 0xffffffff;
+        unk4 = 0;
+        unk5 = 0xffffffff;
+        unk6 = 0;
     }
 
     phBoundPolygonal::~phBoundPolygonal() {
