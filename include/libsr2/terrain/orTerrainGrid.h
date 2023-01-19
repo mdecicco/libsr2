@@ -8,7 +8,7 @@ namespace sr2 {
     class phMaterial;
     class Stream;
 
-    #pragma pack(1)
+    #pragma pack(push, 1)
     struct orTerrainGridPathTile {
         u8 cell_idx;
         u8 texture_idx;
@@ -29,10 +29,17 @@ namespace sr2 {
 
     class orTerrainGrid : public phBound {
         public:
+            static f32 LODDist[8];
+            static f32 LODDistSq[8];
+            static f32 LODDistRelated;
+
             orTerrainGrid();
             ~orTerrainGrid();
 
-            bool load(const char* map, u32 lod_version, u32 lod_idx, mat3x3f& unk0, mat4x4f& unk1);
+            virtual void calculateBoundingBox();
+            void squareLODDists();
+
+            bool load(const char* map, u32 lod_version, u32 lod_idx, mat3x3f* unk0, mat4x4f* unk1);
             void initLODs(const char* map, u32 lod_version, u32 lod_idx);
 
             u32 material_count;
@@ -58,49 +65,51 @@ namespace sr2 {
 
             u32 unk_grid_width, unk_grid_height;
             f32* unk_grid_0;
-            f32* unk_grid_1;
+            f32* height_data;
             i8* cpv_map;
             u8* texture_ids;
             orTerrainGridCell* cells;
             orTerrainGridPathTile* path_data;
             u32* path_texture_ids;
             u16 some_palette[256];
+            u32* low_lod_texture_ids;
 
             u32 texture_count;
-            u32* texture_unks;
+            u32* texture_material_ids;
 
         protected:
             bool m_did_read_info;
             bool m_did_load_cullflags;
             bool m_did_load_palette;
+            bool m_did_load_8199;
             u32 m_path_tex_count;
             vec2f* m_tmp_geom_1;
             u16* m_tmp_cullflags;
             orTerrainGridPathMapPixel* m_tmp_path_map;
 
             void process_info(Stream* fp);
-            void process_0x8194(u16 tag, Stream* fp);
-            void process_0x8203(u16 tag, Stream* fp);
+            void process_heightmap_1(Stream* fp);
+            void process_heightmap(Stream* fp);
             void process_texids(Stream* fp);
             void process_palette(Stream* fp);
             void process_materials(Stream* fp);
             void process_textures(Stream* fp, char** tex_names);
-            void process_0x8199(Stream* fp, mat3x3f& p_unk0, mat4x4f& p_unk1);
+            void process_0x8199(Stream* fp, mat3x3f* p_unk0, mat4x4f* p_unk1);
             void process_paths(Stream* fp);
             void process_0x8202(Stream* fp);
             void process_0x8204(Stream* fp);
             void process_cullflags(Stream* fp);
-            void process_heightmap(Stream* fp);
+            void process_unk_map(Stream* fp);
 
             void generate_cullflags();
             void initialize_cells();
             void initialize_ugrid_0();
             void initialize_textures(const char** texNames);
             void load_cpv(const char* map, u32 lod_version);
-            void load_low_lod_textures();
+            void load_low_lod_textures(const char* map, u32 lod_version);
             void init_cell_tex_indices();
-            void load_imap();
+            void load_imap(const char* map, u32 lod_version);
             void generate_imap();
-            void load_fog_values();
+            void load_fog_values(const char* map, u32 lod_version);
     };
 };

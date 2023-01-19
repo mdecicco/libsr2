@@ -9,8 +9,8 @@ namespace sr2 {
             static Stream* open(const char* dir, const char* filename, const char* ext, i32 unk0, bool unk1);
             static bool exists(const char* dir, const char* filename, const char* ext);
             static void full_path(char* buf, u32 bufSz, const char* dir, const char* filename, const char* ext);
-
-            char* set_path(const char* path);
+            static char* set_path(const char* path);
+            static char* get_path();
 
         protected:
             static char m_path[256];

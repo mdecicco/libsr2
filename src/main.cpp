@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 #include <libsr2/vehicle/vehWheel.h>
 #include <libsr2/managers/missManager.h>
 #include <libsr2/utilities/argParser.h>
+#include <libsr2/gfx/gfxTexture.h>
 void mission_test() {
     const char* missions[] = {
         "Afghan_AAAcruise.sp",
@@ -257,6 +258,8 @@ void debug_testing() {
     sr2::datArgParser::AddReplace("level", "Afghan");
     sr2::datArgParser::AddReplace("humans", "1");
     sr2::datArgParser::AddReplace("mission", "Cruise.mp");
+
+    sr2::gfxTexture::None = new sr2::gfxTexture();
 
     // mission_test();
     // vehicle_test();

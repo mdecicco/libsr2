@@ -15,7 +15,7 @@ namespace sr2 {
 	}
 
 	void gfxTexture::getMovie(gfxTexture** out, const char* name, i32 unk0) {
-		return;
+		*out = gfxTexture::None;
 	}
 
 	void gfxTexture::setTexEnv(u32 env) {

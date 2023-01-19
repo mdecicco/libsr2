@@ -57,7 +57,7 @@ namespace sr2 {
 
         mat3x3f a;
         mat4x4f b;
-        m_terrain->load(map, weather, m_unk2, a, b);
+        m_terrain->load(map, weather, m_unk2, &a, &b);
         loadPointLights(map, weather, nullptr, nullptr);
 
         return true;

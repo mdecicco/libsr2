@@ -34,7 +34,7 @@ namespace sr2 {
 
     char Stream::get_ch() {
         char out;
-        read(&out, 1);
+        if (!read(&out, 1)) return 0xFF;
         return out;
     }
 

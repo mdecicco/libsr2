@@ -57,6 +57,10 @@ namespace sr2 {
         }
     }
 
+    char* datAssetManager::get_path() {
+        return m_path;
+    }
+
     char* datAssetManager::set_path(const char* path) {
         char cVar1;
         char *pcVar2;
