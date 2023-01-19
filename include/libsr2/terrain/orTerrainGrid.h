@@ -94,10 +94,10 @@ namespace sr2 {
             void process_palette(Stream* fp);
             void process_materials(Stream* fp);
             void process_textures(Stream* fp, char** tex_names);
-            void process_0x8199(Stream* fp, mat3x3f* p_unk0, mat4x4f* p_unk1);
+            void process_8199(Stream* fp, mat3x3f* p_unk0, mat4x4f* p_unk1);
             void process_paths(Stream* fp);
-            void process_0x8202(Stream* fp);
-            void process_0x8204(Stream* fp);
+            void process_8202(Stream* fp);
+            void process_8204(Stream* fp);
             void process_cullflags(Stream* fp);
             void process_unk_map(Stream* fp);
 

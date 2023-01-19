@@ -55,10 +55,10 @@ namespace sr2 {
                 case 8196: { process_palette(fp); break; }
                 case 8197: { process_materials(fp); break; }
                 case 8198: { process_textures(fp, tex_names); break; }
-                case 8199: { process_0x8199(fp, p_unk0, p_unk1); break; }
+                case 8199: { process_8199(fp, p_unk0, p_unk1); break; }
                 case 8201: { process_paths(fp); break; }
-                case 8202: { process_0x8202(fp); break; }
-                case 8204: { process_0x8204(fp); break; }
+                case 8202: { process_8202(fp); break; }
+                case 8204: { process_8204(fp); break; }
                 case 8205: { process_cullflags(fp); break; }
                 case 8206: { process_unk_map(fp); break; }
                 default: break;
@@ -205,7 +205,7 @@ namespace sr2 {
         }
     }
 
-    void orTerrainGrid::process_0x8199(Stream* fp, mat3x3f* p_unk0, mat4x4f* p_unk1) {
+    void orTerrainGrid::process_8199(Stream* fp, mat3x3f* p_unk0, mat4x4f* p_unk1) {
         m_did_load_8199 = true;
         vec4f u0;
         vec3f u1;
@@ -302,7 +302,7 @@ namespace sr2 {
         // Game::lvlProgress::popSubTask();
     }
 
-    void orTerrainGrid::process_0x8202(Stream* fp) {
+    void orTerrainGrid::process_8202(Stream* fp) {
         if (!m_did_read_info) throw "Encountered btx2 block before info block";
 
         f32* map = new f32[width_in_cells * height_in_cells];
@@ -318,7 +318,7 @@ namespace sr2 {
         delete [] map;
     }
 
-    void orTerrainGrid::process_0x8204(Stream* fp) {
+    void orTerrainGrid::process_8204(Stream* fp) {
         if (!m_did_read_info) throw "Encountered btx2 block before info block";
 
         fp->read(m_tmp_geom_1, width_in_cells * height_in_cells * 8);
