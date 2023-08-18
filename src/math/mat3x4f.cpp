@@ -1,4 +1,7 @@
 #include <libsr2/math/mat3x4f.h>
+#include <libsr2/math/vec3f.h>
+
+#include <math.h>
 
 namespace sr2 {
     namespace math {
@@ -47,6 +50,7 @@ namespace sr2 {
             f32 xx = lhs.x.x; f32 xy = lhs.x.y; f32 xz = lhs.x.z;
             f32 yx = lhs.y.x; f32 yy = lhs.y.y; f32 yz = lhs.y.z;
             f32 zx = lhs.z.x; f32 zy = lhs.z.y; f32 zz = lhs.z.z;
+
             lhs.x.x = xx * rhs.x.x + xy * rhs.y.x + xz * rhs.z.x;
             lhs.x.y = xx * rhs.x.y + xy * rhs.y.y + xz * rhs.z.y;
             lhs.x.z = xx * rhs.x.z + xy * rhs.y.z + xz * rhs.z.z;
@@ -56,6 +60,21 @@ namespace sr2 {
             lhs.z.x = zx * rhs.x.x + zy * rhs.y.x + zz * rhs.z.x;
             lhs.z.y = zx * rhs.x.y + zy * rhs.y.y + zz * rhs.z.y;
             lhs.z.z = zx * rhs.x.z + zy * rhs.y.z + zz * rhs.z.z;
+        }
+
+        void mult(mat3x4f& out, const mat3x4f& lhs, const mat3x4f& rhs) { 
+            f32 xx = lhs.x.x; f32 xy = lhs.x.y; f32 xz = lhs.x.z;
+            f32 yx = lhs.y.x; f32 yy = lhs.y.y; f32 yz = lhs.y.z;
+            f32 zx = lhs.z.x; f32 zy = lhs.z.y; f32 zz = lhs.z.z;
+            out.x.x = xx * rhs.x.x + xy * rhs.y.x + xz * rhs.z.x;
+            out.x.y = xx * rhs.x.y + xy * rhs.y.y + xz * rhs.z.y;
+            out.x.z = xx * rhs.x.z + xy * rhs.y.z + xz * rhs.z.z;
+            out.y.x = yx * rhs.x.x + yy * rhs.y.x + yz * rhs.z.x;
+            out.y.y = yx * rhs.x.y + yy * rhs.y.y + yz * rhs.z.y;
+            out.y.z = yx * rhs.x.z + yy * rhs.y.z + yz * rhs.z.z;
+            out.z.x = zx * rhs.x.x + zy * rhs.y.x + zz * rhs.z.x;
+            out.z.y = zx * rhs.x.y + zy * rhs.y.y + zz * rhs.z.y;
+            out.z.z = zx * rhs.x.z + zy * rhs.y.z + zz * rhs.z.z;
         }
 
         void mult_with_translation(mat3x4f& lhs, const mat3x4f& rhs) {
@@ -83,26 +102,180 @@ namespace sr2 {
             lhs.w.z = wx1 * xz2 + wy1 * yz2 + wz1 * zz2 + wz2;
         }
 
-        void mult(mat3x4f& out, const mat3x4f& lhs, const mat3x4f& rhs) { 
+        void mult_inverse_with_translation(mat3x4f& lhs, const mat3x4f& rhs) {
             f32 xx = lhs.x.x; f32 xy = lhs.x.y; f32 xz = lhs.x.z;
             f32 yx = lhs.y.x; f32 yy = lhs.y.y; f32 yz = lhs.y.z;
             f32 zx = lhs.z.x; f32 zy = lhs.z.y; f32 zz = lhs.z.z;
-            out.x.x = xx * rhs.x.x + xy * rhs.y.x + xz * rhs.z.x;
-            out.x.y = xx * rhs.x.y + xy * rhs.y.y + xz * rhs.z.y;
-            out.x.z = xx * rhs.x.z + xy * rhs.y.z + xz * rhs.z.z;
-            out.y.x = yx * rhs.x.x + yy * rhs.y.x + yz * rhs.z.x;
-            out.y.y = yx * rhs.x.y + yy * rhs.y.y + yz * rhs.z.y;
-            out.y.z = yx * rhs.x.z + yy * rhs.y.z + yz * rhs.z.z;
-            out.z.x = zx * rhs.x.x + zy * rhs.y.x + zz * rhs.z.x;
-            out.z.y = zx * rhs.x.y + zy * rhs.y.y + zz * rhs.z.y;
-            out.z.z = zx * rhs.x.z + zy * rhs.y.z + zz * rhs.z.z;
+
+            lhs.x.x = lhs.x.x * rhs.x.x + lhs.x.y * rhs.x.y + lhs.x.z * rhs.x.z;
+            lhs.x.y = lhs.x.x * rhs.y.x + lhs.x.y * rhs.y.y + lhs.x.z * rhs.y.z;
+            lhs.x.z = lhs.x.x * rhs.z.x + lhs.x.y * rhs.z.y + lhs.x.z * rhs.z.z;
+
+            lhs.y.x = lhs.y.x * rhs.x.x + lhs.y.y * rhs.x.y + lhs.y.z * rhs.x.z;
+            lhs.y.y = lhs.y.x * rhs.y.x + lhs.y.y * rhs.y.y + lhs.y.z * rhs.y.z;
+            lhs.y.z = lhs.y.x * rhs.z.x + lhs.y.y * rhs.z.y + lhs.y.z * rhs.z.z;
+
+            lhs.z.x = lhs.z.x * rhs.x.x + lhs.z.y * rhs.x.y + lhs.z.z * rhs.x.z;
+            lhs.z.y = lhs.z.x * rhs.y.x + lhs.z.y * rhs.y.y + lhs.z.z * rhs.y.z;
+            lhs.z.z = lhs.z.x * rhs.z.x + lhs.z.y * rhs.z.y + lhs.z.z * rhs.z.z;
+
+            lhs.w.x -= rhs.w.x;
+            lhs.w.y -= rhs.w.y;
+            lhs.w.z -= rhs.w.z;
+
+            lhs.w.x = lhs.w.x * rhs.x.x + lhs.w.y * rhs.x.y + lhs.w.z * rhs.x.z;
+            lhs.w.y = lhs.w.x * rhs.y.x + lhs.w.y * rhs.y.y + lhs.w.z * rhs.y.z;
+            lhs.w.z = lhs.w.x * rhs.z.x + lhs.w.y * rhs.z.y + lhs.w.z * rhs.z.z;
         }
 
         void mult(vec3f& out, const mat3x4f& lhs, const vec3f& rhs) {
-            vec3f o;
-            o.x = lhs.x.x * rhs.x + rhs.y * lhs.y.x + rhs.z * lhs.z.x;
-            o.y = lhs.x.y * rhs.x + rhs.y * lhs.y.y + rhs.z * lhs.z.y;
-            o.z = lhs.x.z * rhs.x + rhs.y * lhs.y.z + rhs.z * lhs.z.z;
+            out.x = lhs.x.x * rhs.x + rhs.y * lhs.y.x + rhs.z * lhs.z.x;
+            out.y = lhs.x.y * rhs.x + rhs.y * lhs.y.y + rhs.z * lhs.z.y;
+            out.z = lhs.x.z * rhs.x + rhs.y * lhs.y.z + rhs.z * lhs.z.z;
+        }
+
+        void mult_transposed(vec3f& out, const mat3x4f& lhs, const vec3f& rhs) {
+            out.x = lhs.x.x * rhs.x + rhs.y * lhs.x.y + rhs.z * lhs.x.z;
+            out.y = lhs.y.x * rhs.x + rhs.y * lhs.y.y + rhs.z * lhs.y.z;
+            out.z = lhs.z.x * rhs.x + rhs.y * lhs.z.y + rhs.z * lhs.z.z;
+        }
+
+        void rotation_x(mat3x4f& out, f32 angle) {
+            f32 cosTheta = cosf(angle);
+            f32 sinTheta = sinf(angle);
+
+            out.x = { 1.0f, 0.0f, 0.0f };
+            out.y = { 0.0f, cosTheta, sinTheta };
+            out.z = { 0.0f, -sinTheta, cosTheta };
+        }
+
+        void rotation_y(mat3x4f& out, f32 angle) {
+            f32 cosTheta = cosf(angle);
+            f32 sinTheta = sinf(angle);
+
+            out.x = { cosTheta, 0.0f, -sinTheta };
+            out.y = { 0.0f, 1.0f, 0.0f };
+            out.z = { sinTheta, 0.0f, cosTheta };
+        }
+
+        void rotation_z(mat3x4f& out, f32 angle) {
+            f32 cosTheta = cosf(angle);
+            f32 sinTheta = sinf(angle);
+
+            out.x = { cosTheta, sinTheta, 0.0f };
+            out.y = { -sinTheta, cosTheta, 0.0f };
+            out.z = { 0.0f, 0.0f, 1.0f };
+        }
+
+        void rotation_axis_angle(mat3x4f& out, const vec3f& axis, f32 angle) {
+            f32 cosTheta = cosf(angle);
+            f32 sinTheta = sinf(angle);
+            f32 invCosTheta = 1.0f - cosTheta;
+
+            out.x.x = invCosTheta * axis.x * axis.x + cosTheta;
+            out.y.y = invCosTheta * axis.y * axis.y + cosTheta;
+            out.z.z = invCosTheta * axis.z * axis.z + cosTheta;
+            out.x.y = invCosTheta * axis.x * axis.y + sinTheta * axis.z;
+            out.y.x = invCosTheta * axis.x * axis.y - sinTheta * axis.z;
+            out.x.z = invCosTheta * axis.x * axis.z - sinTheta * axis.y;
+            out.z.x = invCosTheta * axis.x * axis.z + sinTheta * axis.y;
+            out.y.z = invCosTheta * axis.y * axis.z + sinTheta * axis.x;
+            out.z.y = invCosTheta * axis.y * axis.z - sinTheta * axis.x;
+        }
+
+        void make_rotation(mat3x4f& out, const vec3f& axis, f32 angle) {
+            if (angle == 0.0f) {
+                identity_3x3(out);
+                return;
+            }
+
+            if (axis.x == 0.0f) {
+                if (axis.y == 0.0f) {
+                    if (axis.z <= 0.0f) {
+                        rotation_z(out, -angle);
+                        return;
+                    }
+
+                    rotation_z(out, angle);
+                    return;
+                }
+
+                if (axis.z == 0.0) {
+                    if (axis.y <= 0.0) {
+                        rotation_y(out, -angle);
+                        return;
+                    }
+
+                    rotation_y(out, angle);
+                    return;
+                }
+            } else {
+                if ((axis.y == 0.0) && (axis.z == 0.0)) {
+                    if (axis.x <= 0.0) {
+                        rotation_x(out, -angle);
+                        return;
+                    }
+
+                    rotation_x(out, angle);
+                    return;
+                }
+            }
+
+            vec3f normalizedAxis = axis;
+            normalize(normalizedAxis);
+            rotation_axis_angle(out, normalizedAxis, angle);
+        }
+
+        void from_eulers_zxy(mat3x4f& out, const vec3f& eulers) {
+            vec3f cosTheta = { 0.0f, 0.0f, 0.0f };
+            vec3f sinTheta = { 0.0f, 0.0f, 0.0f };
+
+            if (eulers.x == 0.0) {
+                sinTheta.x = 0.0;
+                cosTheta.x = 1.0;
+            } else {
+                sinTheta.x = sinf(eulers.x);
+                cosTheta.x = cosf(eulers.x);
+            }
+
+            if (eulers.y == 0.0) {
+                sinTheta.y = 0.0;
+                cosTheta.y = 1.0;
+            }
+            else {
+                sinTheta.y = sinf(eulers.x);
+                cosTheta.y = cosf(eulers.x);
+            }
+
+            if (eulers.z == 0.0) {
+                sinTheta.z = 0.0;
+                cosTheta.z = 1.0;
+            }
+            else {
+                sinTheta.z = sinf(eulers.x);
+                cosTheta.z = cosf(eulers.x);
+            }
+            out.x.x = cosTheta.z * cosTheta.y + sinTheta.z * sinTheta.x * sinTheta.y;
+            out.x.z = -cosTheta.z * sinTheta.y + sinTheta.z * sinTheta.x * cosTheta.y;
+            out.y.x = -sinTheta.z * cosTheta.y + cosTheta.z * sinTheta.x * sinTheta.y;
+            out.x.y = sinTheta.z * cosTheta.x;
+            out.y.z = sinTheta.z * sinTheta.y + cosTheta.z * sinTheta.x * cosTheta.y;
+            out.y.y = cosTheta.z * cosTheta.x;
+            out.z.x = cosTheta.x * sinTheta.y;
+            out.z.y = -sinTheta.x;
+            out.z.z = cosTheta.x * cosTheta.y
+        }
+
+        void rotate(mat3x4f& out, const vec3f& axis, f32 angle) {
+            mat3x4f rot;
+            make_rotation(rot, axis, angle);
+            mult(out, rot);
+        }
+
+        void dot3x3CrossProdMtx(mat3x4f& out, const vec3f& unk) {
+            math::cross(out.x, out.x, unk);
+            math::cross(out.y, out.y, unk);
+            math::cross(out.z, out.z, unk);
         }
     }
 };

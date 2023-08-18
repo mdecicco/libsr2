@@ -40,6 +40,6 @@ namespace sr2 {
             f32 longest_extent_mag;
             f32 penetration;
             f32 penetration_barely_moved;
-            f32 bound_gravity;
+            f32 gravity_multiplier;
     };
 };

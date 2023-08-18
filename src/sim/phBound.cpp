@@ -16,7 +16,7 @@ namespace sr2 {
         center_of_gravity.x = 0.0f;
         center_of_gravity.z = 0.0f;
         center_of_gravity.y = 0.0f;
-        bound_gravity = 1.0f;
+        gravity_multiplier = 1.0f;
         penetration = phBoundCollision::Penetration;
         penetration_barely_moved = phBoundCollision::PenetrationBarelyMoved;
         radius = 0.0f;

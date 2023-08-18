@@ -68,8 +68,21 @@ namespace sr2 {
             return 0.0f;
         }
 
-        f32 randf() {
-            return f32(rand()) * 3.051758e-05f;
+        f32 frand() {
+            return f32(rand()) / f32(RAND_MAX);
+        }
+
+        f32 findHomingAccel(f32 a, f32 b, f32 c, f32 d, f32 e) { 
+            if (e + c != 0.0f) {
+                f32 unk = ((d - b) * 2.0f) / (e + c);
+                if (unk > 0.0f && unk < a) {
+                    return ((e * e - c * c) * 0.5) / (d - b);
+                }
+            }
+
+            f32 unk0 = a * 0.5f;
+            f32 unk1 = (d - b) - c * unk0;
+            return (unk1 * 2.0f) / (unk0 * unk0);
         }
     };
 };

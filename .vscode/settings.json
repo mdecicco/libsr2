@@ -7,6 +7,11 @@
         "memory": "cpp",
         "stop_token": "cpp",
         "system_error": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "charconv": "cpp",
+        "ios": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp"
     }
 }

@@ -29,7 +29,7 @@ namespace sr2 {
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
-        void copy(vec3f& a, const vec3f& b) {
+        void copy(vec3f& to, const vec3f& from) {
             a.x = b.x;
             a.y = b.y;
             a.z = b.z;
@@ -65,6 +65,12 @@ namespace sr2 {
             o.z = lhs.z * rhs.z;
         }
 
+        void mult(vec3f& o, const vec3f& lhs, f32 rhs) {
+            o.x = lhs.x * rhs;
+            o.y = lhs.y * rhs;
+            o.z = lhs.z * rhs;
+        }
+
         void sub(vec3f& o, const vec3f& lhs, const vec3f& rhs) {
             o.x = lhs.x - rhs.x;
             o.y = lhs.y - rhs.y;
@@ -75,6 +81,18 @@ namespace sr2 {
             o.x = lhs.x + rhs.x;
             o.y = lhs.y + rhs.y;
             o.z = lhs.z + rhs.z;
+        }
+
+        void mult(vec3f& lhs, const vec3f& rhs) {
+            lhs.x *= rhs.x;
+            lhs.y *= rhs.y;
+            lhs.z *= rhs.z;
+        }
+
+        void mult(vec3f& lhs, f32 rhs) {
+            lhs.x *= rhs;
+            lhs.y *= rhs;
+            lhs.z *= rhs;
         }
 
         void sub(vec3f& lhs, const vec3f& rhs) {
@@ -126,6 +144,21 @@ namespace sr2 {
                     param_2[1] = param_2[2];
                     param_2[2] = tmp;
                 }
+            }
+        }
+
+        void FUN_0031b2f8(vec3f& out, const vec3f& in) {
+            f32 outDotIn = dot(out, in);
+            if (outDotIn <= 0.0f) {
+                add(out, in);
+                return;
+            }
+
+            f32 pMagSq = magnitudeSq(in);
+            if (outDotIn < pMagSq) {
+                vec3f x;
+                mult(x, in, 1.0f - outDotIn / pMagSq);
+                add(out, x);
             }
         }
     };

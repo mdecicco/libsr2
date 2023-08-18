@@ -8,7 +8,7 @@
 
 namespace sr2 {
     phInertialCS::phInertialCS() {
-        Init(1.0f, 1.0f, 1.0f, 1.0f);
+        init(1.0f, 1.0f, 1.0f, 1.0f);
 
         max_velocity = 500.0;                           
         max_ang_velocity = { 5.0f, 5.0f, 5.0f };
@@ -21,13 +21,38 @@ namespace sr2 {
         next = nullptr;
         last = nullptr;
 
-        Zero();
+        zero();
     }
 
     phInertialCS::~phInertialCS() {
     }
 
-    void phInertialCS::Init(f32 _mass, f32 Ixx, f32 Iyy, f32 Izz) { 
+
+
+    /*
+     * Virtual
+     */
+    void phInertialCS::resetTransform() {
+        zero();
+    }
+
+    void phInertialCS::zero() {
+        math::identity(world_transform);
+        freeze();
+
+        math::zero(last_push);
+        pushed_last_frame = false;
+    }
+
+    void phInertialCS::freeze() {
+        math::zero(momentum);
+        math::zero(angular_momentum);
+        math::zero(world_velocity);
+        math::zero(angular_velocity);
+        zeroForces();
+    }
+
+    void phInertialCS::init(f32 _mass, f32 Ixx, f32 Iyy, f32 Izz) { 
         f32 fVar1;
         f32 fVar2;
 
@@ -38,37 +63,120 @@ namespace sr2 {
         else fVar1 = 3.402823e+38f;
 
         inv_mass = fVar1;
-        inertia_tensor.x = Ixx;
-        inertia_tensor.z = Izz;
-        inertia_tensor.y = Iyy;
-        fVar1 = inertia_tensor.x;
+        ang_inertia.x = Ixx;
+        ang_inertia.z = Izz;
+        ang_inertia.y = Iyy;
+        fVar1 = ang_inertia.x;
         if (0.0f < fVar1) {
             fVar1 = 1.0f / fVar1;
         }
         else {
             fVar1 = 3.402823e+38f;
         }
-        fVar2 = inertia_tensor.y;
-        inv_inertia_tensor.x = fVar1;
+        fVar2 = ang_inertia.y;
+        inv_ang_inertia.x = fVar1;
         if (0.0 < fVar2) {
             fVar2 = 1.0 / fVar2;
         }
         else {
             fVar2 = 3.402823e+38f;
         }
-        fVar1 = inertia_tensor.z;
-        inv_inertia_tensor.y = fVar2;
+        fVar1 = ang_inertia.z;
+        inv_ang_inertia.y = fVar2;
         if (0.0f < fVar1) {
             fVar1 = 1.0f / fVar1;
         }
         else {
             fVar1 = 3.402823e+38f;
         }
-        inv_inertia_tensor.z = fVar1;
+        inv_ang_inertia.z = fVar1;
     }
 
-    void phInertialCS::InitBoxMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z) {
-        Init(
+    // todo
+    void phInertialCS::initFromValues() {
+
+    }
+
+    // todo
+    void phInertialCS::update() {
+
+    }
+
+    // todo
+    void phInertialCS::updateInner(f32 dt) {
+
+    }
+
+    // todo
+    void phInertialCS::updateImplicit() {
+
+    }
+
+    // todo
+    void phInertialCS::method_0x40() {
+    }
+
+    void phInertialCS::calcNetPush(const vec3f& unk) {
+        math::FUN_0031b2f8(push, unk);
+    }
+    
+    // todo
+    void phInertialCS::moveICS() {
+    }
+
+    void phInertialCS::getLocalVelocity(vec3f& param_1, vec3f& param_2) {
+        vec3f d;
+        math::sub(d, param_1, world_transform.w);
+        math::copy(param_2, d);
+
+        vec3f x0;
+        math::cross(x0, angular_velocity, d);
+
+        math::add(param_2, x0, world_velocity);
+    }
+
+    void phInertialCS::getLocalAcceleration(vec3f* param_1, vec3f* param_2) {
+        vec3f d;
+        math::sub(d, *param_1, world_transform.w);
+
+        math::cross(*param_2, angular_velocity, d);
+        math::cross(*param_2, angular_velocity, *param_2);
+
+        param_2->x += inv_mass * force.x;
+        param_2->y += inv_mass * force.y;
+        param_2->z += inv_mass * force.z;
+
+        vec3f x0;
+        math::cross(x0, angular_momentum, angular_velocity);
+        math::add(x0, torque);
+
+        x0 = {
+            inv_ang_inertia.x * math::dot(x0, world_transform.x),
+            inv_ang_inertia.y * math::dot(x0, world_transform.y),
+            inv_ang_inertia.z * math::dot(x0, world_transform.z)
+        };
+
+        math::mult(x0, world_transform, x0);
+        math::cross(x0, x0, d);
+        math::add(*param_2, x0);
+    }
+
+    // todo
+    void phInertialCS::method_0x68() {
+    }
+
+    // todo
+    void phInertialCS::getInvMassMatrix2(const vec3f& unk, mat3x4f& out) {
+    }
+
+
+
+    /*
+     * Non-Virtual
+     */
+
+    void phInertialCS::initBoxMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z) {
+        init(
             mass,
             (mass * (inertia_box_y * inertia_box_y + inertia_box_z * inertia_box_z)) / 12.0f,
             (mass * (inertia_box_x * inertia_box_x + inertia_box_z * inertia_box_z)) / 12.0f,
@@ -76,11 +184,11 @@ namespace sr2 {
         );
     }
 
-    void phInertialCS::InitBoxDensity(f32 density, f32 width, f32 height, f32 length) {
-        InitBoxMass(density * width * length * height * 1000.0f, width, height, length);
+    void phInertialCS::initBoxDensity(f32 density, f32 width, f32 height, f32 length) {
+        initBoxMass(density * width * length * height * 1000.0f, width, height, length);
     }
 
-    void phInertialCS::InitCylinderMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z, char axis) {
+    void phInertialCS::initCylinderMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z, char axis) {
         f32 fVar2;
         f32 fVar3;
         f32 fVar4;
@@ -92,7 +200,7 @@ namespace sr2 {
         else {
             if ('y' < axis) {
                 if (axis != 'z') return;
-                Init(mass, fVar2, fVar2, fVar4);
+                init(mass, fVar2, fVar2, fVar4);
                 return;
             }
 
@@ -101,14 +209,14 @@ namespace sr2 {
             fVar4 = fVar2;
         }
 
-        Init(mass, fVar3, fVar4, fVar2);
+        init(mass, fVar3, fVar4, fVar2);
     }
 
-    void phInertialCS::InitCylinderDensity(f32 density, f32 param_2, f32 param_3, f32 param_4, char axis) {
-        InitCylinderMass(param_2 * 3.141593f * param_2 * param_3 * density * 1000.0f, param_2, param_3, param_4, axis);
+    void phInertialCS::initCylinderDensity(f32 density, f32 param_2, f32 param_3, f32 param_4, char axis) {
+        initCylinderMass(param_2 * 3.141593f * param_2 * param_3 * density * 1000.0f, param_2, param_3, param_4, axis);
     }
 
-    void phInertialCS::InitHotdogMass(f32 mass, f32 param_2, f32 param_3, char axis) {                             
+    void phInertialCS::initHotdogMass(f32 mass, f32 param_2, f32 param_3, char axis) {                             
         f32 fVar2;
         f32 fVar3;
         f32 fVar4;
@@ -121,7 +229,7 @@ namespace sr2 {
         if (axis == 'y') fVar2 = fVar3;
         else {
             if ('y' < axis) {
-                if (axis == 'z') Init(mass, fVar3, fVar3, fVar4);
+                if (axis == 'z') init(mass, fVar3, fVar3, fVar4);
                 return;
             }
             if (axis != 'x') return;
@@ -129,11 +237,11 @@ namespace sr2 {
             fVar4 = fVar3;
         }
 
-        Init(mass, fVar2, fVar4, fVar3);
+        init(mass, fVar2, fVar4, fVar3);
     }
 
-    void phInertialCS::InitHotdogDensity(f32 param_1, f32 param_2, f32 param_3, char axis) {
-        InitHotdogMass(
+    void phInertialCS::initHotdogDensity(f32 param_1, f32 param_2, f32 param_3, char axis) {
+        initHotdogMass(
             (param_2 * 1.333333f + param_3) * 3.141593f * param_2 * param_2 * param_1 * 1000.0f,
             param_2,
             param_3,
@@ -141,16 +249,16 @@ namespace sr2 {
         );
     }
 
-    void phInertialCS::InitSphereMass(f32 param_1, f32 param_2) {
+    void phInertialCS::initSphereMass(f32 param_1, f32 param_2) {
         f32 I = param_1 * 0.4f * param_2 * param_2;
-        Init(param_1, I, I, I);
+        init(param_1, I, I, I);
     }
 
-    void phInertialCS::InitSphereDensity(f32 density, f32 param_2) {
-        InitSphereMass(param_2 * 4.18878f * param_2 * param_2 * density * 1000.0f, param_2);
+    void phInertialCS::initSphereDensity(f32 density, f32 param_2) {
+        initSphereMass(param_2 * 4.18878f * param_2 * param_2 * density * 1000.0f, param_2);
     }
 
-    void phInertialCS::InitFromGeometry(f32 mass, vec3f* vertices, phPolygon* polygons, i32 poly_count, mat3x4f* param_6) {
+    void phInertialCS::initFromGeometry(f32 mass, vec3f* vertices, phPolygon* polygons, i32 poly_count, mat3x4f* param_6) {
         f32 fVar5 = 0.0f;
         f32 fVar2 = 0.0f;
         f32 fVar10 = 0.0f;
@@ -174,7 +282,7 @@ namespace sr2 {
                 math::copy(tri[2], vertices[polygons[i].indices[2]]);
 
                 f32 fVar3 = math::dot(polygons[i].field_0x0, tri[0]);
-                TetrahedronAngInertia(tri, &to0, &to1, &to2, &to3, &to4, &to5);
+                tetrahedronAngInertia(tri, &to0, &to1, &to2, &to3, &to4, &to5);
 
                 fVar10 += polygons[i].field_0xc * fVar3;
                 fVar5 += to0 * fVar3;
@@ -188,7 +296,7 @@ namespace sr2 {
                     math::copy(tri[0], vertices[polygons[i].indices[0]]);
                     math::copy(tri[1], vertices[polygons[i].indices[2]]);
                     math::copy(tri[2], vertices[polygons[i].indices[3]]);
-                    TetrahedronAngInertia(tri, &to0, &to1, &to2, &to3, &to4, &to5);
+                    tetrahedronAngInertia(tri, &to0, &to1, &to2, &to3, &to4, &to5);
 
                     fVar5 += to0 * fVar3;
                     fVar4 += to1 * fVar3;
@@ -205,7 +313,7 @@ namespace sr2 {
         f32 Iyy = fabsf(fVar4) * fVar9;
         f32 Izz = fabsf(fVar2) * fVar9;
 
-        Init(fabsf(fVar10) * fVar9 * 0.3333333f, Ixx, Iyy, Izz);
+        init(fabsf(fVar10) * fVar9 * 0.3333333f, Ixx, Iyy, Izz);
 
         if (param_6) {
             fVar6 *= fVar9;
@@ -218,27 +326,11 @@ namespace sr2 {
             if (fVar8 <= fVar7) fVar2 = fVar7;
             if (fVar2 < fVar6) fVar2 = fVar6;
 
-            if (Ixx < fVar2 * 0.05f) FindPrincipalAxes(param_6, fVar8, fVar7, fVar6);
+            if (Ixx < fVar2 * 0.05f) findPrincipalAxes(param_6, fVar8, fVar7, fVar6);
         }
     }
-
-    void phInertialCS::Zero() {
-        math::identity(world_transform);
-        Freeze();
-
-        math::zero(last_push);
-        pushed_last_frame = false;
-    }
-
-    void phInertialCS::Freeze() {
-        math::zero(momentum);
-        math::zero(angular_momentum);
-        math::zero(world_velocity);
-        math::zero(angular_velocity);
-        ZeroForces();
-    }
-
-    void phInertialCS::ZeroForces() {
+    
+    void phInertialCS::zeroForces() {
         math::zero(force);
         math::zero(torque);
         math::zero(oversample_force);
@@ -268,7 +360,7 @@ namespace sr2 {
         maybe_last_time = 0.0f;
     }
 
-    mat3x4f* phInertialCS::AddInertia(mat3x4f* param_1, f32 param_2, vec3f* param_4, vec3f* param_5) {
+    mat3x4f* phInertialCS::addInertia(mat3x4f* param_1, f32 param_2, vec3f* param_4, vec3f* param_5) {
         mat3x4f local_a0;
         mat3x4f local_70;
 
@@ -305,11 +397,11 @@ namespace sr2 {
             local_a0.x.y = local_a0.x.y - local_a0.y.z;
             local_a0.x.z = local_a0.x.z - local_a0.z.x;
 
-            Init(
+            init(
                 mass + param_2,
-                inertia_tensor.x + param_4->x + param_2 * (local_a0.x.y * local_a0.x.y + local_a0.x.z * local_a0.x.z) + mass * (local_a0.y.z * local_a0.y.z + local_a0.z.x * local_a0.z.x),
-                inertia_tensor.y + param_4->y + param_2 * (local_a0.x.x * local_a0.x.x + local_a0.x.z * local_a0.x.z) + mass * (local_a0.y.y * local_a0.y.y + local_a0.z.x * local_a0.z.x),
-                inertia_tensor.z + param_4->z + param_2 * (local_a0.x.x * local_a0.x.x + local_a0.x.y * local_a0.x.y) + mass * (local_a0.y.y * local_a0.y.y + local_a0.y.z * local_a0.y.z)
+                ang_inertia.x + param_4->x + param_2 * (local_a0.x.y * local_a0.x.y + local_a0.x.z * local_a0.x.z) + mass * (local_a0.y.z * local_a0.y.z + local_a0.z.x * local_a0.z.x),
+                ang_inertia.y + param_4->y + param_2 * (local_a0.x.x * local_a0.x.x + local_a0.x.z * local_a0.x.z) + mass * (local_a0.y.y * local_a0.y.y + local_a0.z.x * local_a0.z.x),
+                ang_inertia.z + param_4->z + param_2 * (local_a0.x.x * local_a0.x.x + local_a0.x.y * local_a0.x.y) + mass * (local_a0.y.y * local_a0.y.y + local_a0.y.z * local_a0.y.z)
             );
 
             f32 fVar2 = -param_2 * local_a0.x.x * local_a0.x.y - mass * local_a0.y.y * local_a0.y.z;
@@ -324,13 +416,13 @@ namespace sr2 {
                 param_1->w.x = -local_a0.y.y;
                 param_1->w.y = -local_a0.y.z;
                 param_1->w.z = -local_a0.z.x;
-            } else FindPrincipalAxes(param_1, fVar2, fVar1, fVar3);
+            } else findPrincipalAxes(param_1, fVar2, fVar1, fVar3);
         }
 
         return param_1;
     }
 
-    mat3x4f* phInertialCS::AddInertia(mat3x4f *param_1, f32 param_2, vec3f *param_4, mat3x4f *param_5) {
+    mat3x4f* phInertialCS::addInertia(mat3x4f *param_1, f32 param_2, vec3f *param_4, mat3x4f *param_5) {
         mat3x4f local_140;
         mat3x4f local_110;
         mat3x4f local_e0;
@@ -374,11 +466,11 @@ namespace sr2 {
             math::mult(local_110, local_e0);
             math::mult(local_110, *param_5);
 
-            Init(
+            init(
                 mass + param_2,
-                inertia_tensor.x + local_110.x.x + param_2 * (local_140.x.y * local_140.x.y + local_140.x.z * local_140.x.z) + mass * (local_140.y.z * local_140.y.z + local_140.z.x * local_140.z.x),
-                inertia_tensor.y + local_110.y.y + param_2 * (local_140.x.x * local_140.x.x + local_140.x.z * local_140.x.z) + mass * (local_140.y.y * local_140.y.y + local_140.z.x * local_140.z.x),
-                inertia_tensor.z + local_110.z.z + param_2 * (local_140.x.x * local_140.x.x + local_140.x.y * local_140.x.y) + mass * (local_140.y.y * local_140.y.y + local_140.y.z * local_140.y.z)
+                ang_inertia.x + local_110.x.x + param_2 * (local_140.x.y * local_140.x.y + local_140.x.z * local_140.x.z) + mass * (local_140.y.z * local_140.y.z + local_140.z.x * local_140.z.x),
+                ang_inertia.y + local_110.y.y + param_2 * (local_140.x.x * local_140.x.x + local_140.x.z * local_140.x.z) + mass * (local_140.y.y * local_140.y.y + local_140.z.x * local_140.z.x),
+                ang_inertia.z + local_110.z.z + param_2 * (local_140.x.x * local_140.x.x + local_140.x.y * local_140.x.y) + mass * (local_140.y.y * local_140.y.y + local_140.y.z * local_140.y.z)
             );
 
             f32 fVar3 = (local_110.x.y - param_2 * local_140.x.x * local_140.x.y) - mass * local_140.y.y * local_140.y.z;
@@ -394,14 +486,14 @@ namespace sr2 {
                 param_1->w.z = -local_140.z.x;
             }
             else {
-                FindPrincipalAxes(param_1, fVar3, fVar2, fVar1);
+                findPrincipalAxes(param_1, fVar3, fVar2, fVar1);
             }
         }
 
         return param_1;
     }
 
-    void phInertialCS::ApplyContactForce(vec3f* param_1, vec3f* param_2, mat3x4f* param_3, vec3f* param_4) {
+    void phInertialCS::applyContactForce(vec3f* param_1, vec3f* param_2, mat3x4f* param_3, vec3f* param_4) {
         vec3f local_80;
         mat3x4f local_70;
 
@@ -441,7 +533,7 @@ namespace sr2 {
         //mat3x4f::addEq(&field_0x190 ,&local_70);
     }
 
-    mat3x4f* phInertialCS::FindPrincipalAxes(mat3x4f* param_2, f32 param_3, f32 param_4, f32 param_5) {
+    mat3x4f* phInertialCS::findPrincipalAxes(mat3x4f* param_2, f32 param_3, f32 param_4, f32 param_5) {
         bool bVar1;
         i32 iVar2;
         f32 fVar3;
@@ -459,9 +551,9 @@ namespace sr2 {
         f32 p5sq = param_5 * param_5;
 
         iVar2 = math::RealCubic(
-            (-inertia_tensor.x - inertia_tensor.y) - inertia_tensor.z,
-            (((inertia_tensor.x * inertia_tensor.y + inertia_tensor.x * inertia_tensor.z + inertia_tensor.y * inertia_tensor.z) - p3sq) - p4sq) - p5sq,
-            ((inertia_tensor.x * p5sq + inertia_tensor.y * p4sq + inertia_tensor.z * p3sq) - (param_3 + param_3) * param_4 * param_5) - inertia_tensor.x * inertia_tensor.y * inertia_tensor.z,
+            (-ang_inertia.x - ang_inertia.y) - ang_inertia.z,
+            (((ang_inertia.x * ang_inertia.y + ang_inertia.x * ang_inertia.z + ang_inertia.y * ang_inertia.z) - p3sq) - p4sq) - p5sq,
+            ((ang_inertia.x * p5sq + ang_inertia.y * p4sq + ang_inertia.z * p3sq) - (param_3 + param_3) * param_4 * param_5) - ang_inertia.x * ang_inertia.y * ang_inertia.z,
             0.001f,
             &local_70,
             &local_6c,
@@ -469,20 +561,20 @@ namespace sr2 {
         );
 
         if (iVar2 == 1) {
-            inertia_tensor.x = local_70;
-            inertia_tensor.z = local_70;
-            inertia_tensor.y = local_70;
+            ang_inertia.x = local_70;
+            ang_inertia.z = local_70;
+            ang_inertia.y = local_70;
             math::identity(*param_2);
             return param_2;
         }
         if (iVar2 < 2) goto LAB_00289088;
         if (iVar2 == 2) {
             vec3f xAxis;
-            PrincipalAxis(local_70, param_3, param_4, param_5, &xAxis);
+            principalAxis(local_70, param_3, param_4, param_5, &xAxis);
             math::copy(local_e0.x, xAxis);
 
             if (xAxis.x >= 0.5773503f) {
-                inertia_tensor = { local_70, local_6c, local_6c };
+                ang_inertia = { local_70, local_6c, local_6c };
                 local_e0.y.x = -xAxis.y;
                 local_e0.y.y = 1.0f / sqrtf(local_e0.y.x * local_e0.y.x + xAxis.x * xAxis.x + 0.0);
                 local_e0.y.x = local_e0.y.x * local_e0.y.y;
@@ -501,9 +593,9 @@ namespace sr2 {
                     local_e0.y.x =  local_e0.x.x;
                     local_e0.x.y = -local_e0.x.x;
                     local_e0.y.z =  local_e0.x.z;
-                    inertia_tensor.x = local_6c;
-                    inertia_tensor.z = local_6c;
-                    inertia_tensor.y = local_70;
+                    ang_inertia.x = local_6c;
+                    ang_inertia.z = local_6c;
+                    ang_inertia.y = local_70;
                     fVar4 = 1.0f / sqrtf(xAxis.y * xAxis.y + local_e0.x.y * local_e0.x.y + 0.0);
                     fVar3 = fVar4 * 0.0f;
                     local_e0.x.y = local_e0.x.y * fVar4;
@@ -521,9 +613,9 @@ namespace sr2 {
                     local_e0.z.y = xAxis.y;
                     local_e0.z.z = local_e0.x.z;
 
-                    inertia_tensor.x = local_6c;
-                    inertia_tensor.z = local_70;
-                    inertia_tensor.y = local_6c;
+                    ang_inertia.x = local_6c;
+                    ang_inertia.z = local_70;
+                    ang_inertia.y = local_6c;
 
                     if (local_e0.x.z < 0.0f) math::negate(local_e0.z);
 
@@ -535,8 +627,8 @@ namespace sr2 {
             goto LAB_00289088;
         }
         if (iVar2 != 3) goto LAB_00289088;
-        PrincipalAxis(local_70, param_3, param_4, param_5, &local_e0.x);
-        PrincipalAxis(local_6c, param_3, param_4, param_5, &local_e0.y);
+        principalAxis(local_70, param_3, param_4, param_5, &local_e0.x);
+        principalAxis(local_6c, param_3, param_4, param_5, &local_e0.y);
         math::copy(local_e0.z, local_e0.x);
 
         fVar3 = math::dot(local_e0.x, local_e0.y);
@@ -553,13 +645,13 @@ namespace sr2 {
 
             if (0.5773503f <= local_e0.y.y) {
                 math::cross(local_e0.z, local_e0.x, local_e0.y);
-                inertia_tensor.x = local_70;
-                inertia_tensor.z = local_68[0];
+                ang_inertia.x = local_70;
+                ang_inertia.z = local_68[0];
             } else {
                 math::copy(local_e0.z, local_e0.y);
                 if (local_e0.y.z < 0.0f) math::negate(local_e0.z, local_e0.y);
-                inertia_tensor.x = local_70;
-                inertia_tensor.z = local_6c;
+                ang_inertia.x = local_70;
+                ang_inertia.z = local_6c;
                 math::cross(local_e0.y, local_e0.z, local_e0.x);
                 local_6c = local_68[0];
             }
@@ -577,17 +669,17 @@ namespace sr2 {
                         { fVar345.x, local_e0.y.y, local_e0.y.z }
                     );
                     local_6c = local_70;
-                    inertia_tensor.x = local_6c;
-                    inertia_tensor.z = local_6c;
-                    inertia_tensor.y = local_68[0];
+                    ang_inertia.x = local_6c;
+                    ang_inertia.z = local_6c;
+                    ang_inertia.y = local_68[0];
                     goto LAB_00289088;
                 }
 
                 math::copy(local_e0.y, local_e0.z);
                 if (local_e0.z.y < 0.0f) math::negate(local_e0.y);
 
-                inertia_tensor.x = local_6c;
-                inertia_tensor.z = local_68[0];
+                ang_inertia.x = local_6c;
+                ang_inertia.z = local_68[0];
                 math::cross(local_e0.z, fVar345, local_e0.y);
                 local_6c = local_70;
             } else {
@@ -600,17 +692,17 @@ namespace sr2 {
 
                     if (local_e0.z.z >= 0.5773503f) {
                         math::cross(local_e0.x, local_e0.y, local_e0.z);
-                        inertia_tensor.x = local_6c;
-                        inertia_tensor.y = local_70;
-                        inertia_tensor.z = local_6c;
+                        ang_inertia.x = local_6c;
+                        ang_inertia.y = local_70;
+                        ang_inertia.z = local_6c;
                         goto LAB_00289088;
                     }
 
                     math::copy(local_e0.x, local_e0.z);
                     if (local_e0.z.x < 0.0f) math::negate(local_e0.x, local_e0.z);
 
-                    inertia_tensor.x = local_6c;
-                    inertia_tensor.z = local_68[0];
+                    ang_inertia.x = local_6c;
+                    ang_inertia.z = local_68[0];
 
                     math::cross(local_e0.z, local_e0.x, local_e0.y);
                     local_6c = local_70;
@@ -619,14 +711,14 @@ namespace sr2 {
                     if (local_e0.y.y < 0.0f) math::negate(local_e0.y);
 
                     if (local_e0.y.y <= 0.5773503f) goto LAB_00289088;
-                    inertia_tensor.x = local_68[0];
-                    inertia_tensor.z = local_70;
+                    ang_inertia.x = local_68[0];
+                    ang_inertia.z = local_70;
 
                     math::cross(local_e0.x, local_e0.y, local_e0.z);
                 }
             }
         }
-        inertia_tensor.y = local_6c;
+        ang_inertia.y = local_6c;
     LAB_00289088:
         math::zero(local_e0.w);
         math::mult(local_a0, local_e0, world_transform);
@@ -638,14 +730,33 @@ namespace sr2 {
         return param_2;
     }
 
-    void phInertialCS::GetCMFilteredVelocity(vec3f* velocity) {
+    void phInertialCS::getCMFilteredVelocity(vec3f* velocity) {
         math::copy(*velocity, world_velocity);
         velocity->x += g_datTimeManager.InvSeconds * last_push.x;
         velocity->y += g_datTimeManager.InvSeconds * last_push.y;
         velocity->z += g_datTimeManager.InvSeconds * last_push.z;
     }
+    
+    void phInertialCS::getLocalFilteredVelocity2(vec3f& out0, vec3f& vel) {
+        getLocalVelocity(out0, vel);
 
-    void phInertialCS::GetForce(f32 param_1, vec3f* f) {
+        f32 lastPushMagSq = math::magnitudeSq(last_push);
+        if (lastPushMagSq > 0.0001f) {
+            f32 velDotPush = math::dot(vel, last_push);
+            if (velDotPush < 0.0f) {
+                f32 fVar3 = lastPushMagSq * g_datTimeManager.InvSeconds * g_datTimeManager.InvSeconds;
+                f32 fVar2 = -(velDotPush * g_datTimeManager.InvSeconds);
+
+                vec3f add;
+                if (fVar3 < fVar2) math::mult(add, last_push, g_datTimeManager.InvSeconds);
+                else math::mult(add, last_push, g_datTimeManager.InvSeconds * (fVar2 / fVar3));
+
+                math::add(vel, add);
+            }
+        }
+    }
+
+    void phInertialCS::getForce(f32 param_1, vec3f* f) {
         f->x = force.x;
         f->y = force.y;
         f->z = force.z;
@@ -657,18 +768,18 @@ namespace sr2 {
         }
     }
 
-    void phInertialCS::GetInertiaMatrix(mat3x4f* inertia) { 
-        inertia->x.x = world_transform.x.x * inertia_tensor.x;
-        inertia->x.y = world_transform.y.x * inertia_tensor.y;
-        inertia->x.z = world_transform.z.x * inertia_tensor.z;
+    void phInertialCS::getInertiaMatrix(mat3x4f* inertia) {
+        inertia->x.x = world_transform.x.x * ang_inertia.x;
+        inertia->x.y = world_transform.y.x * ang_inertia.y;
+        inertia->x.z = world_transform.z.x * ang_inertia.z;
 
-        inertia->y.x = world_transform.x.y * inertia_tensor.x;
-        inertia->y.y = world_transform.y.y * inertia_tensor.y;
-        inertia->y.z = world_transform.z.y * inertia_tensor.z;
+        inertia->y.x = world_transform.x.y * ang_inertia.x;
+        inertia->y.y = world_transform.y.y * ang_inertia.y;
+        inertia->y.z = world_transform.z.y * ang_inertia.z;
 
-        inertia->z.x = world_transform.x.z * inertia_tensor.x;
-        inertia->z.y = world_transform.y.z * inertia_tensor.y;
-        inertia->z.z = world_transform.z.z * inertia_tensor.z;
+        inertia->z.x = world_transform.x.z * ang_inertia.x;
+        inertia->z.y = world_transform.y.z * ang_inertia.y;
+        inertia->z.z = world_transform.z.z * ang_inertia.z;
 
         inertia->w.y = 0.0f;
         inertia->w.z = 0.0f;
@@ -677,7 +788,30 @@ namespace sr2 {
         math::mult(*inertia, world_transform);
     }
 
-    void phInertialCS::GetInverseInertiaMatrix(mat3x4f* inertia) {       
+    void phInertialCS::getInverseMassMatrix(const vec3f& unk, mat3x4f& out) {
+        vec3f dp;
+        math::sub(dp, unk, world_transform.w);
+
+        mat3x4f mat0;
+        math::copy(mat0, out);
+        math::dot3x3CrossProdMtx(mat0, dp);
+
+        mat3x4f mat1;
+        math::copy(mat1, mat0);
+        math::mult(mat1.x, inv_ang_inertia.x);
+        math::mult(mat1.y, inv_ang_inertia.y);
+        math::mult(mat1.z, inv_ang_inertia.z);
+
+        math::transpose(mat0);
+        math::mult(out, mat0, mat1);
+
+        out.x.x += inv_mass;
+        out.y.y += inv_mass;
+        out.z.z += inv_mass;
+        math::zero(out.w);
+    }
+
+    void phInertialCS::getInverseInertiaMatrix(mat3x4f* inertia) {
         mat3x4f tmp, tmp1;
         tmp.x.x = world_transform.x.x;
         tmp.x.y = world_transform.x.y;
@@ -695,62 +829,25 @@ namespace sr2 {
         tmp.w.y = world_transform.w.y;
         tmp.w.z = world_transform.w.z;
 
-        tmp1.x.x = world_transform.x.x * inv_inertia_tensor.x;
-        tmp1.x.y = world_transform.x.y * inv_inertia_tensor.x;
-        tmp1.x.z = world_transform.x.z * inv_inertia_tensor.x;
+        tmp1.x.x = world_transform.x.x * inv_ang_inertia.x;
+        tmp1.x.y = world_transform.x.y * inv_ang_inertia.x;
+        tmp1.x.z = world_transform.x.z * inv_ang_inertia.x;
 
-        tmp1.y.x = world_transform.y.x * inv_inertia_tensor.y;
-        tmp1.y.y = world_transform.y.y * inv_inertia_tensor.y;
-        tmp1.y.z = world_transform.y.z * inv_inertia_tensor.y;
+        tmp1.y.x = world_transform.y.x * inv_ang_inertia.y;
+        tmp1.y.y = world_transform.y.y * inv_ang_inertia.y;
+        tmp1.y.z = world_transform.y.z * inv_ang_inertia.y;
 
-        tmp1.z.x = world_transform.z.x * inv_inertia_tensor.z;
-        tmp1.z.y = world_transform.z.y * inv_inertia_tensor.z;
-        tmp1.z.z = world_transform.z.z * inv_inertia_tensor.z;
+        tmp1.z.x = world_transform.z.x * inv_ang_inertia.z;
+        tmp1.z.y = world_transform.z.y * inv_ang_inertia.z;
+        tmp1.z.z = world_transform.z.z * inv_ang_inertia.z;
 
         math::transpose(tmp);
         math::mult(*inertia, tmp, tmp1);
     }
 
-    void phInertialCS::GetLocalAcceleration(vec3f* param_1, vec3f* param_2) {
-        vec3f d;
-        math::sub(d, *param_1, world_transform.w);
-
-        math::cross(*param_2, angular_velocity, d);
-        math::cross(*param_2, angular_velocity, *param_2);
-
-        param_2->x += inv_mass * force.x;
-        param_2->y += inv_mass * force.y;
-        param_2->z += inv_mass * force.z;
-
-        vec3f x0;
-        math::cross(x0, angular_momentum, angular_velocity);
-        math::add(x0, torque);
-
-        x0 = {
-            inv_inertia_tensor.x * math::dot(x0, world_transform.x),
-            inv_inertia_tensor.y * math::dot(x0, world_transform.y),
-            inv_inertia_tensor.z * math::dot(x0, world_transform.z)
-        };
-
-        math::mult(x0, world_transform, x0);
-        math::cross(x0, x0, d);
-        math::add(*param_2, x0);
-    }
-
-    void phInertialCS::GetLocalVelocity(vec3f* param_1, vec3f* param_2) { 
-        vec3f d;
-        math::sub(d, *param_1, world_transform.w);
-        math::copy(*param_2, d);
-
-        vec3f x0;
-        math::cross(x0, angular_velocity, d);
-
-        math::add(*param_2, x0, world_velocity);
-    }
-
-    vec3f* phInertialCS::PrincipalAxis(f32 param_2, f32 param_3, f32 param_4, f32 param_5, vec3f* param_6) {
-        f32 fVar2 = 1.0f / (param_2 - inertia_tensor.z);
-        f32 fVar3 = (param_3 + param_4 * param_5 * fVar2) * (1.0f / ((param_2 - inertia_tensor.y) - param_5 * param_5 * fVar2));
+    vec3f* phInertialCS::principalAxis(f32 param_2, f32 param_3, f32 param_4, f32 param_5, vec3f* param_6) {
+        f32 fVar2 = 1.0f / (param_2 - ang_inertia.z);
+        f32 fVar3 = (param_3 + param_4 * param_5 * fVar2) * (1.0f / ((param_2 - ang_inertia.y) - param_5 * param_5 * fVar2));
         fVar2 = fVar2 * (param_4 + param_5 * fVar3);
         f32 fVar1 = 1.0f / sqrtf(fVar3 * fVar3 + 1.0f + fVar2 * fVar2);
         param_6->x = fVar1;
@@ -759,7 +856,7 @@ namespace sr2 {
         return param_6;
     }
 
-    mat3x4f* phInertialCS::Rejuvinate() { 
+    mat3x4f* phInertialCS::rejuvinate() {
         bool bVar1;
 
         if (world_transform.x.x == 0.0f && world_transform.x.y == 0.0f) bVar1 = world_transform.x.z != 0.0f;
@@ -779,7 +876,7 @@ namespace sr2 {
                     math::normalize(world_transform.z);
                     math::cross(world_transform.x, world_transform.y, world_transform.z);
 
-                    field_0x1c4 = math::randf() * 0.5f * 512.0f;
+                    field_0x1c4 = math::frand() * 0.5f * 512.0f;
                 }
 
                 return &world_transform;
@@ -787,18 +884,18 @@ namespace sr2 {
         }
 
         math::identity_3x3(world_transform);
-        field_0x1c4 = math::randf() * 0.5f * 512.0f;
+        field_0x1c4 = math::frand() * 0.5f * 512.0f;
         return nullptr;
     }
 
-    void phInertialCS::SetVelocity(vec3f* velocity) {
+    void phInertialCS::setVelocity(vec3f* velocity) {
         math::copy(world_velocity, *velocity);
         momentum.x = velocity->x * mass;
         momentum.y = velocity->y * mass;
         momentum.z = velocity->z * mass;
     }
 
-    void phInertialCS::TetrahedronAngInertia(vec3f* verts, f32* param_2, f32* param_3, f32* param_4, f32* param_5, f32* param_6, f32* param_7) {
+    void phInertialCS::tetrahedronAngInertia(vec3f* verts, f32* param_2, f32* param_3, f32* param_4, f32* param_5, f32* param_6, f32* param_7) {
         math::ReOrderVerts(verts, nullptr);
 
         vec3f d0;
@@ -854,5 +951,16 @@ namespace sr2 {
         *param_5 = f1 * (f6 + f6 + verts[0].x * verts[2].y + verts[0].y * verts[2].x + verts[0].x * verts[1].y + verts[0].y * verts[1].x + verts[1].x * verts[2].y + verts[1].y * verts[2].x);
         *param_6 = f1 * (f7 + f7 + verts[0].x * verts[2].z + verts[0].z * verts[2].x + verts[0].x * verts[1].z + verts[0].z * verts[1].x + verts[1].x * verts[2].z + verts[1].z * verts[2].x);
         *param_7 = f1 * (f5 + f5 + verts[0].y * verts[2].z + verts[0].z * verts[2].y + verts[0].y * verts[1].z + verts[0].z * verts[1].y + verts[1].y * verts[2].z + verts[1].z * verts[2].y);
+    }
+
+    f32 phInertialCS::calcCollisionNoFriction(f32 p1, const vec3f& p2, const vec3f& p3) {
+        if (p1 >= 0.0f) return 0.0f;
+        mat3x4f imm;
+        getInverseMassMatrix(p3, imm);
+
+        vec3f x;
+        math::mult(x, imm, p2);
+
+        return p1 / math::dot(x, p2);
     }
 };

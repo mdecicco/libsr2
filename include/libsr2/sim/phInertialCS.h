@@ -7,40 +7,50 @@ namespace sr2 {
     class phInertialCS {
         public:
             phInertialCS();
-            ~phInertialCS();
+            virtual ~phInertialCS();
 
-            void Init(f32 mass, f32 Ixx, f32 Iyy, f32 Izz);
-            void InitBoxMass(f32 density, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z);
-            void InitBoxDensity(f32 mass, f32 width, f32 height, f32 length);
-            void InitCylinderMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z, char axis);
-            void InitCylinderDensity(f32 density, f32 param_2, f32 param_3, f32 param_4, char axis);
-            void InitHotdogMass(f32 param_1, f32 param_2, f32 param_3, char axis);
-            void InitHotdogDensity(f32 param_1, f32 param_2, f32 param_3, char axis);
-            void InitSphereMass(f32 param_1, f32 param_2);
-            void InitSphereDensity(f32 density, f32 param_2);
-            void InitFromGeometry(f32 mass, vec3f* vertices, phPolygon* polygons, i32 poly_count, mat3x4f* param_6);
+            virtual void resetTransform();
+            virtual void zero();
+            virtual void freeze();
+            virtual void init(f32 mass, f32 Ixx, f32 Iyy, f32 Izz);
+            virtual void initFromValues();
+            virtual void update();
+            virtual void updateInner(f32 dt);
+            virtual void updateImplicit();
+            virtual void method_0x40();
+            virtual void calcNetPush(const vec3f& unk);
+            virtual void moveICS();
+            virtual void getLocalVelocity(vec3f& some_position, vec3f& velocity);
+            virtual void getLocalAcceleration(vec3f* param_1, vec3f* param_2);
+            virtual void method_0x68();
+            virtual void getInvMassMatrix2(const vec3f& unk, mat3x4f& out);
 
-            void Zero();
-            void Freeze();
-            void ZeroForces();
-            mat3x4f* AddInertia(mat3x4f* param_1, f32 param_2, vec3f* param_4, vec3f* param_5);
-            mat3x4f* AddInertia(mat3x4f *param_1, f32 param_2, vec3f *param_4, mat3x4f *param_5);
-            void ApplyContactForce(vec3f* param_1, vec3f* param_2, mat3x4f* param_3, vec3f* param_4);
-            mat3x4f* FindPrincipalAxes(mat3x4f* param_2, f32 param_3, f32 param_4, f32 param_5);
-            void GetCMFilteredVelocity(vec3f* velocity);
-            void GetForce(f32 param_1, vec3f* force);
-            void GetInertiaMatrix(mat3x4f* inertia);
-            void GetInverseInertiaMatrix(mat3x4f* inertia);
-            void GetLocalAcceleration(vec3f* param_1, vec3f* param_2);
-            void GetLocalVelocity(vec3f* some_position, vec3f* velocity);
-            vec3f* PrincipalAxis(f32 param_2, f32 param_3, f32 param_4, f32 param_5, vec3f* param_6);
-            mat3x4f* Rejuvinate();
-            void SetVelocity(vec3f* velocity);
-            void TetrahedronAngInertia(vec3f* verts, f32* param_2, f32* param_3, f32* param_4, f32* param_5, f32* param_6, f32* param_7);
-            
-            // one of these does not belong to phInertialCS
-            //void Update(f32 current_time);
-            //void Update(f32 delta_time);
+            void zeroForces();
+            void initBoxMass(f32 density, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z);
+            void initBoxDensity(f32 mass, f32 width, f32 height, f32 length);
+            void initCylinderMass(f32 mass, f32 inertia_box_x, f32 inertia_box_y, f32 inertia_box_z, char axis);
+            void initCylinderDensity(f32 density, f32 param_2, f32 param_3, f32 param_4, char axis);
+            void initHotdogMass(f32 param_1, f32 param_2, f32 param_3, char axis);
+            void initHotdogDensity(f32 param_1, f32 param_2, f32 param_3, char axis);
+            void initSphereMass(f32 param_1, f32 param_2);
+            void initSphereDensity(f32 density, f32 param_2);
+            void initFromGeometry(f32 mass, vec3f* vertices, phPolygon* polygons, i32 poly_count, mat3x4f* param_6);
+
+            mat3x4f* addInertia(mat3x4f* param_1, f32 param_2, vec3f* param_4, vec3f* param_5);
+            mat3x4f* addInertia(mat3x4f *param_1, f32 param_2, vec3f *param_4, mat3x4f *param_5);
+            void applyContactForce(vec3f* param_1, vec3f* param_2, mat3x4f* param_3, vec3f* param_4);
+            mat3x4f* findPrincipalAxes(mat3x4f* param_2, f32 param_3, f32 param_4, f32 param_5);
+            void getCMFilteredVelocity(vec3f* velocity);
+            void getLocalFilteredVelocity2(vec3f& out0, vec3f& out1);
+            void getForce(f32 param_1, vec3f* force);
+            void getInertiaMatrix(mat3x4f* inertia);
+            void getInverseInertiaMatrix(mat3x4f* inertia);
+            void getInverseMassMatrix(const vec3f& unk, mat3x4f& out);
+            vec3f* principalAxis(f32 param_2, f32 param_3, f32 param_4, f32 param_5, vec3f* param_6);
+            mat3x4f* rejuvinate();
+            void setVelocity(vec3f* velocity);
+            void tetrahedronAngInertia(vec3f* verts, f32* param_2, f32* param_3, f32* param_4, f32* param_5, f32* param_6, f32* param_7);
+            f32 calcCollisionNoFriction(f32 p1, const vec3f& p2, const vec3f& p3);
 
             // known
             bool active;
@@ -52,8 +62,8 @@ namespace sr2 {
             f32 max_velocity;
             i32 needs_oversampling;
             f32 maybe_last_time;
-            vec3f inertia_tensor;
-            vec3f inv_inertia_tensor;
+            vec3f ang_inertia;
+            vec3f inv_ang_inertia;
             vec3f max_ang_velocity;
             vec3f world_velocity;
             vec3f angular_velocity;

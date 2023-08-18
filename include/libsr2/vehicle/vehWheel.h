@@ -1,10 +1,13 @@
 #pragma once
 #include <libsr2/vehicle/vehWheel.h>
+#include <libsr2/sim/phSegment.h>
+#include <libsr2/sim/phIntersectionPoint.h>
 #include <libsr2/io/parFileIO.h>
 
 namespace sr2 {
-    class vehCarSim;
+    class vehCarSimBase;
     class phInertialCS;
+    class phMaterial;
 
     class vehWheel : public parFileIO {
         public:
@@ -12,34 +15,28 @@ namespace sr2 {
             ~vehWheel();
 
             virtual datParserNode* prepare_parser(datParser* p);
-            virtual const char* file_type() { return "vehWheel"; }
+            virtual const char* file_type();
 
-            void AddNormalLoad(f32 load);
-            void SetNormalLoad(f32 load);
-            void CalcDispAndDamp(f32 param_1, f32 param_2, f32 param_3, f32* param_4, f32* param_5, i32* param_6);
-            void ComputeConstants();
-            f32 ComputeFriction(f32 slip_percent, f32* friction);
-            void ComputeGM();
-            void ComputeSlipPercent(f32* slip_percent, f32 param_3, f32 synchronous_speed);
-            void CopyFrom(vehWheel* from);
-            f32 GetVisualDispLat();
-            f32 GetVisualDispLng();
-            f32 GetVisualDispVert();
-            void SetBrake(f32 param_1);
-            void SetInputs(f32 param_1, f32 param_2, f32 param_3);
-            void Update();
+            void addNormalLoad(f32 load);
+            void setNormalLoad(f32 load);
+            void calcDispAndDamp(f32 param_1, f32 param_2, f32 param_3, f32* param_4, f32* param_5, i32* param_6);
+            void calcSuspensionForce(f32 suspVal, f32 p2, f32 dispPerSec, bool overrideSuspVal);
+            f32 getBumpDisplacement(f32 unk);
+            void computeConstants();
+            f32 computeFriction(f32 slip_percent, f32* friction);
+            void computeGM();
+            void computeSlipPercent(f32* slip_percent, f32 param_3, f32 synchronous_speed);
+            void computeDwtdw(f32 p1, f32* p2, f32* p3, f32* p4);
+            f32 calcSuspensionValue(f32 p1, f32 p2);
+            void copyFrom(vehWheel* from);
+            f32 getVisualDispLat();
+            f32 getVisualDispLng();
+            f32 getVisualDispVert();
+            void setBrake(f32 param_1);
+            void setInputs(f32 param_1, f32 param_2, f32 param_3);
+            virtual void update();
 
-            void Reset();
-
-            /*
-             *  note:
-             *      There is apparently a discrepancy between which of these
-             *      fields are in vehWheel and which are in parFileIO
-             *
-             */
-
-            // knowns
-            vehCarSim* vehicle;
+            void reset();
 
             // configurable
             f32 tire_displacement_limit_lat;
@@ -61,9 +58,13 @@ namespace sr2 {
             f32 suspension_damping_coefficient;
             f32 optimum_slip_percent;
             f32 static_friction;
+            // -----------------------
 
-            // simulation controlled
-            phInertialCS* phys_obj;
+            static f32 WeatherFriction;
+
+            vehCarSimBase* vehicle;
+            phMaterial* material;
+            phInertialCS* ics;
             mat3x4f world_transform;
             vec3f position_0;
             vec3f position_1;
@@ -73,6 +74,7 @@ namespace sr2 {
             mat3x4f world_transform_1;
             f32 axle_value;
             i32 is_on_ground;
+            bool is_bottomed_out;
             f32 inv_optimum_slip_percent_squared;
             f32 suspension_value;
             f32 suspension_velocity;
@@ -81,6 +83,26 @@ namespace sr2 {
             f32 slip_percent_lng;
             f32 sliding_friction;
             char* some_str;
+            phSegment seg;
+            phIntersectionPoint ground_contact_pt;
+            bool has_intersection;
+            vec3f some_position;
+            f32 radius;
+            f32 width;
+            f32 normal_load;
+            f32 bump_displacement;
+            f32 mtrl_field_0x30;
+            f32 material_friction;
+            undefined4 mtrl_field_0x38;
+            f32 mtrl_width;
+            f32 brake_factor_from_setbrake;
+            f32 some_brake_factor;
+            f32 some_handbrake_factor;
+            f32 some_suspension_thing;
+            f32 some_suspension_damping_factor;
+            f32 some_rps;
+            f32 some_tire_disp_lng_factor;
+            f32 something_to_do_with_tire_damp_coef_lng_and_gravity;
 
             // unknowns
             undefined field_0x4;
@@ -107,7 +129,6 @@ namespace sr2 {
             undefined field_0x95;
             undefined field_0x96;
             undefined field_0x97;
-            pointer field_0xb0;
             undefined field_0xb4;
             undefined field_0xb5;
             undefined field_0xb6;
@@ -236,37 +257,21 @@ namespace sr2 {
             undefined field_0x166;
             undefined field_0x167;
             undefined4 field_0x168;
-            undefined4 field_0x16c;
             f32 field_0x170;
             f32 field_0x174;
             f32 field_0x178;
             f32 field_0x17c;
-            vec3f field_0x1b0;
             f32 field_0x1bc;
-            f32 field_0x1c0;
-            f32 field_0x1c4;
-            f32 field_0x1c8;
-            undefined4 field_0x1cc;
-            f32 field_0x1d0;
-            f32 field_0x1d4;
             f32 field_0x1d8;
-            undefined4 field_0x1dc;
-            f32 field_0x1e0;
-            undefined4 field_0x1e4;
-            f32 field_0x1ec;
-            f32 field_0x1f0;
-            f32 field_0x1f4;
+            f32 field_0x1e4;
             f32 field_0x1f8;
             f32 field_0x200;
             f32 field_0x208;
-            f32 field_0x20c;
             f32 field_0x210;
-            f32 field_0x214;
             f32 field_0x218;
             f32 field_0x21c;
             f32 field_0x220;
             undefined4 field_0x228;
-            undefined field_0x230;
             undefined field_0x231;
             undefined field_0x232;
             undefined field_0x233;
@@ -275,11 +280,8 @@ namespace sr2 {
             f32 field_0x23c;
             f32 field_0x240;
             f32 field_0x244;
-            f32 field_0x248;
-            f32 field_0x254;
-            f32 field_0x258;
-            f32 field_0x268;
-            f32 field_0x26c;
+            f32 some_tire_disp_lat_factor;
+            f32 something_to_do_with_tire_damp_coef_lat_and_gravity;
             undefined field_0x278;
             undefined field_0x279;
             undefined field_0x27a;

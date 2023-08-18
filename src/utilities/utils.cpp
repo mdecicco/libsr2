@@ -1,5 +1,6 @@
 #include <libsr2/utilities/utils.h>
-#include <libsr2/types.h>
+#include <libsr2/managers/datAssetManager.h>
+#include <libsr2/io/stream.h>
 #include <stdarg.h>
 
 namespace sr2 {
@@ -25,5 +26,44 @@ namespace sr2 {
         }
 
         return nullptr;
+    }
+
+    bool IsPivotPrefix(char* directory, char* filename, char* partname) {
+        char buf[64] = { 0 };
+        snprintf(buf, 64, "%s_%s", filename, partname);
+        return datAssetManager::exists(directory, filename, "mtx");
+    }
+
+    bool IsPivot(char* filename, char* partname) {
+        return IsPivotPrefix("geometry", filename, partname);
+    }
+
+    bool GetPivotPrefix(mat3x4f& out, char* directory, char* filename, char* partname) {
+        char filename[64] = { 0 };
+        snprintf("%s_%s", 64, filename, partname);
+
+        Stream* fp = datAssetManager::open(directory, filename, "mtx", 1, true);
+        if (!fp) return false;
+
+        fp->read(&out, sizeof(mat3x4f));
+        fp->close();
+        
+        return true;
+    }
+    
+    bool GetPivot(mat3x4f& out, char* filename, char* partname) {
+        GetPivotPrefix(out, "geometry", filename, partname);
+    }
+
+    i32 GetPivotCount(char* filename, char* partBaseName, i32 maxCount) {
+        char buf[64];
+
+        i32 i = 0;
+        for (;i < maxCount;i++) {
+            snprintf(buf, 64, "%s%d", partBaseName, i);
+            if (!IsPivot(filename, buf)) return i;
+        }
+
+        return i;
     }
 };

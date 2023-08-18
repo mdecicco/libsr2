@@ -11,7 +11,17 @@ namespace sr2 {
         void transposed(mat3x4f& out, const mat3x4f& in);
         void mult(mat3x4f& lhs, const mat3x4f& rhs);
         void mult_with_translation(mat3x4f& lhs, const mat3x4f& rhs);
+        void mult_inverse_with_translation(mat3x4f& lhs, const mat3x4f& rhs);
         void mult(mat3x4f& out, const mat3x4f& lhs, const mat3x4f& rhs);
         void mult(vec3f& out, const mat3x4f& lhs, const vec3f& rhs);
+        void mult_transposed(vec3f& out, const mat3x4f& lhs, const vec3f& rhs);
+        void rotation_x(mat3x4f& out, f32 angle);
+        void rotation_y(mat3x4f& out, f32 angle);
+        void rotation_z(mat3x4f& out, f32 angle);
+        void rotation_axis_angle(mat3x4f& out, const vec3f& axis, f32 angle);
+        void make_rotation(mat3x4f& out, const vec3f& axis, f32 angle);
+        void from_eulers_zxy(mat3x4f& out, const vec3f& eulers);
+        void rotate(mat3x4f& out, const vec3f& axis, f32 angle);
+        void dot3x3CrossProdMtx(mat3x4f& out, const vec3f& unk);
     };
 };

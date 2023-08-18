@@ -46,6 +46,15 @@ namespace sr2 {
 	struct vec2s16 {
 		s16 x, y;
 	};
+	struct quat {
+		vec3f axis;
+		f32 angle;
+	};
+	struct quat_transform {
+		quat orient;
+		vec3f position;
+	};
+
 	struct mat3x3f {
 		vec3f x, y, z;
 	};
