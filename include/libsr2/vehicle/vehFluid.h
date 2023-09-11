@@ -4,6 +4,7 @@
 namespace sr2 {
     class vehCarSimBase;
     class datParser;
+    class datParserNode;
 
     class vehFluid {
         public:

@@ -263,7 +263,23 @@ namespace sr2 {
             out.y.y = cosTheta.z * cosTheta.x;
             out.z.x = cosTheta.x * sinTheta.y;
             out.z.y = -sinTheta.x;
-            out.z.z = cosTheta.x * cosTheta.y
+            out.z.z = cosTheta.x * cosTheta.y;
+        }
+
+        void from_quaternion(mat3x4f& out, const quat& q) {
+            f32 ax = q.axis.x * 1.414214f;
+            f32 ay = q.axis.y * 1.414214f;
+            f32 az = q.axis.z * 1.414214f;
+            f32 ang = q.angle * 1.414214f;
+            out.y.x = ax * ay - az * ang;
+            out.z.x = ax * az + ay * ang;
+            out.z.y = ay * az - ax * ang;
+            out.z.z = 1.0f - (ay * ay + ax * ax);
+            out.x.x = 1.0f - (ay * ay + az * az);
+            out.y.y = 1.0f - (az * az + ax * ax);
+            out.x.y = ax * ay + az * ang;
+            out.x.z = ax * az - ay * ang;
+            out.y.z = ay * az + ax * ang;
         }
 
         void rotate(mat3x4f& out, const vec3f& axis, f32 angle) {

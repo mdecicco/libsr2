@@ -27,7 +27,7 @@ namespace sr2 {
             virtual void move();
 
             // phInst
-            virtual void method_0x30() = 0;
+            virtual f32 phinst_method_0x30() = 0;
 
             // own
             virtual void method_0x48();

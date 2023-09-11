@@ -169,14 +169,14 @@ namespace sr2 {
         if (gearRatio == 0.0 || field21_0x5a || transmission->clutch) {
             if (drivetrains->engine) drivetrains->detach();
         } else {
-            bool cond0 = fabsf(drivetrains->field14_0x34 * gearRatio) < fabsf(idle_rps * 0.75f);
+            bool cond0 = fabsf(drivetrains->some_rps * gearRatio) < fabsf(idle_rps * 0.75f);
             bool cond1 = !transmission->current_gear || transmission->current_gear == 2;
             if (cond0 && cond1 && torque_lerp_factor < 0.1f) {
                 if (drivetrains->engine) drivetrains->detach();
             } else if (gearRatio != 0.0) {
                 if (!transmission->clutch) {
                     cond0 = rps <= idle_rps * 1.25f;
-                    cond1 = fabsf(drivetrains->field14_0x34 * gearRatio) <= fabsf(idle_rps * 1.25f);
+                    cond1 = fabsf(drivetrains->some_rps * gearRatio) <= fabsf(idle_rps * 1.25f);
                     if ((!cond0 || !cond1) && !drivetrains->engine) drivetrains->attach();
                 }
             }

@@ -39,10 +39,10 @@ namespace sr2 {
     }
 
     bool GetPivotPrefix(mat3x4f& out, char* directory, char* filename, char* partname) {
-        char filename[64] = { 0 };
-        snprintf("%s_%s", 64, filename, partname);
+        char fullname[64] = { 0 };
+        snprintf("%s_%s", 64, fullname, filename, partname);
 
-        Stream* fp = datAssetManager::open(directory, filename, "mtx", 1, true);
+        Stream* fp = datAssetManager::open(directory, fullname, "mtx", 1, true);
         if (!fp) return false;
 
         fp->read(&out, sizeof(mat3x4f));
@@ -52,7 +52,7 @@ namespace sr2 {
     }
     
     bool GetPivot(mat3x4f& out, char* filename, char* partname) {
-        GetPivotPrefix(out, "geometry", filename, partname);
+        return GetPivotPrefix(out, "geometry", filename, partname);
     }
 
     i32 GetPivotCount(char* filename, char* partBaseName, i32 maxCount) {

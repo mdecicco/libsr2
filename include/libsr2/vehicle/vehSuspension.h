@@ -5,7 +5,7 @@ namespace sr2 {
     class vehSuspension : public parFileIO {
         public:
             vehSuspension();
-            ~vehSuspension();
+            virtual ~vehSuspension();
             
             virtual void reset();
             virtual void update();

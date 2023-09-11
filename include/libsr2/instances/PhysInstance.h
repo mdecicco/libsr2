@@ -4,14 +4,14 @@
 #include <libsr2/sim/phInst.h>
 
 namespace sr2 {
-    class phInst;
-    class PhysInstance : public UnkInstance0 {
+    class PhysInstance : public UnkInstance0, public phInst {
         public:
             PhysInstance();
             ~PhysInstance();
 
+            virtual f32 phinst_method_0x30();
+
             f32 unk0, unk2;
             undefined unk1;
-            phInst phys;
     };
 };

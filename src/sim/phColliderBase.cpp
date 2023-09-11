@@ -47,7 +47,7 @@ namespace sr2 {
     void phColliderBase::move() {
     }
 
-    void phColliderBase::reset() {
+    void phColliderBase::reset2() {
         reset();
 
         if (ics) {

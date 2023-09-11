@@ -225,7 +225,6 @@ namespace sr2 {
         bool bVar1;
         f32 fVar2;
         f32 fVar3;
-        vehCarSim* veh;
 
         fVar2 = some_position.x;
         if (width < fabsf(fVar2)) {
@@ -243,19 +242,18 @@ namespace sr2 {
         else {
             field_0x1bc = 0.0f;
         }
-        veh = vehicle;
         inv_optimum_slip_percent_squared = 1.0f / (optimum_slip_percent * optimum_slip_percent);
 
-        if (veh == nullptr) {
+        if (vehicle == nullptr) {
             fVar2 = fabsf(some_position.z);
             bVar1 = 0.01f < fabsf(some_position.x);
             // Yes, this is in the decompilation. Not sure why they allowed the dereferencing of a null pointer
-            // fVar2 = -((veh->base).collider.pfio.field_0x30)->gravity * -9.8f * ics->mass * fVar2) / (fVar2 + fVar2);
+            // fVar2 = -(vehicle.collider.pfio.field_0x30)->gravity * -9.8f * ics->mass * fVar2) / (fVar2 + fVar2);
         }
         else {
             fVar2 = fabsf(some_position.z);
             bVar1 = width < fabsf(some_position.x);
-            // fVar2 = (fabsf(field_0x1b8 - -(veh->base).collider.center_of_mass.z) / (fVar2 + fVar2)) * -((veh->base).collider.pfio.field_0x30)->gravity * -9.8f * ((veh->base).collider.pfio.solver)->mass;
+            // fVar2 = (fabsf(field_0x1b8 - -vehicle.collider.center_of_mass.z) / (fVar2 + fVar2)) * -(vehicle.collider.pfio.field_0x30)->gravity * -9.8f * (vehicle.collider.pfio.solver)->mass;
         }
 
         if (bVar1) fVar2 = fVar2 * 0.5f;
@@ -312,7 +310,7 @@ namespace sr2 {
         (world_transform).w.z = fVar8 + fVar7 * (world_transform).y.z;
 
         if (0.0f < axle_limit) {
-            if (field_0x16c == 0) {
+            if (has_intersection == 0) {
                 fVar7 = field_0x218;
             } else {
                 /*
@@ -753,11 +751,11 @@ namespace sr2 {
         field_0x200 = 0.0f;
         field_0x220 = 0.0f;
         field_0x228 = 0;
-        field_0x16c = 0;
+        has_intersection = 0;
         field_0x168 = 0;
         material_friction = 1.0f;
         field_0x17c = 0.0f;
-        field_0xb0 = nullptr;
+        ground_contact_pt.instance = nullptr;
         bump_displacement = 0;
         mtrl_field_0x30 = 0.0f;
         field_0x1d8 = 0.0f;

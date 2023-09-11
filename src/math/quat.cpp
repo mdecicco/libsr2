@@ -1,5 +1,6 @@
 #include <libsr2/math/quat.h>
 #include <libsr2/math/vec3f.h>
+#include <libsr2/math/math.h>
 #include <math.h>
 
 namespace sr2 {
@@ -112,12 +113,79 @@ namespace sr2 {
             math::copy(out, result);
         }
         
+        void unrotate(const quat& q, const vec3f& in, vec3f& out) { 
+            vec3f result;
+            
+            math::mult(result, q.axis, math::dot(q.axis, in) * 2.0f);
+
+            vec3f tmp;
+            math::mult(tmp, in, ((q.angle * q.angle) * 2.0f) - 1.0f);
+            math::add(result, tmp);
+
+            math::cross(tmp, q.axis, in);
+            math::mult(tmp, q.angle * 2.0f);
+            math::sub(result, tmp);
+
+            math::copy(out, result);
+        }
+        
         void mult(quat& out, const quat& lhs, const quat& rhs) {
             quat o;
             o.axis.x = (lhs.angle * rhs.axis.x + rhs.angle * lhs.axis.x + lhs.axis.y * rhs.axis.z) - lhs.axis.z * rhs.axis.y;
             o.axis.y = (lhs.angle * rhs.axis.y + rhs.angle * lhs.axis.y + lhs.axis.z * rhs.axis.x) - lhs.axis.x * rhs.axis.z;
             o.axis.z = (lhs.angle * rhs.axis.z + rhs.angle * lhs.axis.z + lhs.axis.x * rhs.axis.y) - lhs.axis.y * rhs.axis.x;
             o.angle = ((lhs.angle * rhs.angle - lhs.axis.x * rhs.axis.x) - lhs.axis.y * rhs.axis.y) - lhs.axis.z * rhs.axis.z;
+        }
+        
+        void mult(quat& lhs, const quat& rhs) {
+            quat o;
+            o.axis.x = (lhs.angle * rhs.axis.x + rhs.angle * lhs.axis.x + lhs.axis.y * rhs.axis.z) - lhs.axis.z * rhs.axis.y;
+            o.axis.y = (lhs.angle * rhs.axis.y + rhs.angle * lhs.axis.y + lhs.axis.z * rhs.axis.x) - lhs.axis.x * rhs.axis.z;
+            o.axis.z = (lhs.angle * rhs.axis.z + rhs.angle * lhs.axis.z + lhs.axis.x * rhs.axis.y) - lhs.axis.y * rhs.axis.x;
+            o.angle = ((lhs.angle * rhs.angle - lhs.axis.x * rhs.axis.x) - lhs.axis.y * rhs.axis.y) - lhs.axis.z * rhs.axis.z;
+
+            lhs.axis = o.axis;
+            lhs.angle = o.angle;
+        }
+
+        void negate(quat& lhs) {
+            lhs.axis = {
+                -lhs.axis.x,
+                -lhs.axis.y,
+                -lhs.axis.z
+            };
+            lhs.angle = -lhs.angle;
+        }
+
+        f32 dot(const quat& a, const quat& b) {
+            return a.axis.x * b.axis.x + a.axis.y * b.axis.y + a.axis.z * b.axis.z + a.angle * b.angle;
+        }
+
+        void FUN_002c3720(f32 p0, f32 dt, vec3f& out, const quat& p4, const vec3f& p5, const quat& p6) {
+            quat a = p4;
+            math::negate(a.axis);
+            math::mult(a, p6);
+
+            vec3f b = a.axis;
+            vec3f rotated;
+            math::rotate(p4, b, rotated);
+            math::normalize(rotated);
+
+            f32 c = math::dot(rotated, p5);
+            vec3f t0;
+            math::mult(t0, rotated, math::dot(rotated, p5));
+            math::sub(t0, p5, t0);
+            math::normalize(t0);
+
+            f32 t3 = 0.0f;
+            if (a.angle > 0.0f) {
+                if (a.angle < 1.0f) t3 = acosf(a.angle) * 2.0f;
+            } else t3 = 3.141593f;
+
+            vec3f t4, t5;
+            math::mult(t4, t0, -math::dot(t0, p5) * dt);
+            math::mult(t5, rotated, findHomingAccel(p0, 0.0f, c, t3, 0.0f));
+            math::add(out, t4, t5);
         }
     };
 };

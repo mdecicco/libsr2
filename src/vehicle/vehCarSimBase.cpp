@@ -75,6 +75,9 @@ namespace sr2 {
         wheels[2]->prep_parser(parser->add_parser("WheelBack", nullptr));
         if (axles[0]) axles[0]->prep_parser(parser->add_parser("AxleFront", nullptr));
         if (axles[1]) axles[1]->prep_parser(parser->add_parser("AxleBack", nullptr));
+
+        // not real
+        return nullptr;
     }
 
     void vehCarSimBase::reset() {
@@ -89,7 +92,7 @@ namespace sr2 {
         for (u32 i = 0;i < suspension_item_count;i++) suspensionItemArray[i].reset();
 
         if (ics) {
-            ics->ResetTransform();
+            ics->resetTransform();
             ics->world_transform.w = initial_pos;
             math::from_eulers_zxy(ics->world_transform, eulers);
             updateModelOffset();

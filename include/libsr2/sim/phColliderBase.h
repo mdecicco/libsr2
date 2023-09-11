@@ -18,6 +18,7 @@ namespace sr2 {
 
             void init(phBound* bnd, phInst* inst, phInertialCS* ics);
             virtual void reset();
+            virtual void reset2();
             virtual void update();
             virtual void move();
             virtual void applyGravity();

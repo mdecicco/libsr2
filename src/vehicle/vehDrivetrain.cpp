@@ -7,6 +7,11 @@
 #include <math.h>
 
 namespace sr2 {
+    f32 vehDrivetrain::diffRatioMax = 1.25f;
+    f32 vehDrivetrain::diffRatioMaxHighSpeed = 1.03f;
+    f32 vehDrivetrain::diffRatioHighSpeedLevel = 50.0f;
+    f32 vehDrivetrain::dRHSLinV = 0.02f;
+
     vehDrivetrain::vehDrivetrain() {
         vehicle = nullptr;
         engine = nullptr;

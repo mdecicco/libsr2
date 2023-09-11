@@ -92,7 +92,7 @@ namespace sr2 {
         field27_0x150 = 0.0f;
         velocity_mag = 0.0f;
 
-        if (ics) ics->ResetTransform();
+        if (ics) ics->resetTransform();
         updateModelOffset();
 
         // Not sure why this is there...

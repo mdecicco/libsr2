@@ -30,9 +30,9 @@ namespace sr2 {
         }
 
         void copy(vec3f& to, const vec3f& from) {
-            a.x = b.x;
-            a.y = b.y;
-            a.z = b.z;
+            to.x = from.x;
+            to.y = from.y;
+            to.z = from.z;
         }
 
         void zero(vec3f& a) {
