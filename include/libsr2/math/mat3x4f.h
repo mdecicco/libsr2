@@ -21,6 +21,7 @@ namespace sr2 {
         void rotation_axis_angle(mat3x4f& out, const vec3f& axis, f32 angle);
         void make_rotation(mat3x4f& out, const vec3f& axis, f32 angle);
         void from_eulers_zxy(mat3x4f& out, const vec3f& eulers);
+        void from_eulers_xzy(mat3x4f& out, const vec3f& eulers);
         void from_quaternion(mat3x4f& out, const quat& q);
         void rotate(mat3x4f& out, const vec3f& axis, f32 angle);
         void dot3x3CrossProdMtx(mat3x4f& out, const vec3f& unk);

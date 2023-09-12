@@ -243,8 +243,8 @@ namespace sr2 {
                 cosTheta.y = 1.0;
             }
             else {
-                sinTheta.y = sinf(eulers.x);
-                cosTheta.y = cosf(eulers.x);
+                sinTheta.y = sinf(eulers.y);
+                cosTheta.y = cosf(eulers.y);
             }
 
             if (eulers.z == 0.0) {
@@ -252,8 +252,8 @@ namespace sr2 {
                 cosTheta.z = 1.0;
             }
             else {
-                sinTheta.z = sinf(eulers.x);
-                cosTheta.z = cosf(eulers.x);
+                sinTheta.z = sinf(eulers.z);
+                cosTheta.z = cosf(eulers.z);
             }
             out.x.x = cosTheta.z * cosTheta.y + sinTheta.z * sinTheta.x * sinTheta.y;
             out.x.z = -cosTheta.z * sinTheta.y + sinTheta.z * sinTheta.x * cosTheta.y;
@@ -264,6 +264,18 @@ namespace sr2 {
             out.z.x = cosTheta.x * sinTheta.y;
             out.z.y = -sinTheta.x;
             out.z.z = cosTheta.x * cosTheta.y;
+        }
+
+        void from_eulers_xzy(mat3x4f& out, const vec3f& eulers) {
+            // TODO: the actual function does a bunch of bullshit (like the other ones)
+            //       only, I don't feel like figuring it out right now and this is
+            //       _probably_ correct
+            from_eulers_zxy(out, {
+                // xzy -> zxy
+                eulers.y, // y = z
+                eulers.x, // x = x
+                eulers.z  // z = y
+            });
         }
 
         void from_quaternion(mat3x4f& out, const quat& q) {

@@ -1,6 +1,7 @@
 #include <libsr2/sim/dgRagdoll.h>
 #include <libsr2/sim/dgLinkData.h>
 #include <libsr2/creature/ragdoll.h>
+#include <libsr2/creature/ragJoint.h>
 #include <libsr2/math/quat.h>
 #include <libsr2/math/mat3x4f.h>
 
