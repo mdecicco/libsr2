@@ -2,6 +2,7 @@
 #include <libsr2/sim/phInertialCS.h>
 #include <libsr2/sim/phBound.h>
 #include <libsr2/sim/phInst.h>
+#include <libsr2/sim/PhysEntity.h>
 #include <libsr2/math/mat3x4f.h>
 #include <libsr2/math/vec3f.h>
 
@@ -26,6 +27,24 @@ namespace sr2 {
         read_matrix = &instance->transform;
         math::copy(ics->world_transform, instance->transform);
         math::copy(matrix, instance->transform);
+    }
+
+    void phColliderBase::init(phInst* inst, phInertialCS* _ics, phSleep* _sleep) {
+        impact_cb = nullptr;
+        bound_cb = nullptr;
+        instance = inst;
+        ics = _ics;
+        sleep = _sleep;
+        bound = instance->unk->bound;
+
+        if (!ics && !instance->unk->bound->centroidIsSet) {
+            ics->world_transform = instance->transform;
+            read_matrix = &ics->world_transform;
+        } else {
+            read_matrix = &instance->transform;
+        }
+
+        reset2();
     }
 
     void phColliderBase::reset() {
@@ -54,7 +73,7 @@ namespace sr2 {
             if (read_matrix != &ics->world_transform) {
                 math::copy(ics->world_transform, *read_matrix);
 
-                if (bound->centroid_is_set) {
+                if (bound->centroidIsSet) {
                     vec3f centroidWorldSpace;
                     math::mult(centroidWorldSpace, ics->world_transform, bound->centroid);
                     math::add(ics->world_transform.w, centroidWorldSpace);
@@ -66,7 +85,7 @@ namespace sr2 {
     }
 
     void phColliderBase::applyGravity() {
-        ics->force.y += bound->gravity_multiplier * -9.8f * ics->mass;
+        ics->force.y += bound->gravityMultiplier * -9.8f * ics->mass;
     }
     
     void phColliderBase::method_0x30() {

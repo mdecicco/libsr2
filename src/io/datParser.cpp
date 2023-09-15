@@ -66,7 +66,7 @@ namespace sr2 {
                 // find the opening block or return if it doesn't exist, I think
                 i32 a = 0;
                 do {
-                    a = tok->get_token(buf, 64);
+                    a = tok->getToken(buf, 64);
                     if (buf[0] == 0) return 0;
                     if (strcmp(buf, "}") == 0) return 0;
                     a = strcmp(buf, "{");
@@ -101,7 +101,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                tok->get_token((char*)dest, n->string_len);
+                                tok->getToken((char*)dest, n->string_len);
                                 dest += n->string_len;
                             } while (u2 != -1);
                         }
@@ -112,7 +112,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                i32 i = tok->read_int32();
+                                i32 i = tok->readInt32();
                                 *(bool*)dest = i != 0;
                                 dest += sizeof(bool);
                             } while (u2 != -1);
@@ -124,7 +124,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                i32 i = tok->read_int32();
+                                i32 i = tok->readInt32();
                                 *dest = u8(i);
                                 dest++;
                             } while (u2 != -1);
@@ -136,7 +136,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                i32 i = tok->read_int32();
+                                i32 i = tok->readInt32();
                                 *(u16*)dest = u16(i);
                                 dest += 2;
                             } while (u2 != -1);
@@ -148,7 +148,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                *(u32*)dest = tok->read_int32();
+                                *(u32*)dest = tok->readInt32();
                                 dest += 4;
                             } while (u2 != -1);
                         }
@@ -159,7 +159,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                *(f32*)dest = tok->read_float();
+                                *(f32*)dest = tok->readFloat();
                                 dest += 4;
                             } while (u2 != -1);
                         }
@@ -170,7 +170,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                *(vec2f*)dest = tok->read_vec2();
+                                *(vec2f*)dest = tok->readVec2();
                                 dest += sizeof(vec2f);
                             } while (u2 != -1);
                         }
@@ -181,7 +181,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                *(vec3f*)dest = tok->read_vec3();
+                                *(vec3f*)dest = tok->readVec3();
                                 dest += sizeof(vec3f);
                             } while (u2 != -1);
                         }
@@ -192,7 +192,7 @@ namespace sr2 {
                         if (u2 != -1) {
                             do {
                                 u2--;
-                                *(vec4f*)dest = tok->read_vec4();
+                                *(vec4f*)dest = tok->readVec4();
                                 dest += sizeof(vec4f);
                             } while (u2 != -1);
                         }
@@ -213,24 +213,24 @@ namespace sr2 {
             }
 
             // find matching closing bracket for this structure
-            tok->get_token(buf, 64);
+            tok->getToken(buf, 64);
             if (strcmp(buf, "{") == 0) {
                 u32 i = 1;
                 do {
-                    tok->get_token(buf, 64);
+                    tok->getToken(buf, 64);
                     if (strcmp(buf, "{") == 0) i++;
                     else {
                         if (strcmp(buf, "}") == 0) i--;
                     }
                 } while (i != 0);
             } else {
-                tok->skip_to_end_of_line();
+                tok->skipToEndOfLine();
             }
         }
     }
 
     void datParser::read(datBaseTokenizer* tokenizer) {
-        tokenizer->get_token(m_last_token, 64);
+        tokenizer->getToken(m_last_token, 64);
         read_inner(tokenizer);
     }
 

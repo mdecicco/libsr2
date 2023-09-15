@@ -21,7 +21,7 @@ namespace sr2 {
 
             i32 frameCount;
             i32 channelCount;
-            i32 unk2;
+            f32 unk2;
             crAnimFrame* frames;
             f32 duration;
             bool unk4;

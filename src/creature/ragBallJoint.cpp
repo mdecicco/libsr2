@@ -45,7 +45,7 @@ namespace sr2 {
 
     void ragBallJoint::method_0x18(f32 dt, f32 gravity, dgLinkData* links, const vec3f& velocity, const vec3f& u0, const vec3f& u1) {
         dgLinkData* link = &links[linkIdx];
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             link->unk2 = link->rotated;
             math::rotate(link->unk0->orient, link->init.position, link->rotated.position);
             math::add(link->rotated.position, link->unk0->position);
@@ -65,12 +65,12 @@ namespace sr2 {
 
         vec3f t1;
         math::cross(t1, t0, u1);
-        math::mult(t1, unk0 * math::min(unk1, 1.0f));
+        math::mult(t1, unk0 * math::min(flex, 1.0f));
         math::add(link->center.position, t1);
 
         vec3f t2;
         math::sub(t2, u0, link->center.position);
-        math::mult(t2, unk2 * dt);
+        math::mult(t2, damping * dt);
         math::add(link->center.position, t2);
 
         link->center.position = {
@@ -164,7 +164,7 @@ namespace sr2 {
 
     void ragBallJoint::method_0x50(dgLinkData* links, const vec3f& param_2, mat3x4f& param_3, const vec3f& param_4) {
         dgLinkData* link = &links[linkIdx];
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x50(links, link->rotated.position, param_3, param_4);
             return;
         }
@@ -200,13 +200,13 @@ namespace sr2 {
                 math::cross(t7, t1, t6);
 
                 vec3f t8;
-                math::mult(t8, t7, t7.x * unk1);
+                math::mult(t8, t7, t7.x * flex);
                 math::add(param_3.x, t8);
 
-                math::mult(t8, t7, t7.y * unk1);
+                math::mult(t8, t7, t7.y * flex);
                 math::add(param_3.y, t8);
 
-                math::mult(t8, t7, t7.z * unk1);
+                math::mult(t8, t7, t7.z * flex);
                 math::add(param_3.z, t8);
 
                 bVar1 = false;
@@ -218,19 +218,19 @@ namespace sr2 {
             math::sub(t9, param_2, link->rotated.position);
 
             vec3f t10;
-            math::mult(t10, t9, unk1);
+            math::mult(t10, t9, flex);
             math::mult(t10, t9);
             
             param_3.x.x += t10.y + t10.z;
-            param_3.x.y -= (unk1 * t9.x * t9.y);
-            param_3.x.z -= (unk1 * t9.x * t9.z);
+            param_3.x.y -= (flex * t9.x * t9.y);
+            param_3.x.z -= (flex * t9.x * t9.z);
 
-            param_3.y.x -= (unk1 * t9.x * t9.y);
+            param_3.y.x -= (flex * t9.x * t9.y);
             param_3.y.y += t10.x + t10.z;
-            param_3.y.z -= (unk1 * t9.y * t9.z);
+            param_3.y.z -= (flex * t9.y * t9.z);
             
-            param_3.z.x -= (unk1 * t9.x * t9.z);
-            param_3.z.y -= (unk1 * t9.y * t9.z);
+            param_3.z.x -= (flex * t9.x * t9.z);
+            param_3.z.y -= (flex * t9.y * t9.z);
             param_3.z.z += t10.x + t10.y;
         }
         
@@ -238,7 +238,7 @@ namespace sr2 {
     }
 
     void ragBallJoint::method_0x58(dgLinkData* links, const vec3f& param_2, const vec3f& param_3, vec3f& param_4) {
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x58(links, param_2, param_3, param_4);
             return;
         }
@@ -257,7 +257,7 @@ namespace sr2 {
     }
 
     void ragBallJoint::method_0x20(dgLinkData* links, const vec3f& param_1, const vec3f& param_2) {
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x20(links, param_2, links[linkIdx].rotated.position);
             return;
         }
@@ -267,14 +267,14 @@ namespace sr2 {
         
         vec3f t1;
         math::cross(t1, t0, param_1);
-        math::mult(t1, unk1);
+        math::mult(t1, flex);
         math::add(links[linkIdx].center.position, t1);
 
         ragJoint::method_0x20(links, param_2, links[linkIdx].rotated.position);
     }
 
     void ragBallJoint::method_0x28(dgLinkData* links, vec3f& param_1, const vec3f& param_2) {
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x28(links, param_1, param_2);
             return;
         }

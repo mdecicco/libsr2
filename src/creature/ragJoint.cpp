@@ -10,8 +10,8 @@ namespace sr2 {
         unk0 = 1.0f;
         linkIdx = -1;
         parent = nullptr;
-        unk1 = 0.0f;
-        unk2 = 0.0f;
+        flex = 0.0f;
+        damping = 0.0f;
         boneIdx = -1;
     }
 

@@ -4,9 +4,8 @@ project(libsr2)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/bin)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/bin)
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/debug)
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/release)
 
 set (all_sources "")
 macro(add_sources group dir)
@@ -46,12 +45,13 @@ add_sources("src/instances" "instances")
 add_sources("src/utilities" "utilities")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(libsr2 ${all_sources})
+add_subdirectory(test)
 
-
+add_library(libsr2 ${all_sources})
 
 target_include_directories(libsr2 PUBLIC src)
 target_include_directories(libsr2 PUBLIC include)
+target_include_directories(libsr2 PUBLIC "deps/zlib/include")
 target_include_directories(libsr2 PUBLIC "C:\\Program Files (x86)\\OpenAL 1.1 SDK\\include")
 
 target_link_directories(libsr2 PUBLIC "C:\\Program Files (x86)\\OpenAL 1.1 SDK\\libs\\Win64")
@@ -70,7 +70,6 @@ SET(release_libs
 target_link_libraries(libsr2 ${debug_libs})
 #target_link_libraries(libsr2 ${release_libs})
 set_target_properties(libsr2 PROPERTIES LINK_FLAGS "/ignore:4099")
-
 
 set_property(TARGET libsr2 PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}")
 

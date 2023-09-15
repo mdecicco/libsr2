@@ -24,8 +24,8 @@ namespace sr2 {
             clonedVertices[i] = vertices[i];
         }
 
-        clonedAabbMin = aabb_min;
-        clonedAabbMax = aabb_max;
+        clonedAabbMin = aabbMin;
+        clonedAabbMax = aabbMax;
         clonedCentroid = centroid;
     }
 
@@ -36,8 +36,8 @@ namespace sr2 {
             }
         }
 
-        clonedAabbMin = aabb_min;
-        clonedAabbMax = aabb_max;
+        clonedAabbMin = aabbMin;
+        clonedAabbMax = aabbMax;
         clonedCentroid = centroid;
     }
 

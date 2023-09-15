@@ -19,9 +19,9 @@ namespace sr2 {
 
         void cross(vec3f& out, const vec3f& a, const vec3f& b) {
             vec3f o;
-            o.x = a.y * b.z - b.y * a.z;
-            o.y = a.z * b.x - b.z * a.x;
-            o.z = a.x * b.y - b.x * a.y;
+            o.x = a.y * b.z - a.z * b.y;
+            o.y = a.z * b.x - a.x * b.z;
+            o.z = a.x * b.y - a.y * b.x;
             copy(out, o);
         }
 
@@ -162,4 +162,84 @@ namespace sr2 {
             }
         }
     };
+
+    vec3f::vec3f() : x(0.0f), y(0.0f), z(0.0f) {}
+    vec3f::vec3f(f32 _x, f32 _y, f32 _z) : x(_x), y(_y), z(_z) {}
+
+    vec3f vec3f::operator-() const {
+        return { -x, -y, -z };
+    }
+    vec3f vec3f::operator-(const vec3f& rhs) const {
+        return { x - rhs.x, y - rhs.y, z - rhs.z };
+    }
+    vec3f vec3f::operator+(const vec3f& rhs) const {
+        return { x + rhs.x, y + rhs.y, z + rhs.z };
+    }
+    vec3f vec3f::operator*(const vec3f& rhs) const {
+        return { x * rhs.x, y * rhs.y, z * rhs.z };
+    }
+    vec3f vec3f::operator/(const vec3f& rhs) const {
+        return { x / rhs.x, y / rhs.y, z / rhs.z };
+    }
+    vec3f vec3f::operator-(f32 rhs) const {
+        return { x - rhs, y - rhs, z - rhs };
+    }
+    vec3f vec3f::operator+(f32 rhs) const {
+        return { x + rhs, y + rhs, z + rhs };
+    }
+    vec3f vec3f::operator*(f32 rhs) const {
+        return { x * rhs, y * rhs, z * rhs };
+    }
+    vec3f vec3f::operator/(f32 rhs) const {
+        return { x / rhs, y / rhs, z / rhs };
+    }
+    vec3f vec3f::operator-=(const vec3f& rhs) {
+        return { x -= rhs.x, y -= rhs.y, z -= rhs.z };
+    }
+    vec3f vec3f::operator+=(const vec3f& rhs) {
+        return { x += rhs.x, y += rhs.y, z += rhs.z };
+    }
+    vec3f vec3f::operator*=(const vec3f& rhs) {
+        return { x *= rhs.x, y *= rhs.y, z *= rhs.z };
+    }
+    vec3f vec3f::operator/=(const vec3f& rhs) {
+        return { x /= rhs.x, y /= rhs.y, z /= rhs.z };
+    }
+    vec3f vec3f::operator-=(f32 rhs) {
+        return { x -= rhs, y -= rhs, z -= rhs };
+    }
+    vec3f vec3f::operator+=(f32 rhs) {
+        return { x += rhs, y += rhs, z += rhs };
+    }
+    vec3f vec3f::operator*=(f32 rhs) {
+        return { x *= rhs, y *= rhs, z *= rhs };
+    }
+    vec3f vec3f::operator/=(f32 rhs) {
+        return { x /= rhs, y /= rhs, z /= rhs };
+    }
+    f32 vec3f::operator[](u8 axis) const {
+        return (&x)[axis];
+    }
+    f32& vec3f::operator[](u8 axis) {
+        return (&x)[axis];
+    }
+    vec3f vec3f::cross(const vec3f& rhs) const {
+        vec3f out;
+        math::cross(out, *this, rhs);
+        return out;
+    }
+    vec3f vec3f::normalized() const {
+        vec3f out = *this;
+        math::normalize(out);
+        return out;
+    }
+    void vec3f::normalize() {
+        math::normalize(*this);
+    }
+    f32 vec3f::dot(const vec3f& rhs) const {
+        return math::dot(*this, rhs);
+    }
+    vec3f operator*(f32 lhs, const vec3f& rhs) {
+        return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
+    }
 };

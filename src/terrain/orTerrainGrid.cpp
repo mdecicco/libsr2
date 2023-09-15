@@ -17,8 +17,8 @@ namespace sr2 {
     }
 
     void orTerrainGrid::calculateBoundingBox() {
-        aabb_min = { 0.0f, -10.0f, 0.0f };
-        aabb_max = {
+        aabbMin = { 0.0f, -10.0f, 0.0f };
+        aabbMax = {
             f32(scale * width),
             500.0f,
             f32(scale * height)

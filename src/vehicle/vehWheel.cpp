@@ -100,7 +100,7 @@ namespace sr2 {
         some_tire_disp_lat_factor = (normal_load + normal_load) / tire_displacement_limit_lat;
         some_tire_disp_lng_factor = (normal_load + normal_load) / tire_displacement_limit_lng;
 
-        f32 fVar1 = -normal_load / (vehicle->bound->gravity_multiplier * -9.8f);
+        f32 fVar1 = -normal_load / (vehicle->bound->gravityMultiplier * -9.8f);
         something_to_do_with_tire_damp_coef_lat_and_gravity = (tire_damping_coefficient_lat + tire_damping_coefficient_lat) * sqrtf(fVar1 * some_tire_disp_lat_factor);
         something_to_do_with_tire_damp_coef_lng_and_gravity = (tire_damping_coefficient_lng + tire_damping_coefficient_lng) * sqrtf(fVar1 * some_tire_disp_lng_factor);
     }

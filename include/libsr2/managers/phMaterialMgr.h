@@ -13,7 +13,7 @@ namespace sr2 {
             static phMaterial* getDefaultMaterial();
 
             phMaterial* find(const char* name);
-            void AddToTable(phMaterial* mtrl);
+            void addToTable(phMaterial* mtrl);
 
             virtual phMaterial* addMaterial(datAsciiTokenizer& file);
             virtual phMaterial* addMaterial(Stream* file);

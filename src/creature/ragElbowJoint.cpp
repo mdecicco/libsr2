@@ -28,7 +28,7 @@ namespace sr2 {
     }
 
     void ragElbowJoint::method_0x18(f32 dt, f32 gravity, dgLinkData* links, const vec3f& vel, const vec3f& param_5, const vec3f& param_6) {
-        if (unk1 > 0.0f) {
+        if (flex > 0.0f) {
             if (parent) {
                 vec3f dummy;
                 parent->method_0x58(links, links[linkIdx].rotated.position, param_5, dummy);
@@ -50,8 +50,8 @@ namespace sr2 {
 
             f32 cx = links[linkIdx].center.position.x;
 
-            cx += (tmp.x + tmp.y + tmp.z) * math::min(unk1, 1.0f);
-            cx += (math::dot(param_5, linkX) - cx) * unk2 * dt;
+            cx += (tmp.x + tmp.y + tmp.z) * math::min(flex, 1.0f);
+            cx += (math::dot(param_5, linkX) - cx) * damping * dt;
             cx = math::max(math::min(cx, 9.0f), -9.0f);
 
             links[linkIdx].center.position.x = cx;
@@ -119,7 +119,7 @@ namespace sr2 {
     
     void ragElbowJoint::method_0x50(dgLinkData* links, const vec3f& param_2, mat3x4f& param_3, const vec3f& param_4) {
         dgLinkData& link = links[linkIdx];
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x50(links, link.rotated.position, param_3, param_4);
             return;
         }
@@ -148,7 +148,7 @@ namespace sr2 {
             math::cross(tmp1, linkX, tmp0);
 
             vec3f tmp2;
-            math::mult(tmp2, tmp1, unk1);
+            math::mult(tmp2, tmp1, flex);
 
             vec3f tmp3;
             math::mult(tmp3, tmp1, tmp2.x); math::add(param_3.x, tmp3);
@@ -160,7 +160,7 @@ namespace sr2 {
     }
     
     void ragElbowJoint::method_0x58(dgLinkData* links, const vec3f& param_2, const vec3f& param_3, vec3f& param_4) { 
-        if (unk1 > 0.0f && links[linkIdx].center.position.x != 0.0f) {
+        if (flex > 0.0f && links[linkIdx].center.position.x != 0.0f) {
             vec3f dp;
             math::sub(dp, param_2, links[linkIdx].rotated.position);
 
@@ -180,7 +180,7 @@ namespace sr2 {
     }
 
     void ragElbowJoint::method_0x20(dgLinkData* links, const vec3f& param_1, const vec3f& param_2) {
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x20(links, param_1, links[linkIdx].rotated.position);
             return;
         }
@@ -200,14 +200,14 @@ namespace sr2 {
         // Who knows what on earth this is doing
         bool unkCond = i32(reinterpret_cast<u32&>(unk) ^ reinterpret_cast<u32&>(da)) < 0;
         if (!links[linkIdx].unk5 || unkCond) {
-            links[linkIdx].center.position.x += unk * unk1;
+            links[linkIdx].center.position.x += unk * flex;
         }
 
         ragJoint::method_0x20(links, param_1, links[linkIdx].rotated.position);
     }
     
     void ragElbowJoint::method_0x28(dgLinkData* links, vec3f& param_1, const vec3f& param_2) {
-        if (unk1 <= 0.0f) {
+        if (flex <= 0.0f) {
             ragJoint::method_0x28(links, param_1, param_2);
             return;
         }     

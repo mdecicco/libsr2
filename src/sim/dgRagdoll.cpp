@@ -1,5 +1,8 @@
 #include <libsr2/sim/dgRagdoll.h>
 #include <libsr2/sim/dgLinkData.h>
+#include <libsr2/sim/PhysEntity.h>
+#include <libsr2/sim/phBoundComposite.h>
+#include <libsr2/sim/SpatialPartitioner.h>
 #include <libsr2/creature/ragdoll.h>
 #include <libsr2/creature/ragJoint.h>
 #include <libsr2/math/quat.h>
@@ -105,5 +108,44 @@ namespace sr2 {
 
             unk0->links[i]->method_0x18(dt, grav, links, vel, links[i].center.position, boneUp);
         }
+    }
+
+
+
+    dgRagdoll::dgRagdoll() {
+        col.read_matrix = nullptr;
+        col.unk0 = 0;
+        col.last = col.next = nullptr;
+        col.active = true;
+        col.reset();
+
+        sleep.init(nullptr, nullptr);
+        field28_0x190 = 0;
+        bones0 = nullptr;
+        bones1 = nullptr;
+        data = nullptr;
+    }
+    
+    dgRagdoll::~dgRagdoll() {
+    }
+
+    void dgRagdoll::init(u32 boneCount, u32 linkCount) {
+        entity = new PhysEntity();
+        entity->bound = new phBoundComposite(boneCount);
+        bones0 = new mat3x4f[boneCount];
+        bones1 = new mat3x4f[boneCount];
+        instance0.unk = entity;
+        ((phBoundComposite*)entity->bound)->field6_0x6c = bones0;
+        ((phBoundComposite*)entity->bound)->field7_0x70 = bones1;
+        data = new dgRagdollData();
+        data->init(linkCount);
+        sleep.init(data, &col);
+        math::identity(instance0.transform);
+        col.init(&instance0, data, &sleep);
+        spIndex = SpatialPartitioner::get()->insertCollider(&col);
+        SpatialPartitioner::get()->maybeReinsertAny(spIndex);
+    }
+    
+    void dgRagdoll::setBoundsFromUnk1(ragUnk1* unk) {
     }
 };

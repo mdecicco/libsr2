@@ -15,8 +15,8 @@ namespace sr2 {
             i32 seek(i32 pos);
             i32 read(void* dst, u32 sz);
             i32 write(void* src, u32 sz);
-            char get_ch();
-            bool put_ch(char ch);
+            char getCh();
+            bool putCh(char ch);
             FILE* getRaw();
 
             static Stream* open(char* path, bool unk0);

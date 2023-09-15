@@ -17,6 +17,7 @@ namespace sr2 {
             virtual ~phColliderBase();
 
             void init(phBound* bnd, phInst* inst, phInertialCS* ics);
+            void init(phInst* inst, phInertialCS* ics, phSleep* sleep);
             virtual void reset();
             virtual void reset2();
             virtual void update();

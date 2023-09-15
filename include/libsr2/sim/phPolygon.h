@@ -7,15 +7,11 @@ namespace sr2 {
             phPolygon();
             ~phPolygon();
 
-            vec3f field_0x0;
-            f32 field_0xc;
+            void calculateNormal(vec3f* vertices);
+
+            vec3f normal;
+            f32 normalMag;
             u16 indices[4];
-            i16 maybe_material_idx;
-            undefined field_0x1a;
-            undefined field_0x1b;
-            undefined field_0x1c;
-            undefined field_0x1d;
-            undefined field_0x1e;
-            undefined field_0x1f;
+            i16 maybeMaterialIndices[4];
     };
 };

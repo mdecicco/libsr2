@@ -32,13 +32,13 @@ namespace sr2 {
         return fwrite(src, sz, 1, m_fp) * sz;
     }
 
-    char Stream::get_ch() {
+    char Stream::getCh() {
         char out;
         if (!read(&out, 1)) return 0xFF;
         return out;
     }
 
-    bool Stream::put_ch(char ch) {
+    bool Stream::putCh(char ch) {
         return write(&ch, 1) == 1;
     }
 

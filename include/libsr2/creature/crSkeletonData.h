@@ -10,6 +10,11 @@ namespace sr2 {
             crSkeletonData();
             ~crSkeletonData();
 
+            bool load(const char* name);
+            bool load(const char* prefix, const char* name);
+            void initMirror();
+            crBoneData* findBone(const char* name, char postfix = 0, u32 nameIndex = 0);
+
             u32 boneCount;
             crBoneData* boneData;
     };

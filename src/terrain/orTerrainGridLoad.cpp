@@ -26,7 +26,7 @@ namespace sr2 {
         if (mtl) {
             datAsciiTokenizer tok;
             tok.init(map, mtl);
-            while (tok.check_token("mtl", false)) {
+            while (tok.checkToken("mtl", false)) {
                 phMaterialMgr::get()->addMaterial(tok);
             }
             mtl->close();
@@ -657,14 +657,14 @@ namespace sr2 {
         datAsciiTokenizer tok;
         tok.init(map, fp);
         char buf[64] = { 0 };
-        while (tok.get_token(buf, 64)) {
-            if (strncmp(buf, "fogend", 64) == 0) fog_end = tok.read_float();
-            else if (strncmp(buf, "fogstart", 64) == 0) fog_start = tok.read_float();
-            else if (strncmp(buf, "fogclamp", 64) == 0) fog_clamp = tok.read_float();
+        while (tok.getToken(buf, 64)) {
+            if (strncmp(buf, "fogend", 64) == 0) fog_end = tok.readFloat();
+            else if (strncmp(buf, "fogstart", 64) == 0) fog_start = tok.readFloat();
+            else if (strncmp(buf, "fogclamp", 64) == 0) fog_clamp = tok.readFloat();
             else if (strncmp(buf, "fogcolor", 64) == 0) {
-                u8 r = tok.read_int32();
-                u8 g = tok.read_int32();
-                u8 b = tok.read_int32();
+                u8 r = tok.readInt32();
+                u8 g = tok.readInt32();
+                u8 b = tok.readInt32();
                 u8 a = 128;
                 fog_color = r | g << 8 | b << 16 | a << 24;
             }
@@ -702,15 +702,15 @@ namespace sr2 {
         tok.init(filename.c_str(), fp);
         char* buf = (char*)tok.buf;
         
-        while (tok.get_token(buf, 64)) {
-            if (strncmp(buf, "hirez8", 64) == 0) LODDist[0] = tok.read_float();
-            else if (strncmp(buf, "hirez4", 64) == 0) LODDist[1] = tok.read_float();
-            else if (strncmp(buf, "hirez2", 64) == 0) LODDist[2] = tok.read_float();
-            else if (strncmp(buf, "hirez1", 64) == 0) LODDist[3] = tok.read_float();
-            else if (strncmp(buf, "lorez1", 64) == 0) LODDist[4] = tok.read_float();
-            else if (strncmp(buf, "lorez2", 64) == 0) LODDist[5] = tok.read_float();
-            else if (strncmp(buf, "lorez4", 64) == 0) LODDist[6] = tok.read_float();
-            else if (strncmp(buf, "lorez8", 64) == 0) LODDist[7] = tok.read_float();
+        while (tok.getToken(buf, 64)) {
+            if (strncmp(buf, "hirez8", 64) == 0) LODDist[0] = tok.readFloat();
+            else if (strncmp(buf, "hirez4", 64) == 0) LODDist[1] = tok.readFloat();
+            else if (strncmp(buf, "hirez2", 64) == 0) LODDist[2] = tok.readFloat();
+            else if (strncmp(buf, "hirez1", 64) == 0) LODDist[3] = tok.readFloat();
+            else if (strncmp(buf, "lorez1", 64) == 0) LODDist[4] = tok.readFloat();
+            else if (strncmp(buf, "lorez2", 64) == 0) LODDist[5] = tok.readFloat();
+            else if (strncmp(buf, "lorez4", 64) == 0) LODDist[6] = tok.readFloat();
+            else if (strncmp(buf, "lorez8", 64) == 0) LODDist[7] = tok.readFloat();
         }
 
         fp->close();

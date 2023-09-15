@@ -54,7 +54,7 @@ namespace sr2 {
             return false;
         }
 
-        u8 someChar = fp->get_ch();
+        u8 someChar = fp->getCh();
         unk4 = someChar != 0;
 
         frames = new crAnimFrame[frameCount];
@@ -88,7 +88,7 @@ namespace sr2 {
     void crAnimation::normalize(i32 u0) {
         f32 t0 = u0 ? frames[0].buffer[2] : 0.0f;
         for (u32 i = 0;i < frameCount;i++) {
-            frames[i].buffer[2] -= (f32(i) * (-f32(unk2) / f32(frameCount)) + t0);
+            frames[i].buffer[2] -= (f32(i) * (-unk2 / f32(frameCount)) + t0);
         }
     }
 

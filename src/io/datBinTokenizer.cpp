@@ -1,83 +1,83 @@
 #include <libsr2/io/datBinTokenizer.h>
 
 namespace sr2 {
-    i8 datBinTokenizer::read_int8() {
+    i8 datBinTokenizer::readInt8() {
         return 0;
     }
 
-    i16 datBinTokenizer::read_int16() {
+    i16 datBinTokenizer::readInt16() {
         return 0;
     }
 
-    i32 datBinTokenizer::read_int32() {
+    i32 datBinTokenizer::readInt32() {
         return 0;
     }
 
-    f32 datBinTokenizer::read_float() {
+    f32 datBinTokenizer::readFloat() {
         return 0.0f;
     }
 
-    vec2f datBinTokenizer::read_vec2() {
+    vec2f datBinTokenizer::readVec2() {
         return vec2f({ 0.0f, 0.0f });
     }
 
-    vec3f datBinTokenizer::read_vec3() {
+    vec3f datBinTokenizer::readVec3() {
         return vec3f({ 0.0f, 0.0f, 0.0f });
     }
 
-    vec4f datBinTokenizer::read_vec4() {
+    vec4f datBinTokenizer::readVec4() {
         return vec4f({ 0.0f, 0.0f, 0.0f, 0.0f });
     }
 
-    i32 datBinTokenizer::read_delimiter(char* token) {
+    i32 datBinTokenizer::readDelimiter(char* token) {
         return 0;
     }
 
-    i32 datBinTokenizer::match_int(char* token) {
+    i32 datBinTokenizer::matchInt(char* token) {
         return 0;
     }
 
-    f32 datBinTokenizer::match_float(char* token) {
+    f32 datBinTokenizer::matchFloat(char* token) {
         return 0.0f;
     }
 
-    vec2f datBinTokenizer::match_vec2(char* token) {
+    vec2f datBinTokenizer::matchVec2(char* token) {
         return vec2f({ 0.0f, 0.0f });
     }
 
-    vec3f datBinTokenizer::match_vec3(char* token) {
+    vec3f datBinTokenizer::matchVec3(char* token) {
         return vec3f({ 0.0f, 0.0f, 0.0f });
     }
 
-    vec4f datBinTokenizer::match_vec4(char* token) {
+    vec4f datBinTokenizer::matchVec4(char* token) {
         return vec4f({ 0.0f, 0.0f, 0.0f, 0.0f });
     }
 
-    bool datBinTokenizer::write_string(const char* str, i32 postfix_tab_count) {
+    bool datBinTokenizer::writeString(const char* str, i32 postfix_tab_count) {
         return false;
     }
 
-    bool datBinTokenizer::put_delimiter(char* c) {
+    bool datBinTokenizer::putDelimiter(char* c) {
         return false;
     }
 
-    bool datBinTokenizer::write_int(i32 i) {
+    bool datBinTokenizer::writeInt(i32 i) {
         return false;
     }
 
-    bool datBinTokenizer::write_float(f32 f) {
+    bool datBinTokenizer::writeFloat(f32 f) {
         return false;
     }
 
-    bool datBinTokenizer::write_vec2(const vec2f& v) {
+    bool datBinTokenizer::writeVec2(const vec2f& v) {
         return false;
     }
 
-    bool datBinTokenizer::write_vec3(const vec3f& v) {
+    bool datBinTokenizer::writeVec3(const vec3f& v) {
         return false;
     }
 
-    bool datBinTokenizer::write_vec4(const vec4f& v) {
+    bool datBinTokenizer::writeVec4(const vec4f& v) {
         return false;
     }
 };

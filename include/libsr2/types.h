@@ -31,25 +31,83 @@ namespace sr2 {
 	typedef u32               undefined4;
 	typedef undefined*        pointer;
 
-	struct vec4f {
-		f32 x, y, z, w;
-	};
-	struct vec3f {
-		f32 x, y, z;
-	};
 	struct vec2f {
 		f32 x, y;
 	};
+	struct vec3f {
+		f32 x, y, z;
+
+		vec3f();
+		vec3f(f32 x, f32 y, f32 z);
+
+		vec3f operator-() const;
+		vec3f operator-(const vec3f& rhs) const;
+		vec3f operator+(const vec3f& rhs) const;
+		vec3f operator*(const vec3f& rhs) const;
+		vec3f operator/(const vec3f& rhs) const;
+		vec3f operator-(f32 rhs) const;
+		vec3f operator+(f32 rhs) const;
+		vec3f operator*(f32 rhs) const;
+		vec3f operator/(f32 rhs) const;
+		vec3f operator-=(const vec3f& rhs);
+		vec3f operator+=(const vec3f& rhs);
+		vec3f operator*=(const vec3f& rhs);
+		vec3f operator/=(const vec3f& rhs);
+		vec3f operator-=(f32 rhs);
+		vec3f operator+=(f32 rhs);
+		vec3f operator*=(f32 rhs);
+		vec3f operator/=(f32 rhs);
+		f32 operator[](u8 axis) const;
+		f32& operator[](u8 axis);
+
+		vec3f cross(const vec3f& rhs) const;
+		vec3f normalized() const;
+		void normalize();
+		f32 dot(const vec3f& rhs) const;
+	};
+	struct vec4f {
+		vec4f();
+		vec4f(f32 x, f32 y, f32 z, f32 w);
+		vec4f(const vec3f& rhs);
+
+		vec4f operator-() const;
+		vec4f operator-(const vec4f& rhs) const;
+		vec4f operator+(const vec4f& rhs) const;
+		vec4f operator*(const vec4f& rhs) const;
+		vec4f operator/(const vec4f& rhs) const;
+		vec4f operator-(f32 rhs) const;
+		vec4f operator+(f32 rhs) const;
+		vec4f operator*(f32 rhs) const;
+		vec4f operator/(f32 rhs) const;
+		vec4f operator-=(const vec4f& rhs);
+		vec4f operator+=(const vec4f& rhs);
+		vec4f operator*=(const vec4f& rhs);
+		vec4f operator/=(const vec4f& rhs);
+		vec4f operator-=(f32 rhs);
+		vec4f operator+=(f32 rhs);
+		vec4f operator*=(f32 rhs);
+		vec4f operator/=(f32 rhs);
+		f32 operator[](u8 axis) const;
+		f32& operator[](u8 axis);
+
+		f32 x, y, z, w;
+	};
+
+	vec3f operator*(f32 lhs, const vec3f& rhs);
+
 	struct vec2i {
 		i32 x, y;
 	};
+
 	struct vec2s16 {
 		s16 x, y;
 	};
+
 	struct quat {
 		vec3f axis;
 		f32 angle;
 	};
+
 	struct quat_transform {
 		quat orient;
 		vec3f position;
@@ -57,11 +115,36 @@ namespace sr2 {
 
 	struct mat3x3f {
 		vec3f x, y, z;
+
+		vec3f operator*(const vec3f& rhs) const;
+		mat3x3f inverse() const;
+		mat3x3f transposed() const;
+		
+		vec3f operator[](u8 axis) const;
+		vec3f& operator[](u8 axis);
 	};
+
 	struct mat3x4f {
 		vec3f x, y, z, w;
+
+		vec3f operator*(const vec3f& rhs) const;
+		mat3x4f operator*(const mat3x4f& rhs) const;
+		mat3x4f transposed() const;
+
+		vec3f operator[](u8 axis) const;
+		vec3f& operator[](u8 axis);
 	};
+
 	struct mat4x4f {
+		vec3f operator*(const vec3f& rhs) const;
+		mat4x4f operator*(const mat3x4f& rhs) const;
+		mat4x4f operator*(const mat4x4f& rhs) const;
+		mat4x4f operator*=(const mat3x4f& rhs);
+		mat4x4f operator*=(const mat4x4f& rhs);
+		mat3x4f to3x4() const;
+		mat3x3f basis() const;
+		mat4x4f transposed() const;
+
 		vec4f x, y, z, w;
 	};
 

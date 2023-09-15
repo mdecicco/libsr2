@@ -2,10 +2,16 @@
 #include <libsr2/types.h>
 
 namespace sr2 {
+    class datAsciiTokenizer;
+
     class phMaterial {
         public:
             phMaterial();
-            ~phMaterial();
+            virtual ~phMaterial();
+
+            void parse(datAsciiTokenizer& tok);
+            void setName(const char* name);
+            virtual void copy(phMaterial* other);
 
             char name[32];
             short effect;

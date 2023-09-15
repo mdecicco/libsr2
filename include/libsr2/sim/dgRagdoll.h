@@ -1,10 +1,15 @@
 #pragma once
 #include <libsr2/types.h>
 #include <libsr2/sim/phInertialCS.h>
+#include <libsr2/sim/phInst.h>
+#include <libsr2/sim/phColliderBase.h>
+#include <libsr2/sim/phSleep.h>
 
 namespace sr2 {
     class ragUnk0;
+    class ragUnk1;
     class dgLinkData;
+    class PhysEntity;
 
     class dgRagdollData : public phInertialCS {
         public:
@@ -38,5 +43,19 @@ namespace sr2 {
         public:
             dgRagdoll();
             ~dgRagdoll();
+
+            void init(u32 boneCount, u32 linkCount);
+            void setBoundsFromUnk1(ragUnk1* unk);
+
+            PhysEntity* entity;
+            phInst instance0;
+            phInst instance1;
+            mat3x4f* bones0;
+            mat3x4f* bones1;
+            dgRagdollData* data;
+            phColliderBase col;
+            phSleep sleep;
+            u16 spIndex;
+            i32 field28_0x190;
     };
 };

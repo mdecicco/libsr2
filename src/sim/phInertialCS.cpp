@@ -281,10 +281,10 @@ namespace sr2 {
                 math::copy(tri[1], vertices[polygons[i].indices[1]]);
                 math::copy(tri[2], vertices[polygons[i].indices[2]]);
 
-                f32 fVar3 = math::dot(polygons[i].field_0x0, tri[0]);
+                f32 fVar3 = math::dot(polygons[i].normal, tri[0]);
                 tetrahedronAngInertia(tri, &to0, &to1, &to2, &to3, &to4, &to5);
 
-                fVar10 += polygons[i].field_0xc * fVar3;
+                fVar10 += polygons[i].normalMag * fVar3;
                 fVar5 += to0 * fVar3;
                 fVar4 += to1 * fVar3;
                 fVar2 += to2 * fVar3;

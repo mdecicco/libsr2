@@ -34,7 +34,7 @@ namespace sr2 {
         memset(m_materials, 0, sizeof(void*) * materialCapacity);
 
         m_table = new HashTable();
-        AddToTable(phMaterialMgr::defaultMaterial);
+        addToTable(phMaterialMgr::defaultMaterial);
         m_materials[m_materialCount++] = phMaterialMgr::defaultMaterial;
     }
 
@@ -50,15 +50,26 @@ namespace sr2 {
     }
     
     phMaterial* phMaterialMgr::find(const char* name) {
-        return nullptr;
+        return (phMaterial*)m_table->Access(name);
     }
 
-    void phMaterialMgr::AddToTable(phMaterial* mtrl) {
+    void phMaterialMgr::addToTable(phMaterial* mtrl) {
         m_table->Insert(mtrl->name, mtrl);
     }
 
-    phMaterial* phMaterialMgr::addMaterial(datAsciiTokenizer& file) {
-        return nullptr;
+    phMaterial* phMaterialMgr::addMaterial(datAsciiTokenizer& tok) {
+        phMaterial mtrl;
+        mtrl.parse(tok);
+        phMaterial* out = find(mtrl.name);
+        if (!out) {
+            out = new phMaterial();
+            out->setName(mtrl.name);
+            out->copy(&mtrl);
+            addToTable(out);
+            m_materials[m_materialCount++] = out;
+        }
+
+        return out;
     }
 
     phMaterial* phMaterialMgr::addMaterial(Stream* file) {

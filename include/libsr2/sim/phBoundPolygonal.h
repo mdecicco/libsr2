@@ -10,7 +10,7 @@ namespace sr2 {
                 u16 idx_a, idx_b;
             };
 
-            phBoundPolygonal(BOUND_TYPE type);
+            phBoundPolygonal(phBoundType type);
             ~phBoundPolygonal();
 
             u32 vertexCount;

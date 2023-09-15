@@ -1,7 +1,7 @@
 #include <libsr2/sim/phBoundPolygonal.h>
 
 namespace sr2 {
-    phBoundPolygonal::phBoundPolygonal(BOUND_TYPE type) : phBound(type) {
+    phBoundPolygonal::phBoundPolygonal(phBoundType type) : phBound(type) {
         vertices = nullptr;
         polygons = nullptr;
         edges = nullptr;

@@ -12,6 +12,15 @@
         "charconv": "cpp",
         "ios": "cpp",
         "istream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cmath": "cpp",
+        "algorithm": "cpp",
+        "compare": "cpp",
+        "format": "cpp",
+        "fstream": "cpp",
+        "locale": "cpp",
+        "numeric": "cpp",
+        "optional": "cpp",
+        "xlocinfo": "cpp"
     }
 }

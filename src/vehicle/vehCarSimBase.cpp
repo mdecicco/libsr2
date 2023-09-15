@@ -263,7 +263,7 @@ namespace sr2 {
     
     void vehCarSimBase::initFluid() {
         fluid = new vehFluid();
-        fluid->init(this, bound->aabb_min, bound->aabb_max);
+        fluid->init(this, bound->aabbMin, bound->aabbMax);
     }
     
     void vehCarSimBase::initEngine(char* vehicleName) {
@@ -443,7 +443,7 @@ namespace sr2 {
         ics->initBoxMass(mass, inertia_box.x, inertia_box.y, inertia_box.z);
         ((vehBound*)bound)->setFriction(bound_friction);
         ((vehBound*)bound)->setElasticity(bound_elasticity);
-        bound->gravity_multiplier = bound_gravity;
+        bound->gravityMultiplier = bound_gravity;
         engine->computeConstants();
         transmission->computeConstants();
 

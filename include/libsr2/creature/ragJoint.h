@@ -29,8 +29,8 @@ namespace sr2 {
             vec3f position;
 
             f32 unk0;
-            f32 unk1;
-            f32 unk2;
+            f32 flex;
+            f32 damping;
             i32 boneIdx;
             i32 linkIdx;
     };

@@ -45,7 +45,9 @@ namespace sr2 {
     }
 
     void crAnimFrame::pose(crSkeleton* skel, bool unk) {
+        vec3f* eulers = (vec3f*)(&buffer[3]);
         for (u32 i = 0;i < skel->data->boneCount;i++) {
+            skel->bones[i].eulers = eulers[i];
             math::from_eulers_xzy(skel->bones[i].transform, skel->bones[i].eulers);
             skel->bones[i].transform.w = skel->data->boneData[i].offset;
         }

@@ -27,7 +27,7 @@ namespace sr2 {
 
         for (u32 i = 0;i < data->boneCount;i++) {
             math::identity_3x3(bones[i].transform);
-            data->boneData[i].offset = bones[i].transform.w;
+            bones[i].transform.w = data->boneData[i].offset;
         }
 
         update();
