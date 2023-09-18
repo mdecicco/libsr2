@@ -1,15 +1,19 @@
 #include <libsr2/utilities/DebugDrawer.h>
+#include <vector>
 
 struct GLFWwindow;
-
-namespace gla {
-    class GLAnnotate;
-};
 
 namespace sr2 {
     class crBoneData;
     class ragUnk1;
     class crSkeleton;
+
+    #pragma pack(push, 1)
+    struct vertex {
+        vec3f position;
+        vec4f color;
+    };
+    #pragma pack(pop)
 
     class Draw : public IDebugDrawer {
         public:
@@ -32,16 +36,24 @@ namespace sr2 {
             static void destroy();
         
             GLFWwindow* window;
-            gla::GLAnnotate* gfx;
         
         protected:
             mat4x4f m_projection;
             mat4x4f m_view;
+            mat4x4f m_mvp;
             bool m_btnDown;
             bool m_keyDown[256];
             vec2f m_cursor;
             f32 m_dt;
             f32 m_lastTime;
+            f32 m_moveSpeed;
+            f32 m_moveDamping;
+            f32 m_moveAccel;
+            vec3f m_moveVelocity;
+            i32 m_shaderProgram;
+            u32 m_vbo;
+            u32 m_vao;
+            std::vector<vertex> m_vertices;
         
         private:
             Draw();

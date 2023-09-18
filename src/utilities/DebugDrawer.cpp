@@ -51,7 +51,7 @@ namespace sr2 {
 
     }
 
-    void IDebugDrawer::sphere(f32 radius, const mat3x4f& transform, const vec4f color) {
+    void IDebugDrawer::sphere(f32 radius, const mat3x4f& transform, const vec4f& color) {
 		vec3f center = transform.w;
 		vec3f up = transform.y;
 		vec3f axis = transform.x;
@@ -64,20 +64,20 @@ namespace sr2 {
 		spherePatch(center, up, -axis, radius, minTh, maxTh, minPs, maxPs, color, stepDegrees, false);
     }
 
-    void IDebugDrawer::sphere(f32 radius, const vec3f& center, const vec4f color) {
+    void IDebugDrawer::sphere(f32 radius, const vec3f& center, const vec4f& color) {
 		mat3x4f tr;
         math::identity(tr);
         tr.w = center;
 		sphere(radius, tr, color);
     }
 
-    void IDebugDrawer::triangle(const vec3f& a, const vec3f& b, const vec3f& c, const vec4f color) {
+    void IDebugDrawer::triangle(const vec3f& a, const vec3f& b, const vec3f& c, const vec4f& color) {
 		line(a, b, color);
 		line(b, c, color);
 		line(c, a, color);
     }
 
-    void IDebugDrawer::aabb(const vec3f& upper, const vec3f& lower, const vec4f color) {
+    void IDebugDrawer::aabb(const vec3f& upper, const vec3f& lower, const vec4f& color) {
 		vec3f halfExtents = (upper - lower) * 0.5f;
 		vec3f center = (upper + lower) * 0.5f;
 		int i, j;
@@ -115,7 +115,7 @@ namespace sr2 {
     void IDebugDrawer::arc(
         const vec3f& center, const vec3f& normal, const vec3f& axis,
         f32 radiusA, f32 radiusB, f32 minAngle, f32 maxAngle,
-        const vec4f color, bool drawSect, f32 stepDegrees
+        const vec4f& color, bool drawSect, f32 stepDegrees
     ) {
 		const vec3f& vx = axis;
 		vec3f vy = normal.cross(axis);
@@ -143,7 +143,7 @@ namespace sr2 {
     void IDebugDrawer::spherePatch(
         const vec3f& center, const vec3f& up, const vec3f& axis,
         f32 radius, f32 minTh, f32 maxTh, f32 minPs, f32 maxPs,
-        const vec4f color, f32 stepDegrees, bool drawCenter
+        const vec4f& color, f32 stepDegrees, bool drawCenter
     ) {
 		vec3f vA[74];
 		vec3f vB[74];
@@ -250,7 +250,7 @@ namespace sr2 {
 		}
     }
 
-    void IDebugDrawer::box(const vec3f& min, const vec3f& max, const vec4f color) {
+    void IDebugDrawer::box(const vec3f& min, const vec3f& max, const vec4f& color) {
 		line(vec3f(min.x, min.y, min.z), vec3f(max.x, min.y, min.z), color);
 		line(vec3f(max.x, min.y, min.z), vec3f(max.x, max.y, min.z), color);
 		line(vec3f(max.x, max.y, min.z), vec3f(min.x, max.y, min.z), color);
@@ -265,7 +265,7 @@ namespace sr2 {
 		line(vec3f(min.x, max.y, max.z), vec3f(min.x, min.y, max.z), color);
     }
 
-    void IDebugDrawer::box(const vec3f& min, const vec3f& max, const mat3x4f& transform, const vec4f color) {
+    void IDebugDrawer::box(const vec3f& min, const vec3f& max, const mat3x4f& transform, const vec4f& color) {
 		line(transform * vec3f(min.x, min.y, min.z), transform * vec3f(max.x, min.y, min.z), color);
 		line(transform * vec3f(max.x, min.y, min.z), transform * vec3f(max.x, max.y, min.z), color);
 		line(transform * vec3f(max.x, max.y, min.z), transform * vec3f(min.x, max.y, min.z), color);
@@ -280,14 +280,14 @@ namespace sr2 {
 		line(transform * vec3f(min.x, max.y, max.z), transform * vec3f(min.x, min.y, max.z), color);
     }
 
-    void IDebugDrawer::capsule(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f color) {
+    void IDebugDrawer::capsule(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f& color) {
 		int stepDegrees = 30;
 
 		vec3f capStart(0.f, 0.f, 0.f);
-		capStart[upAxis] = -halfHeight;
+		capStart[upAxis] = 0.0f;
 
 		vec3f capEnd(0.f, 0.f, 0.f);
-		capEnd[upAxis] = halfHeight;
+		capEnd[upAxis] = halfHeight * 2.0f;
 
 		// Draw the ends
 		{
@@ -328,19 +328,19 @@ namespace sr2 {
 		{
 			capEnd[(upAxis + 1) % 3] = capStart[(upAxis + 1) % 3] = sinf(f32(i) * RADS_PER_DEG) * radius;
 			capEnd[(upAxis + 2) % 3] = capStart[(upAxis + 2) % 3] = cosf(f32(i) * RADS_PER_DEG) * radius;
-			line(start + basis(transform) * capStart, start + basis(transform) * capEnd, color);
+			line(transform * capStart, transform * capEnd, color);
 		}
     }
 
-    void IDebugDrawer::cylinder(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f color) {
+    void IDebugDrawer::cylinder(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f& color) {
 		vec3f start = transform.w;
 		vec3f offsetHeight(0, 0, 0);
-		offsetHeight[upAxis] = halfHeight;
+		offsetHeight[upAxis] = halfHeight * 2.0f;
 		int stepDegrees = 30;
 		vec3f capStart(0.f, 0.f, 0.f);
-		capStart[upAxis] = -halfHeight;
+		capStart[upAxis] = 0.0f;
 		vec3f capEnd(0.f, 0.f, 0.f);
-		capEnd[upAxis] = halfHeight;
+		capEnd[upAxis] = halfHeight * 2.0f;
 
 		for (int i = 0; i < 360; i += stepDegrees)
 		{
@@ -357,7 +357,7 @@ namespace sr2 {
 		arc(start + basis(transform) * (offsetHeight), basis(transform) * yaxis, basis(transform) * xaxis, radius, radius, 0, PI2, color, false, f32(10.0));
     }
 
-    void IDebugDrawer::cone(f32 radius, f32 height, Axis upAxis, const mat3x4f& transform, const vec4f color) {
+    void IDebugDrawer::cone(f32 radius, f32 height, Axis upAxis, const mat3x4f& transform, const vec4f& color) {
 		int stepDegrees = 30;
 		vec3f start = transform.w;
 
@@ -392,7 +392,7 @@ namespace sr2 {
 		arc(start - basis(transform) * (offsetHeight), basis(transform) * yaxis, basis(transform) * xaxis, radius, radius, 0, PI2, color, false, 10.0);
     }
 
-    void IDebugDrawer::plane(const vec3f& normal, f32 planeConst, const mat3x4f& transform, const vec4f color) {
+    void IDebugDrawer::plane(const vec3f& normal, f32 planeConst, const mat3x4f& transform, const vec4f& color) {
 		vec3f planeOrigin = normal * planeConst;
 		vec3f vec0, vec1;
 		btPlaneSpace1(normal, vec0, vec1);
@@ -410,24 +410,49 @@ namespace sr2 {
         i32 hlength = length / 2;
 
         for (f32 x = -f32(hwidth);x <= f32(hwidth);x += 1.0f) {
+			if (x == 0.0f) continue;
             line(
                 { x, 0, -f32(hlength) },
                 { x, 0,  f32(hlength) },
-                x == 0.0f ? vec4f(1.0f, 0.0f, 0.0f, 1.0f) : vec4f(0.5f, 0.5f, 0.5f, 1.0f)
+                vec4f(0.5f, 0.5f, 0.5f, 1.0f)
             );
         }
 
         for (f32 z = -f32(hlength);z <= f32(hlength);z += 1.0f) {
+			if (z == 0.0f) continue;
             line(
                 { -f32(hwidth), 0, z },
                 {  f32(hwidth), 0, z },
-                z == 0.0f ? vec4f(0.0f, 0.0f, 1.0f, 1.0f) : vec4f(0.5f, 0.5f, 0.5f, 1.0f)
+                vec4f(0.5f, 0.5f, 0.5f, 1.0f)
             );
         }
+
+		line(
+			{ -f32(hwidth), 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f },
+			vec4f(0.5f, 0.0f, 0.0f, 1.0f)
+		);
+		line(
+			{ 0.0f, 0.0f, 0.0f },
+			{ f32(hwidth), 0.0f, 0.0f },
+			vec4f(1.0f, 0.0f, 0.0f, 1.0f)
+		);
+		line(
+			{ 0.0f, 0.0f, -f32(hlength) },
+			{ 0.0f, 0.0f, 0.0f },
+			vec4f(0.0f, 0.0f, 0.5f, 1.0f)
+		);
+		line(
+			{ 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, f32(hlength) },
+			vec4f(0.0f, 0.0f, 1.0f, 1.0f)
+		);
     }
 
-    IDebugDrawer* DebugDraw::drawer = nullptr;
 
+
+
+    IDebugDrawer* DebugDraw::drawer = nullptr;
     void DebugDraw::setDrawer(IDebugDrawer* drawer) {
         DebugDraw::drawer = drawer;
     }
@@ -437,22 +462,22 @@ namespace sr2 {
         DebugDraw::drawer->line(a, b, color);
     }
 
-    void DebugDraw::sphere(f32 radius, const mat3x4f& transform, const vec4f color) {
+    void DebugDraw::sphere(f32 radius, const mat3x4f& transform, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->sphere(radius, transform, color);
     }
 
-    void DebugDraw::sphere(f32 radius, const vec3f& center, const vec4f color) {
+    void DebugDraw::sphere(f32 radius, const vec3f& center, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->sphere(radius, center, color);
     }
 
-    void DebugDraw::triangle(const vec3f& a, const vec3f& b, const vec3f& c, const vec4f color) {
+    void DebugDraw::triangle(const vec3f& a, const vec3f& b, const vec3f& c, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->triangle(a, b, c, color);
     }
 
-    void DebugDraw::aabb(const vec3f& upper, const vec3f& lower, const vec4f color) {
+    void DebugDraw::aabb(const vec3f& upper, const vec3f& lower, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->aabb(upper, lower, color);
     }
@@ -465,7 +490,7 @@ namespace sr2 {
     void DebugDraw::arc(
         const vec3f& center, const vec3f& normal, const vec3f& axis,
         f32 radiusA, f32 radiusB, f32 minAngle, f32 maxAngle,
-        const vec4f color, bool drawSect, f32 stepDegrees
+        const vec4f& color, bool drawSect, f32 stepDegrees
     ) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->arc(center, normal, axis, radiusA, radiusB, minAngle, maxAngle, color, drawSect, stepDegrees);
@@ -474,38 +499,38 @@ namespace sr2 {
     void DebugDraw::spherePatch(
         const vec3f& center, const vec3f& up, const vec3f& axis, f32 radius,
         f32 minTh, f32 maxTh, f32 minPs, f32 maxPs,
-        const vec4f color, f32 stepDegrees, bool drawCenter
+        const vec4f& color, f32 stepDegrees, bool drawCenter
     ) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->spherePatch(center, up, axis, radius, minTh, maxTh, minPs, maxPs, color, stepDegrees, drawCenter);
     }
 
-    void DebugDraw::box(const vec3f& min, const vec3f& max, const vec4f color) {
+    void DebugDraw::box(const vec3f& min, const vec3f& max, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->box(min, max, color);
     }
 
-    void DebugDraw::box(const vec3f& min, const vec3f& max, const mat3x4f& transform, const vec4f color) {
+    void DebugDraw::box(const vec3f& min, const vec3f& max, const mat3x4f& transform, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->box(min, max, transform, color);
     }
 
-    void DebugDraw::capsule(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f color) {
+    void DebugDraw::capsule(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->capsule(radius, halfHeight, upAxis, transform, color);
     }
 
-    void DebugDraw::cylinder(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f color) {
+    void DebugDraw::cylinder(f32 radius, f32 halfHeight, Axis upAxis, const mat3x4f& transform, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->cylinder(radius, halfHeight, upAxis, transform, color);
     }
 
-    void DebugDraw::cone(f32 radius, f32 height, Axis upAxis, const mat3x4f& transform, const vec4f color) {
+    void DebugDraw::cone(f32 radius, f32 height, Axis upAxis, const mat3x4f& transform, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->cone(radius, height, upAxis, transform, color);
     }
 
-    void DebugDraw::plane(const vec3f& normal, f32 planeConst, const mat3x4f& transform, const vec4f color) {
+    void DebugDraw::plane(const vec3f& normal, f32 planeConst, const mat3x4f& transform, const vec4f& color) {
         if (!DebugDraw::drawer) return;
         DebugDraw::drawer->plane(normal, planeConst, transform, color);
     }

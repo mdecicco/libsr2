@@ -239,6 +239,17 @@ namespace sr2 {
     f32 vec3f::dot(const vec3f& rhs) const {
         return math::dot(*this, rhs);
     }
+    f32 vec3f::length() const {
+        return sqrtf(x * x + y * y + z * z);
+    }
+    f32 vec3f::lengthSq() const {
+        return x * x + y * y + z * z;
+    }
+    void vec3f::zero() {
+        x = 0.0f;
+        y = 0.0f;
+        z = 0.0f;
+    }
     vec3f operator*(f32 lhs, const vec3f& rhs) {
         return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
     }

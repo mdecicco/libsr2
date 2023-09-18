@@ -129,6 +129,10 @@ namespace sr2 {
     dgRagdoll::~dgRagdoll() {
     }
 
+    void dgRagdoll::reset() {
+        FUN_001ab2d8();
+    }
+
     void dgRagdoll::init(u32 boneCount, u32 linkCount) {
         entity = new PhysEntity();
         entity->bound = new phBoundComposite(boneCount);
@@ -147,5 +151,10 @@ namespace sr2 {
     }
     
     void dgRagdoll::setBoundsFromUnk1(ragUnk1* unk) {
+    }
+    
+    void dgRagdoll::FUN_001ab2d8() {
+        SpatialPartitioner::get()->maybeReinsertAny(spIndex);
+        field28_0x190 = 0;
     }
 };

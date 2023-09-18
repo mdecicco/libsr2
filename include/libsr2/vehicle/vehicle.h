@@ -16,7 +16,7 @@ namespace sr2 {
             i32 index;
             some_vehicle_thing* instance;
             undefined* unk0;
-            VEHICLE_TYPE type;
+            PLAYER_TYPE type;
             VehicleCameraData* cam_data;
             UnkMenu* some_menu;
             i32 unk1, unk2;
@@ -25,6 +25,8 @@ namespace sr2 {
             f32 max_horsepower;
 
             static Vehicle* GetVehicle(u16 idx);
+            static u32 GetCount();
+            static u32 Count;
             static Vehicle* Vehicles;
     };
 };

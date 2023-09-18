@@ -9,6 +9,7 @@ namespace sr2 {
             phBoundComposite(u32 boneCount);
             virtual ~phBoundComposite();
 
+            virtual void debugDraw(const mat3x4f& transform = mat3x4f::identity);
             virtual bool parseText(datAsciiTokenizer& tok);
             virtual void calculateBoundingBox();
 

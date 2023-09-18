@@ -70,8 +70,6 @@ void ragdoll_test() {
     
     unk->setPose(&sdata, &anim->frames[0]);
 
-    glPointSize(5.0f);
-
     f32 frameDur = 1.0f / 30.0f;
     f32 frameTmr = 0.0f;
     u32 frameIdx = 0;
@@ -89,6 +87,7 @@ void ragdoll_test() {
         crSkeleton s(100);
         s.init(&sdata, nullptr);
         anim->frames[frameIdx].pose(&s, true);
+        unk->setPose(&sdata, &anim->frames[frameIdx]);
         s.update();
 
         Draw::get()->begin();

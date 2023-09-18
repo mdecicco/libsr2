@@ -9,10 +9,12 @@ namespace sr2 {
             TaggedStream();
             ~TaggedStream();
 
-            Stream* open(char* filename);
-            Stream* open(char* dir, char* filename, char* ext);
+            Stream* open(const char* filename);
+            Stream* open(const char* dir, const char* filename, const char* ext);
             Stream* open(Stream* strm);
             Stream* getStream();
+            void closeOnError(bool value);
+            void restart();
             void close();
 
             bool readTag(u16* tag, u32* size);
@@ -20,7 +22,7 @@ namespace sr2 {
         protected:
             Stream* m_strm;
             Stream* m_field1_0x4;
-            i32 m_field2_0x8;
+            bool m_closeOnError;
             i32 m_readPos;
     };
 };

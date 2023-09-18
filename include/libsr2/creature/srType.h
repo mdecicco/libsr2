@@ -7,11 +7,17 @@ namespace sr2 {
     class ragUnk1;
     class shdwInstance;
     class PhysEntity;
+    class srCreatureGroup;
+    class crAnimation;
 
     class srType {
         public:
             srType();
             ~srType();
+
+            void load(srCreatureGroup* group);
+            void initData();
+            void FUN_001ad528(const char* name);
             
             undefined4 field0_0x0;
             f32 field1_0x4;
@@ -20,8 +26,10 @@ namespace sr2 {
             f32 field4_0x10;
             vec3f field5_0x14;
             f32 field6_0x20;
+            i32 field9_0x2c;
             f32 maxForce;
             u32 animationCount;
+            crAnimation** animations;
             modModel* lods[3];
             crSkeletonData* skel;
             PhysEntity* entity;

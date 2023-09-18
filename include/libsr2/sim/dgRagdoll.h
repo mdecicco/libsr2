@@ -25,7 +25,6 @@ namespace sr2 {
             virtual void moveICS();
             virtual void getLocalVelocity(vec3f& some_position, vec3f& velocity);
             virtual void method_0x68();
-
             void init(u32 linkCount);
             void FUN_00282e08();
             void updateTransforms();
@@ -44,9 +43,13 @@ namespace sr2 {
             dgRagdoll();
             ~dgRagdoll();
 
+
+            void reset();
             void init(u32 boneCount, u32 linkCount);
             void setBoundsFromUnk1(ragUnk1* unk);
+            void FUN_001ab2d8();
 
+            ragUnk1* unk1;
             PhysEntity* entity;
             phInst instance0;
             phInst instance1;

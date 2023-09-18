@@ -161,7 +161,9 @@ namespace sr2 {
             } else {
                 mat3x4f& posedMtx = skel.boneTransforms[firstLinkIdx];
                 math::mult_transposed(*firstMtx, boundTrans, posedMtx);
-                math::sub(boundTrans.w, posedMtx.w, offset);
+                boundTrans = posedMtx;
+                math::sub(boundTrans.w, offset);
+                //math::sub(boundTrans.w, posedMtx.w, offset);
 
                 ragJoint* joint = unk1.links[linkIdx];
                 if (joint->parent) {

@@ -46,7 +46,7 @@ namespace sr2 {
         return m_fp;
     }
 
-    Stream* Stream::open(char* path, bool unk0) {
+    Stream* Stream::open(const char* path, bool unk0) {
         /*
             Stream *pSVar1;
             long lVar2;

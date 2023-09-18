@@ -388,6 +388,8 @@ namespace sr2 {
         }
     }
 
+
+	const mat3x4f mat3x4f::identity = {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}};
     vec3f mat3x4f::operator*(const vec3f& rhs) const {
         return {
             x.x * rhs.x + rhs.y * y.x + rhs.z * z.x + w.x,
@@ -398,7 +400,7 @@ namespace sr2 {
 
     mat3x4f mat3x4f::operator*(const mat3x4f& rhs) const {
         mat3x4f out;
-        math::mult(out, *this, rhs);
+        math::mult_with_translation(out, *this, rhs);
         return out;
     }
 

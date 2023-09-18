@@ -5,7 +5,7 @@
 namespace sr2 {
     TaggedStream::TaggedStream() {
         m_strm = nullptr;
-        m_field2_0x8 = 1;
+        m_closeOnError = true;
         m_readPos = 0;
         m_field1_0x4 = nullptr;
     }
@@ -15,12 +15,12 @@ namespace sr2 {
         m_strm = nullptr;
     }
 
-    Stream* TaggedStream::open(char* filename) {
+    Stream* TaggedStream::open(const char* filename) {
         Stream* s = Stream::open(filename, true);
         return open(s);
     }
 
-    Stream* TaggedStream::open(char* dir, char* filename, char* ext) {
+    Stream* TaggedStream::open(const char* dir, const char* filename, const char* ext) {
         Stream* s = datAssetManager::open(dir, filename, ext, 0, true);
         return open(s);
     }
@@ -47,6 +47,17 @@ namespace sr2 {
         return m_strm;
     }
 
+    
+    void TaggedStream::closeOnError(bool value) {
+        m_closeOnError = value;
+    }
+    
+    void TaggedStream::restart() {
+        if (!m_strm) return;
+        m_strm->seek(0);
+        open(m_strm);
+    }
+
     void TaggedStream::close() {
         if (!m_strm) return;
         if (m_field1_0x4) {
@@ -65,7 +76,7 @@ namespace sr2 {
         u32 pos = m_strm->tell();
         if (pos < m_readPos) m_strm->seek(m_readPos);
         else if (m_readPos < pos) {
-            if (m_field2_0x8) close();
+            if (m_closeOnError) close();
             return false;
         }
 
@@ -78,7 +89,7 @@ namespace sr2 {
             }
         }
 
-        if (m_field2_0x8) close();
+        if (m_closeOnError) close();
         return false;
     }
 };

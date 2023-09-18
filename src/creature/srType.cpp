@@ -6,4 +6,13 @@ namespace sr2 {
 
     srType::~srType() {
     }
+
+    void srType::load(srCreatureGroup* group) {
+    }
+
+    void srType::initData() {
+    }
+    
+    void srType::FUN_001ad528(const char* name) {
+    }
 };

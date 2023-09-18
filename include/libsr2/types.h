@@ -64,6 +64,9 @@ namespace sr2 {
 		vec3f normalized() const;
 		void normalize();
 		f32 dot(const vec3f& rhs) const;
+		f32 length() const;
+		f32 lengthSq() const;
+		void zero();
 	};
 	struct vec4f {
 		vec4f();
@@ -133,6 +136,8 @@ namespace sr2 {
 
 		vec3f operator[](u8 axis) const;
 		vec3f& operator[](u8 axis);
+
+		static const mat3x4f identity;
 	};
 
 	struct mat4x4f {
@@ -160,6 +165,12 @@ namespace sr2 {
         vpmass2     = 0x8,
         vpsnowcycle = 0x9
     };
+
+	enum PLAYER_TYPE : u32 {
+		Human,
+		AI,
+		Parked
+	};
 
 	enum WEATHER_TYPE : u32 {
 		weather_unk0 = 0x0,

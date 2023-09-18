@@ -1,17 +1,19 @@
 #pragma once
 #include <libsr2/types.h>
 #include <libsr2/sim/phBoundType.h>
+#include <libsr2/utilities/DebugDrawer.h>
 
 namespace sr2 {
     class datAsciiTokenizer;
     class datBinTokenizer;
     class phMaterial;
 
-    class phBound {
+    class phBound : public IDebugDrawable {
         public:
             phBound(phBoundType param_1);
             virtual ~phBound();
 
+            virtual void debugDraw(const mat3x4f& transform = mat3x4f::identity);
             virtual void calculateBoundingBox();
             void calculateSphereFromBoundingBox();
             void setPenetration();

@@ -17,6 +17,12 @@ namespace sr2 {
     phBoundComposite::~phBoundComposite() {
     }
 
+    void phBoundComposite::debugDraw(const mat3x4f& transform) {
+        for (u32 i = 0;i < boundCount;i++) {
+            bounds[i]->debugDraw(transform * boundTransforms[i]);
+        }
+    }
+
     bool phBoundComposite::parseText(datAsciiTokenizer& tok) {
         phMaterial* mtrl = nullptr;
 

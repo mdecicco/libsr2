@@ -11,6 +11,14 @@ namespace sr2 {
     phBoundHotdog::~phBoundHotdog() {
     }
 
+    void phBoundHotdog::debugDraw(const mat3x4f& transform) {
+        mat3x4f t = transform;
+        math::negate(t.y);
+        DebugDraw::capsule(radius, length * 0.5f, Axis::Y_AXIS, t);
+        if (centerOfGravityIsSet) DebugDraw::sphere(0.01f, t * centerOfGravity, vec4f(1.0f, 1.0f, 0.0f, 1.0f));
+        if (centroidIsSet) DebugDraw::sphere(0.01f, t * centroid, vec4f(1.0f, 0.0f, 1.0f, 1.0f));
+    }
+
     bool phBoundHotdog::parseText(datAsciiTokenizer& tok) {
         tok.matchToken("length:");
         f32 _length = tok.readFloat();

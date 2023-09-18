@@ -38,6 +38,12 @@ namespace sr2 {
     phBound::~phBound() {
     }
 
+    void phBound::debugDraw(const mat3x4f& transform) {
+        DebugDraw::box(aabbMin, aabbMax, transform);
+        if (centerOfGravityIsSet) DebugDraw::sphere(0.1f, transform * centerOfGravity, vec4f(1.0f, 1.0f, 0.0f, 1.0f));
+        if (centroidIsSet) DebugDraw::sphere(0.1f, transform * centroid, vec4f(1.0f, 0.0f, 1.0f, 1.0f));
+    }
+
     void phBound::calculateBoundingBox() {
     }
 

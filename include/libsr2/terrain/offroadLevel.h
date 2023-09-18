@@ -1,27 +1,14 @@
 #pragma once
 #include <libsr2/types.h>
+#include <libsr2/terrain/lvlLevel.h>
 
 namespace sr2 {
-    class UnkInstance0;
+    class unkInstance0;
     struct CullRoomData {
         undefined2 unk0;
         u16 flags;
-        UnkInstance0* instances;
+        unkInstance0* instances;
         undefined4 unk1;
-    };
-
-    class lvlLevel {
-        public:
-
-        protected:
-            lvlLevel();
-            ~lvlLevel();
-
-            undefined2 m_unk;
-            CullRoomData** m_cull_rooms;
-            u32 m_room_count;
-            UnkInstance0* m_first_instance;
-            u32 m_instance_count;
     };
 
     class gfxTexture;

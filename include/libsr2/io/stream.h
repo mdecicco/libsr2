@@ -19,7 +19,7 @@ namespace sr2 {
             bool putCh(char ch);
             FILE* getRaw();
 
-            static Stream* open(char* path, bool unk0);
+            static Stream* open(const char* path, bool unk0);
 
         protected:
             FILE* m_fp;

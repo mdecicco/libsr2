@@ -6,19 +6,6 @@
 #include <libsr2/sim/SpatialPartitioner.h>
 
 namespace sr2 {
-    lvlLevel::lvlLevel() {
-        m_unk = 0;
-        m_cull_rooms = nullptr;
-        m_room_count = 0;
-        m_first_instance = nullptr;
-        m_instance_count = 0;
-    }
-
-    lvlLevel::~lvlLevel() {
-
-    }
-
-    
     offroadLevel* offroadLevel::instance = nullptr;
     offroadLevel* offroadLevel::create() {
         if (instance) return instance;
