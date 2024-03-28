@@ -108,7 +108,7 @@ namespace sr2 {
         } while (ch != '\n');
     }
 
-    void datBaseTokenizer::pushBack(char* data, u32 len) {
+    void datBaseTokenizer::pushBack(const char* data, u32 len) {
         buf_len = len + 1;
         char a = *data;
         while (a != 0) {
@@ -119,21 +119,21 @@ namespace sr2 {
         buf[0] = 0;
     }
 
-    i32 datBaseTokenizer::matchToken(char* tok) {
+    i32 datBaseTokenizer::matchToken(const char* tok) {
         char _buf[64] = { 0 };
         i32 result = getToken(_buf, 64);
         if (result) return strcmp(tok, _buf);
         return result;
     }
 
-    i32 datBaseTokenizer::matchIntToken(char* tok) {
+    i32 datBaseTokenizer::matchIntToken(const char* tok) {
         char _buf[64] = { 0 };
         i32 result = getToken(_buf, 64);
         if (result) return strcmp(tok, _buf);
         return result;
     }
 
-    i32 datBaseTokenizer::checkToken(char* tok, bool dont_backup_on_match) {
+    i32 datBaseTokenizer::checkToken(const char* tok, bool dont_backup_on_match) {
         char _buf[64] = { 0 };
         i32 len = getToken(_buf, 64);
 
@@ -147,7 +147,7 @@ namespace sr2 {
         return true;
     }
 
-    i32 datBaseTokenizer::checkIntToken(char* tok, bool dont_backup_on_match) {
+    i32 datBaseTokenizer::checkIntToken(const char* tok, bool dont_backup_on_match) {
         char _buf[64] = { 0 };
         i32 len = getToken(_buf, 64);
 
@@ -193,7 +193,7 @@ namespace sr2 {
         });
     }
     
-    bool datBaseTokenizer::putDelimiter(char* c) {
+    bool datBaseTokenizer::putDelimiter(const char* c) {
         return writeString(c, 0);
     }
 

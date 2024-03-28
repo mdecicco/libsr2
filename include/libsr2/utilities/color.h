@@ -8,9 +8,9 @@ namespace sr2 {
             giColor();
 
             virtual bool load();
-            virtual void after_load();
-            virtual const char* directory();
-            virtual const char* file_type();
+            virtual void afterLoad();
+            virtual const char* getDirectory();
+            virtual const char* getFileType();
             virtual void loadAndUpdate();
             virtual void updateU32() = 0;
 
@@ -21,8 +21,8 @@ namespace sr2 {
         public:
             giColorRGB();
 
-            virtual datParserNode* prep_parser(datParser* p);
-            virtual const char* file_type();
+            virtual datParserNode* prepParser(datParser* p);
+            virtual const char* getFileType();
             virtual void updateU32();
 
             f32 r, g, b;
@@ -32,8 +32,8 @@ namespace sr2 {
         public:
             giColorRGBA();
             
-            virtual datParserNode* prep_parser(datParser* p);
-            virtual const char* file_type();
+            virtual datParserNode* prepParser(datParser* p);
+            virtual const char* getFileType();
             virtual void updateU32();
 
             f32 r, g, b, a;

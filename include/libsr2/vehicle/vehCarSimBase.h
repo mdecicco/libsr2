@@ -13,9 +13,9 @@ namespace sr2 {
             ~vehCarSimBase();
         
             // parFileIO
-            virtual const char* directory() const;
-            virtual const char* file_type() const;
-            virtual datParserNode* prep_parser(datParser* parser);
+            virtual const char* getDirectory() const;
+            virtual const char* getFileType() const;
+            virtual datParserNode* prepParser(datParser* parser);
 
             // phColliderBase
             virtual void reset();

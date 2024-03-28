@@ -18,6 +18,7 @@ namespace sr2 {
             ~gameFSM();
             
             GameState* current() const;
+            GameState* get(GAME_STATE state) const;
 
             // 0x00100c70
             void change(GAME_STATE state);

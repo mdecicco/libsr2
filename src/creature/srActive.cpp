@@ -34,7 +34,8 @@ namespace sr2 {
         blender = new crAnimBlender(skeleton, 3, false, 1);
         ragdollFrames = 0;
 
-        for (u32 i = 0;i < 10;i++) prevRepulsion[i].zero();
+        for (u32 i = 0; i < 10; i++)
+            prevRepulsion[i].zero();
 
         deactivate();
     }
@@ -65,7 +66,8 @@ namespace sr2 {
     }
 
     void srActive::deactivate() {
-        if (ragdollFrames > 0) stopRagdoll();
+        if (ragdollFrames > 0)
+            stopRagdoll();
         transform = mat3x4f::identity;
         force.zero();
         repulsion.zero();
@@ -80,8 +82,7 @@ namespace sr2 {
         vec3f positionOffset = {
             math::frand() * (2.0f * group->spawnRadius) - group->spawnRadius,
             0.0f,
-            math::frand() * (2.0f * group->spawnRadius) - group->spawnRadius
-        };
+            math::frand() * (2.0f * group->spawnRadius) - group->spawnRadius };
 
         transform.w = group->currentPosition + positionOffset;
 
@@ -89,10 +90,11 @@ namespace sr2 {
         skeleton->init(group->type->skel, &transform);
         blender->init(skeleton->data);
 
-        for (u32 i = 0;i < group->type->animationCount;i++) {
+        for (u32 i = 0; i < group->type->animationCount; i++) {
             blender->players[i].playAnimation(group->type->animations[i]);
             blender->players[i].doLoop = true;
-            if (i > 0) blender->players[i].field10_0x28 = 0.0f;
+            if (i > 0)
+                blender->players[i].field10_0x28 = 0.0f;
         }
 
         if (idx != -1) {
@@ -147,23 +149,27 @@ namespace sr2 {
                 group->currentPointIdx = 0;
             }
         }
-        
+
         f32 rx = fabsf(dp.x) - group->spawnRadius;
         f32 rz = fabsf(dp.z) - group->spawnRadius;
 
         if (rx > 0.0f) {
-            if (dp.x > 0.0f) repulsion.x += group->type->field2_0x8 * 100.0f * rx;
-            else repulsion.x -= group->type->field2_0x8 * 100.0f * rx;
+            if (dp.x > 0.0f)
+                repulsion.x += group->type->field2_0x8 * 100.0f * rx;
+            else
+                repulsion.x -= group->type->field2_0x8 * 100.0f * rx;
         }
 
         if (rz > 0.0f) {
-            if (dp.z > 0.0f) repulsion.z += group->type->field2_0x8 * 100.0f * rz;
-            else repulsion.z -= group->type->field2_0x8 * 100.0f * rz;
+            if (dp.z > 0.0f)
+                repulsion.z += group->type->field2_0x8 * 100.0f * rz;
+            else
+                repulsion.z -= group->type->field2_0x8 * 100.0f * rz;
         }
     }
 
     void srActive::calcPlayerRepulsion() {
-        for (u32 i = 0;i < Vehicle::GetCount();i++) {
+        for (u32 i = 0; i < Vehicle::GetCount(); i++) {
             Vehicle* v = Vehicle::GetVehicle(i);
             phInst* inst = nullptr; // veh->instance->base.base.car.sim->veh.sim.col.instance; (lol)
 
@@ -176,23 +182,26 @@ namespace sr2 {
 
     void srActive::resolveForces() {
         smoothRepulsion();
-        
-        force = repulsion * (1.0f / group->type->field4_0x10) * g_datTimeManager.Seconds;
+
+        force = repulsion * (1.0f / group->type->field4_0x10) * datTimeManager::Seconds;
 
         f32 forceMag = force.length();
         f32 maxForce = group->type->maxForce * 1.25f;
-        if (forceMag > maxForce) force *= maxForce / forceMag;
+        if (forceMag > maxForce)
+            force *= maxForce / forceMag;
     }
 
     void srActive::smoothRepulsion() {
         prevRepulsion[rollingAverageIdx] = repulsion;
         repulsion.zero();
 
-        for (u32 i = 0;i < 10;i++) repulsion += prevRepulsion[i];
+        for (u32 i = 0; i < 10; i++)
+            repulsion += prevRepulsion[i];
         repulsion *= 0.1f;
 
         rollingAverageIdx++;
-        if (rollingAverageIdx >= 10) rollingAverageIdx = 0;
+        if (rollingAverageIdx >= 10)
+            rollingAverageIdx = 0;
     }
 
     void srActive::stopRagdoll() {
@@ -204,7 +213,7 @@ namespace sr2 {
         mover->field1_0x4.w = skeleton->boneTransforms[0].w;
         mover->setElevationFromPosition(mover->field1_0x4.w);
     }
-    
+
     void srActive::FUN_001aef08(audImpact* aud, f32 u0) {
         aud->play(u0, 500.0f, 0x11);
 
@@ -224,7 +233,35 @@ namespace sr2 {
         }
     }
 
-    void srActive::onImpact(const mat3x4f& u0) {
-        
+    bool srActive::onImpact(const mat3x4f& u0) {
+        audImpact* impactAudio = nullptr;
+
+        f32 nearestDistSq = 10000.0f;
+        for (u32 i = 0; i < Vehicle::GetCount(); i++) {
+            Vehicle* veh = Vehicle::GetVehicle(i);
+            phInst* inst = nullptr; // veh->instance->base.base.car.sim->veh.sim.col.instance (lol)
+            f32 distSq = (transform.w - inst->transform.w).lengthSq();
+
+            if (distSq >= nearestDistSq) continue;
+            nearestDistSq = distSq;
+
+            phInertialCS* ics = nullptr; // veh->instance->base.base.car.sim->veh.sim.col.ics (lol)
+            worldVelocity = ics->world_velocity;
+
+            if (false /* Managers::Aud3DObjectManager::IsAlive() */) {
+                impactAudio = nullptr; // veh->instance->base.base.car.audio->getAudImpactPtr();
+            }
+        }
+
+        if (impactAudio) FUN_001aef08(impactAudio, worldVelocity.lengthSq());
+        ragdoll = group->type->FUN_001ae018();
+
+        if (ragdoll) {
+            ragdoll->startRagdoll(skeleton, u0);
+            ragdollFrames = 1;
+            return true;
+        }
+
+        return false;
     }
 };

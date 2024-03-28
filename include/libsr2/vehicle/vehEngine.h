@@ -14,7 +14,7 @@ namespace sr2 {
             ~vehEngine();
 
             virtual void reset();
-            void init(vehCarSimBase* veh, char* modelname, char* partname);
+            void init(vehCarSimBase* veh, const char* modelname, const char* partname);
             f32 getMaxHorsepower();
             void computeConstants();
             f32 calcTorqueAtFullThrottle(f32 rpm_fac);
@@ -23,8 +23,8 @@ namespace sr2 {
             void stopBoosting();
             void update();
 
-            virtual datParserNode* prep_parser(datParser* parser);
-            virtual const char* file_type();
+            virtual datParserNode* prepParser(datParser* parser);
+            virtual const char* getFileType();
 
             vehDrivetrain* drivetrains;
             vehTransmission* transmission;

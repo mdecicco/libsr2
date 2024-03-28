@@ -26,7 +26,7 @@ namespace sr2 {
     vehAxle::~vehAxle() {
     }
 
-    void vehAxle::init(vehCarSimBase* veh, char* modelname, char* partname, vehWheel* wheel0, vehWheel* wheel1, f32 unk0) {
+    void vehAxle::init(vehCarSimBase* veh, const char* modelname, const char* partname, vehWheel* wheel0, vehWheel* wheel1, f32 unk0) {
         vehicle = veh;
         wheels[0] = wheel0;
         wheels[1] = wheel1;
@@ -49,12 +49,12 @@ namespace sr2 {
         else math::mult(world_transform, *unk_mat_0, vehicle->instance->transform);
     }
 
-    datParserNode* vehAxle::prep_parser(datParser* parser) {
+    datParserNode* vehAxle::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "TorqueCoef", &torque_coefficient, 1, nullptr);
         return parser->add(PARSE_TYPE::FLOAT, "DampCoef", &damping_coefficient, 1, nullptr);
     }
 
-    const char* vehAxle::file_type() {
+    const char* vehAxle::getFileType() {
         return "vehAxle";
     }
 

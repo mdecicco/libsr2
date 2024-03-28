@@ -14,7 +14,7 @@ namespace sr2 {
         md1_unk5 = 0;
         md1_unk6 = 0;
         follow_marker = new giColorRGB();
-        follow_marker->set_name("FollowMarker");
+        follow_marker->setName("FollowMarker");
         follow_marker->loadAndUpdate();
     }
     bool FollowMission::load(TaggedStream* tsv) {

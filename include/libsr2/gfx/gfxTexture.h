@@ -16,6 +16,7 @@ namespace sr2 {
 			static gfxTexture* None;
 
 			void setTexEnv(u32 env);
+			static void release(gfxTexture* tex);
 
 			u16 width;
 			u16 height;

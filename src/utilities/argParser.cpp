@@ -167,7 +167,7 @@ namespace sr2 {
         return false;
     }
 
-    bool datArgParser::GetStringArgument(const char* arg, i32 index, char** dest) {
+    bool datArgParser::GetStringArgument(const char* arg, i32 index, const char** dest) {
         HashElem* elem = (HashElem*)argTable.Access(arg);
         if (!elem) return false;
 

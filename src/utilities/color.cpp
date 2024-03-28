@@ -26,23 +26,23 @@ namespace sr2 {
                 m_name ? m_name : "default",
                 weatherVariant
             );
-            if (datAssetManager::exists(directory(), fn.c_str(), file_type())) {
-                set_name(fn.c_str());
+            if (datAssetManager::exists(getDirectory(), fn.c_str(), getFileType())) {
+                setName(fn.c_str());
             }
         }
 
         return parFileIO::load();
     }
 
-    void giColor::after_load() {
+    void giColor::afterLoad() {
         updateU32();
     }
 
-    const char* giColor::directory() {
+    const char* giColor::getDirectory() {
         return "tune/gameinfo";
     }
 
-    const char* giColor::file_type() {
+    const char* giColor::getFileType() {
         return "giColor";
     }
 
@@ -57,11 +57,11 @@ namespace sr2 {
         r = g = b = 0.0f;
     }
 
-    datParserNode* giColorRGB::prep_parser(datParser* p) {
+    datParserNode* giColorRGB::prepParser(datParser* p) {
         return p->add(PARSE_TYPE::VEC3F, "v3NormalizedColor", &r, 1, nullptr);
     }
 
-    const char* giColorRGB::file_type() {
+    const char* giColorRGB::getFileType() {
         return "giColorRGB";
     }
 
@@ -74,11 +74,11 @@ namespace sr2 {
         r = g = b = a = 0.0f;
     }
 
-    datParserNode* giColorRGBA::prep_parser(datParser* p) {
+    datParserNode* giColorRGBA::prepParser(datParser* p) {
         return p->add(PARSE_TYPE::VEC4F, "v4NormalizedColor", &r, 1, nullptr);
     }
 
-    const char* giColorRGBA::file_type() {
+    const char* giColorRGBA::getFileType() {
         return "giColorRGBA";
     }
 

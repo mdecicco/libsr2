@@ -29,27 +29,27 @@ namespace sr2 {
         return vec4f({ 0.0f, 0.0f, 0.0f, 0.0f });
     }
 
-    i32 datBinTokenizer::readDelimiter(char* token) {
+    i32 datBinTokenizer::readDelimiter(const char* token) {
         return 0;
     }
 
-    i32 datBinTokenizer::matchInt(char* token) {
+    i32 datBinTokenizer::matchInt(const char* token) {
         return 0;
     }
 
-    f32 datBinTokenizer::matchFloat(char* token) {
+    f32 datBinTokenizer::matchFloat(const char* token) {
         return 0.0f;
     }
 
-    vec2f datBinTokenizer::matchVec2(char* token) {
+    vec2f datBinTokenizer::matchVec2(const char* token) {
         return vec2f({ 0.0f, 0.0f });
     }
 
-    vec3f datBinTokenizer::matchVec3(char* token) {
+    vec3f datBinTokenizer::matchVec3(const char* token) {
         return vec3f({ 0.0f, 0.0f, 0.0f });
     }
 
-    vec4f datBinTokenizer::matchVec4(char* token) {
+    vec4f datBinTokenizer::matchVec4(const char* token) {
         return vec4f({ 0.0f, 0.0f, 0.0f, 0.0f });
     }
 
@@ -57,7 +57,7 @@ namespace sr2 {
         return false;
     }
 
-    bool datBinTokenizer::putDelimiter(char* c) {
+    bool datBinTokenizer::putDelimiter(const char* c) {
         return false;
     }
 

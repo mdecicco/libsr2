@@ -30,6 +30,11 @@ namespace sr2 {
         if (m_current == PRE_GAME) return nullptr;
         return m_states[m_current];
     }
+    
+    GameState* gameFSM::get(GAME_STATE state) const {
+        if (state == PRE_GAME) return nullptr;
+        return m_states[state];
+    }
 
     void gameFSM::change(GAME_STATE state) {
         if (m_current != PRE_GAME) {

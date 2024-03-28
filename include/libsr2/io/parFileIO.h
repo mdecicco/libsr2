@@ -12,13 +12,13 @@ namespace sr2 {
 
             virtual bool save();
             virtual bool load();
-            virtual datParserNode* prep_parser(datParser* parser);
-            virtual void after_load();
-            virtual void before_save();
-            virtual const char* directory();
-            virtual const char* file_type();
+            virtual datParserNode* prepParser(datParser* parser);
+            virtual void afterLoad();
+            virtual void beforeSave();
+            virtual const char* getDirectory();
+            virtual const char* getFileType();
 
-            void set_name(const char* name);
+            void setName(const char* name);
 
         protected:
             char* m_name;

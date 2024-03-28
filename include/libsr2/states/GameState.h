@@ -20,6 +20,7 @@ namespace sr2 {
             virtual bool CanUpdateTime();
             virtual void Reset();
 
+            virtual void method_0x58();
             virtual void method_0x60();
             virtual void Reset(GameEngine* eng);
             

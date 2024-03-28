@@ -1,4 +1,5 @@
 #include <libsr2/types.h>
+#include <libsr2/utilities/msgMsgSink.h>
 
 namespace sr2 {
     class gameFSM;
@@ -8,7 +9,7 @@ namespace sr2 {
     extern u64 g_FrameTimer;
     extern bool g_showFrameTime;
 
-    class GameEngine {
+    class GameEngine : public msgMsgSink {
         public:
             // 0x001007c8
             static GameEngine* Create(int argc, char** args);
@@ -33,6 +34,8 @@ namespace sr2 {
 
             // 0x00100c70
             void ChangeState(GAME_STATE state);
+    
+            virtual void onMessage(msgMessage* msg);
 
             gameFSM* fsm;
             bool just_update;

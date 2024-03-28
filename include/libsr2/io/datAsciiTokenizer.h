@@ -7,12 +7,12 @@ namespace sr2 {
         public:
             virtual i32 readInt32();
             virtual f32 readFloat();
-            virtual i32 readDelimiter(char* token);
-            virtual i32 matchInt(char* token);
-            virtual f32 matchFloat(char* token);
-            virtual vec2f matchVec2(char* token);
-            virtual vec3f matchVec3(char* token);
-            virtual vec4f matchVec4(char* token);
+            virtual i32 readDelimiter(const char* token);
+            virtual i32 matchInt(const char* token);
+            virtual f32 matchFloat(const char* token);
+            virtual vec2f matchVec2(const char* token);
+            virtual vec3f matchVec3(const char* token);
+            virtual vec4f matchVec4(const char* token);
             virtual bool writeString(const char* str, i32 postfix_tab_count);
             virtual bool writeInt(i32 i);
             virtual bool writeFloat(f32 f);

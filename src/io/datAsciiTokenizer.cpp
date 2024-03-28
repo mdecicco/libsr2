@@ -25,31 +25,31 @@ namespace sr2 {
         }
     }
 
-    i32 datAsciiTokenizer::readDelimiter(char* token) {
+    i32 datAsciiTokenizer::readDelimiter(const char* token) {
         return matchToken(token);
     }
 
-    i32 datAsciiTokenizer::matchInt(char* token) {
+    i32 datAsciiTokenizer::matchInt(const char* token) {
         matchToken(token);
         return readInt32();
     }
 
-    f32 datAsciiTokenizer::matchFloat(char* token) {
+    f32 datAsciiTokenizer::matchFloat(const char* token) {
         matchToken(token);
         return readFloat();
     }
 
-    vec2f datAsciiTokenizer::matchVec2(char* token) {
+    vec2f datAsciiTokenizer::matchVec2(const char* token) {
         matchToken(token);
         return readVec2();
     }
 
-    vec3f datAsciiTokenizer::matchVec3(char* token) {
+    vec3f datAsciiTokenizer::matchVec3(const char* token) {
         matchToken(token);
         return readVec3();
     }
 
-    vec4f datAsciiTokenizer::matchVec4(char* token) {
+    vec4f datAsciiTokenizer::matchVec4(const char* token) {
         matchToken(token);
         return readVec4();
     }

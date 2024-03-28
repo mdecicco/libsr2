@@ -14,39 +14,39 @@ namespace sr2 {
     }
 
     bool parFileIO::save() {
-        datParser parser(file_type());
-        prep_parser(&parser);
-        before_save();
-        return parser.save(directory(), m_name, file_type());
+        datParser parser(getFileType());
+        prepParser(&parser);
+        beforeSave();
+        return parser.save(getDirectory(), m_name, getFileType());
     }
 
     bool parFileIO::load() {
-        datParser parser(file_type());
-        prep_parser(&parser);
-        bool status = parser.load(directory(), m_name, file_type());
-        if (status) after_load();
+        datParser parser(getFileType());
+        prepParser(&parser);
+        bool status = parser.load(getDirectory(), m_name, getFileType());
+        if (status) afterLoad();
         return status;
     }
 
-    datParserNode* parFileIO::prep_parser(datParser* parser) {
+    datParserNode* parFileIO::prepParser(datParser* parser) {
         return nullptr;
     }
 
-    void parFileIO::after_load() {
+    void parFileIO::afterLoad() {
     }
 
-    void parFileIO::before_save() {
+    void parFileIO::beforeSave() {
     }
 
-    const char* parFileIO::directory() {
+    const char* parFileIO::getDirectory() {
         return "tune";
     }
 
-    const char* parFileIO::file_type() {
+    const char* parFileIO::getFileType() {
         return "parFileIO";
     }
 
-    void parFileIO::set_name(const char* name) {
+    void parFileIO::setName(const char* name) {
         if (m_name) delete [] m_name;
         m_name = duplicate_string(name);
     }

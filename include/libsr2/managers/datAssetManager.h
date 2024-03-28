@@ -11,8 +11,11 @@ namespace sr2 {
             static void full_path(char* buf, u32 bufSz, const char* dir, const char* filename, const char* ext);
             static char* set_path(const char* path);
             static char* get_path();
+            static bool doIgnorePrefix();
+            static void setIgnorePrefix(bool ignore);
 
         protected:
             static char m_path[256];
+            static bool m_ignorePrefix;
     };
 };

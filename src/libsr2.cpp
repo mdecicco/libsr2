@@ -3,9 +3,14 @@
 #include <libsr2/utilities/argParser.h>
 #include <libsr2/utilities/timer.h>
 #include <libsr2/utilities/utils.h>
+#include <libsr2/utilities/msgMsgSource.h>
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/states/GameState.h>
+#include <libsr2/managers/Aud3DObjectManager.h>
+#include <libsr2/managers/datTimeManager.h>
 #include <libsr2/gfx/gfx.h>
+#include <libsr2/gfx/gfxTextureMovie.h>
+#include <libsr2/ui/GameLoadingScreen.h>
 #include <libsr2/libsr2.h>
 
 #include <string>
@@ -22,11 +27,10 @@ namespace sr2 {
 
     GameEngine* GameEngine::Create(int argc, char** args) {
         // Originally this was created by now, but for now this is fine
-        GameEngine::instance = new GameEngine(argc, args);
+        instance = new GameEngine(argc, args);
 
-
-        // Utils::msgMsgSource::Register(this, 0x84, 0x80);
-        GameEngine::instance->ChangeState(IN_MENU);
+        msgMsgSource::registerSink(instance, 0x84, 0x80);
+        instance->ChangeState(IN_MENU);
 
         if (!gfx::g_SomeViewport) gfx::g_SomeViewport = gfx::pipeline::Viewport;
 
@@ -110,17 +114,23 @@ namespace sr2 {
     bool GameEngine::Update() {
         BeginFrame();
 
+        // FUN_002ed360(0, 1);
+        // FUN_002ed360(1, 1);
+
+        GameLoadingScreen::get()->FUN_001c57c0();
+
         GameState* state = fsm->current();
         if (just_update) {
-            // msgMsgSource::Dispatch();
+            msgMsgSource::dispatch();
             state->Update();
         } else {
             state->PreUpdate();
             state->Input();
-            // msgMsgSource::Dispatch();
+            msgMsgSource::dispatch();
+
             if (state->CanUpdateTime()) {
-                // datTimeManager::Update();
-                // gfxTextureMovie::UpdateAll(datTimeManager::Seconds);
+                datTimeManager::update();
+                gfxTextureMovie::updateAll(datTimeManager::Seconds);
             }
 
             // There is also a lot of time tracking going on here, but
@@ -136,12 +146,10 @@ namespace sr2 {
         if (should_pause) fsm->deferred_change(IN_GAME_PAUSED);
 
         if (just_update) {
-            /*
-            if (FUN_001c5540((int)&DAT_0035e7b0)) {
+            if (GameLoadingScreen::get()->FUN_001c5540()) {
                 fsm->deferred_change(MENU_LOAD);
                 just_update = false;
             }
-            */
         }
 
         fsm->update();
@@ -150,5 +158,49 @@ namespace sr2 {
 
     void GameEngine::ChangeState(GAME_STATE state) {
         fsm->change(state);
+    }
+    
+    void GameEngine::onMessage(msgMessage* msg) {
+        switch (msg->type) {
+            case MSG_TYPE::RESET_GAME: {
+                fsm->get(GAME_STATE::IN_GAME)->RequestReset();
+                msgMsgSource::sendBroadcast(MSG_TYPE::UNK66);
+
+                if (Aud3DObjectManager::isAlive()) Aud3DObjectManager::get()->FUN_001c1428();
+                break;
+            }
+            case MSG_TYPE::ENTER_GAME: {
+                fsm->deferred_change(GAME_STATE::IN_GAME);
+                if (Aud3DObjectManager::isAlive()) Aud3DObjectManager::get()->FUN_001c14b0();
+                break;
+            }
+            case MSG_TYPE::LOAD_GAME: {
+                fsm->deferred_change(GAME_STATE::GAME_LOAD);
+                break;
+            }
+            case MSG_TYPE::PAUSE_GAME: {
+                fsm->get(GAME_STATE::IN_GAME)->method_0x58();
+                fsm->deferred_change(GAME_STATE::IN_GAME_PAUSED);
+                if (Aud3DObjectManager::isAlive()) Aud3DObjectManager::get()->FUN_001c1370();
+                break;
+            }
+            case MSG_TYPE::QUIT_TO_MENU: {
+                fsm->deferred_change(GAME_STATE::IN_MENU);
+                break;
+            }
+            case MSG_TYPE::ENTER_MENU: {
+                if (datArgParser::GetBooleanArgument("autoloadall")) {
+                    if (Aud3DObjectManager::isAlive()) Aud3DObjectManager::get()->FUN_001c1370();
+                    fsm->deferred_change(GAME_STATE::MENU_LOAD);
+                } else {
+                    just_update = true;
+                    GameLoadingScreen::get()->FUN_001c54e8(9);
+                    GameLoadingScreen::get()->FUN_001c54f0(0.5f);
+                }
+
+                break;
+            }
+            default: break;
+        }
     }
 };

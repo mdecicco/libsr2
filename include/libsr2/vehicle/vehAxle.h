@@ -10,10 +10,10 @@ namespace sr2 {
             vehAxle();
             ~vehAxle();
 
-            void init(vehCarSimBase* veh, char* modelname, char* partname, vehWheel* wheel0, vehWheel* wheel1, f32 unk0);
+            void init(vehCarSimBase* veh, const char* modelname, const char* partname, vehWheel* wheel0, vehWheel* wheel1, f32 unk0);
 
-            virtual datParserNode* prep_parser(datParser* parser);
-            virtual const char* file_type();
+            virtual datParserNode* prepParser(datParser* parser);
+            virtual const char* getFileType();
             virtual void reset();
             virtual void update();
             void computeConstants();

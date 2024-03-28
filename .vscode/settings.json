@@ -1,6 +1,7 @@
 {
     "cmake.configureOnOpen": true,
     "files.associations": {
+        "*.embeddedhtml": "html",
         "atomic": "cpp",
         "chrono": "cpp",
         "filesystem": "cpp",
@@ -21,6 +22,8 @@
         "locale": "cpp",
         "numeric": "cpp",
         "optional": "cpp",
-        "xlocinfo": "cpp"
+        "xlocinfo": "cpp",
+        "type_traits": "cpp",
+        "vector": "cpp"
     }
 }

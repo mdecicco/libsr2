@@ -8,6 +8,7 @@
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/utilities/utils.h>
 #include <libsr2/utilities/argParser.h>
+#include <libsr2/utilities/msgMsgSource.h>
 #include <libsr2/gfx/gfx.h>
 #include <libsr2/mission/MissionWeatherData.h>
 #include <libsr2/libsr2.h>
@@ -32,8 +33,8 @@ namespace sr2 {
     }
 
     void GameLoadState::Enter(GameEngine* eng) {
-        char* level = "test";
-        char* mission = "cruise.mp";
+        const char* level = "test";
+        const char* mission = "cruise.mp";
         datArgParser::GetStringArgument("level", 0, &level);
         datArgParser::GetStringArgument("mission", 0, &mission);
         // InitGameLoadingScreen();
@@ -51,8 +52,8 @@ namespace sr2 {
     }
 
     void GameLoadState::Update() {
-        char* mission_name = "cruise.mp";
-        char* map_name = "test";
+        const char* mission_name = "cruise.mp";
+        const char* map_name = "test";
         i32 variant = 0;
         datArgParser::GetStringArgument("level", 0, &map_name);
         datArgParser::GetStringArgument("mission", 0, &mission_name);
@@ -216,9 +217,7 @@ namespace sr2 {
 
     bool GameLoadState::Done() {
         if (load_switch_mode == 14) {
-            // Utils::msgMsgSource::Send(0x3802, 0x80);
-            // the above line essentially does the following until literally everything else is implemented
-            GameEngine::Instance()->ChangeState(GAME_STATE::IN_GAME);
+            msgMsgSource::send(MSG_TYPE::ENTER_GAME, 0x80);
         }
         return false;
     }

@@ -14,7 +14,7 @@ namespace sr2 {
             void init(vehCarSimBase* veh, const vec3f& min, const vec3f& max);
             void reset();
             void update();
-            datParserNode* prep_parser(datParser* parser);
+            datParserNode* prepParser(datParser* parser);
             u32 FUN_0025fa58();
             void FUN_0025fa68();
             void FUN_0025fa78();

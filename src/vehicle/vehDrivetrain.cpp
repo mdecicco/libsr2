@@ -78,7 +78,7 @@ namespace sr2 {
         {
             if (engine) {
                 unk1 = engine->torque * gearRatio; // kg*m^2
-                unk1 += engine->angular_inertia * gearRatio * (engine->rps + some_rps * gearRatio) * g_datTimeManager.InvSeconds; // m^2*kg/s? (aka. Joule)
+                unk1 += engine->angular_inertia * gearRatio * (engine->rps + some_rps * gearRatio) * datTimeManager::InvSeconds; // m^2*kg/s? (aka. Joule)
             }
 
             for (u32 i = 0;i < wheel_count;i++) {
@@ -170,7 +170,7 @@ namespace sr2 {
         f32 fVar25 = some_rps;
         for (u32 i = 0;i <= wheel_count;i++) {
             f32 fVar22 = 0.0f;
-            fVar21 = (fVar19 / (fVar26 + fVar23 * g_datTimeManager.Seconds)) * g_datTimeManager.Seconds + fVar25;
+            fVar21 = (fVar19 / (fVar26 + fVar23 * datTimeManager::Seconds)) * datTimeManager::Seconds + fVar25;
             
             if (unk1 < 0.0f) {
                 fVar22 = 1e+09f;
@@ -229,10 +229,10 @@ namespace sr2 {
             }
 
             if (engine->rps < someRps) {
-                someOtherRps = engine->rps + engine->opt_rps * g_datTimeManager.Seconds;
+                someOtherRps = engine->rps + engine->opt_rps * datTimeManager::Seconds;
                 engine->rps = someRps < someOtherRps ? someRps : someOtherRps;
             } else if (engine->rps > someRps) {
-                someOtherRps = engine->rps - engine->opt_rps * g_datTimeManager.Seconds;
+                someOtherRps = engine->rps - engine->opt_rps * datTimeManager::Seconds;
                 engine->rps = someRps < someOtherRps ? someOtherRps : someRps;
             }
         }

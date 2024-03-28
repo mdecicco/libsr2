@@ -116,7 +116,7 @@ namespace sr2 {
         math::mult(field21_0x120, 0.8f);
     }
 
-    const char* vehSim::file_type() const {
+    const char* vehSim::getFileType() const {
         return "vehSim";
     }
 };

@@ -47,7 +47,7 @@ namespace sr2 {
 
     void PhysEntityManager::addEntity(f32 u0, f32 mass, phBound* bound, phBoundType type, const char* name, const vec3f& u2, undefined* u3, const vec3f& angInertia, i32* outIdx) {
         std::string hash = PhysEntityManager::genHashStr(u0, type, name, u2, { 0.0f, 0.0f, 0.0f });
-        auto& it = entityIdxMap.find(hash);
+        auto it = entityIdxMap.find(hash);
         if (it == entityIdxMap.end()) {
             u32 idx = insert(bound, hash);
             entities[idx].unk1 = u3;
@@ -70,7 +70,7 @@ namespace sr2 {
 
     phBound* PhysEntityManager::addEntity(f32 u0, phBoundType type, const char* name, const vec3f& u1, undefined* u2, i32* outIdx, const vec3f& center, bool u5) {
         std::string hash = PhysEntityManager::genHashStr(u0, type, name, u1, center);
-        auto& it = entityIdxMap.find(hash);
+        auto it = entityIdxMap.find(hash);
         if (it != entityIdxMap.end()) {
             if (outIdx) *outIdx = it->second;
             return entities[it->second].bound;
@@ -216,7 +216,7 @@ namespace sr2 {
         std::string hash = PhysEntityManager::genHashStr(u0, type, name, u2, { 0.0f, 0.0f, 0.0f });
         u32 i = 0;
         while (true) {
-            auto& it = entityIdxMap.find(hash);
+            auto it = entityIdxMap.find(hash);
             if (it == entityIdxMap.end()) break;
 
             char nameBuf[64];
@@ -247,7 +247,7 @@ namespace sr2 {
 
     PhysEntity* PhysEntityManager::getEntity(f32 u0, const char* name, i32 u1, i32* outIdx) {
         std::string hash = PhysEntityManager::genHashStr(u0, INVALID_BOUND, name, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f });
-        auto& it = entityIdxMap.find(hash);
+        auto it = entityIdxMap.find(hash);
         if (it != entityIdxMap.end()) {
             u32 idx = it->second;
             if (outIdx) *outIdx = idx;

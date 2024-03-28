@@ -111,7 +111,7 @@ namespace sr2 {
     }
 
     crAnimation* crAnimation::getAnimPrefix(const char* prefix, const char* file, i32 param_3, i32 param_4, crAnimFrame* param_5, i32 param_6, i32 param_7) {
-        auto& existing = cachedAnims.find(file);
+        auto existing = cachedAnims.find(file);
         if (existing == cachedAnims.end()) {
             crAnimation* anim = new crAnimation();
             anim->unk7 = param_7;

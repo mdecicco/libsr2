@@ -49,8 +49,10 @@ namespace sr2 {
     void GameState::Reset() {
     }
 
+    void GameState::method_0x58() {
+    }
+
     void GameState::method_0x60() {
-        
     }
 
     void GameState::Reset(GameEngine* eng) {

@@ -15,7 +15,7 @@ namespace sr2 {
     }
 
     dgRagdollData::~dgRagdollData() {
-        if (links) delete [] links;
+        if (links) delete[] links;
         links = nullptr;
     }
 
@@ -70,7 +70,7 @@ namespace sr2 {
 
         links = new dgLinkData[linkCount];
     }
-    
+
     void dgRagdollData::FUN_00282e08() {
         if (!unk0) return;
 
@@ -93,7 +93,7 @@ namespace sr2 {
         math::from_matrix(worldTrans.orient, world_transform);
         worldTrans.position = world_transform.w;
     }
-    
+
     void dgRagdollData::FUN_00282f80(f32 dt, mat3x4f* bones) {
         f32 grav = 0.0f;
 
@@ -109,6 +109,7 @@ namespace sr2 {
             unk0->links[i]->method_0x18(dt, grav, links, vel, links[i].center.position, boneUp);
         }
     }
+    void startRagdoll(crSkeleton* skeleton, const mat3x4f& transform);
 
 
 
@@ -125,7 +126,7 @@ namespace sr2 {
         bones1 = nullptr;
         data = nullptr;
     }
-    
+
     dgRagdoll::~dgRagdoll() {
     }
 
@@ -149,12 +150,15 @@ namespace sr2 {
         spIndex = SpatialPartitioner::get()->insertCollider(&col);
         SpatialPartitioner::get()->maybeReinsertAny(spIndex);
     }
-    
+
     void dgRagdoll::setBoundsFromUnk1(ragUnk1* unk) {
     }
-    
+
     void dgRagdoll::FUN_001ab2d8() {
         SpatialPartitioner::get()->maybeReinsertAny(spIndex);
         field28_0x190 = 0;
+    }
+
+    void dgRagdoll::startRagdoll(crSkeleton* skeleton, const mat3x4f& transform) {
     }
 };

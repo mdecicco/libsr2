@@ -28,19 +28,19 @@ namespace sr2 {
         return nullptr;
     }
 
-    bool IsPivotPrefix(char* directory, char* filename, char* partname) {
+    bool IsPivotPrefix(const char* directory, const char* filename, const char* partname) {
         char buf[64] = { 0 };
         snprintf(buf, 64, "%s_%s", filename, partname);
         return datAssetManager::exists(directory, filename, "mtx");
     }
 
-    bool IsPivot(char* filename, char* partname) {
+    bool IsPivot(const char* filename, const char* partname) {
         return IsPivotPrefix("geometry", filename, partname);
     }
 
-    bool GetPivotPrefix(mat3x4f& out, char* directory, char* filename, char* partname) {
+    bool GetPivotPrefix(mat3x4f& out, const char* directory, const char* filename, const char* partname) {
         char fullname[64] = { 0 };
-        snprintf("%s_%s", 64, fullname, filename, partname);
+        snprintf(fullname, 64, "%s_%s", filename, partname);
 
         Stream* fp = datAssetManager::open(directory, fullname, "mtx", 1, true);
         if (!fp) return false;
@@ -51,11 +51,11 @@ namespace sr2 {
         return true;
     }
     
-    bool GetPivot(mat3x4f& out, char* filename, char* partname) {
+    bool GetPivot(mat3x4f& out, const char* filename, const char* partname) {
         return GetPivotPrefix(out, "geometry", filename, partname);
     }
 
-    i32 GetPivotCount(char* filename, char* partBaseName, i32 maxCount) {
+    i32 GetPivotCount(const char* filename, const char* partBaseName, i32 maxCount) {
         char buf[64];
 
         i32 i = 0;

@@ -4,6 +4,7 @@
 
 namespace sr2 {
     char datAssetManager::m_path[256] = { 0 };
+    bool datAssetManager::m_ignorePrefix = false; // todo: probably false?
 
     Stream* datAssetManager::open(const char* dir, const char* filename, const char* ext, i32 unk0, bool unk1) {
         char path[128];
@@ -101,5 +102,13 @@ namespace sr2 {
             */
         }
         return pcVar2;
+    }
+
+    bool datAssetManager::doIgnorePrefix() {
+        return m_ignorePrefix;
+    }
+
+    void datAssetManager::setIgnorePrefix(bool ignore) {
+        m_ignorePrefix = ignore;
     }
 };

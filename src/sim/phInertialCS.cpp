@@ -539,12 +539,10 @@ namespace sr2 {
         f32 fVar3;
         f32 fVar4;
         f32 fVar5;
-        mat3x4f local_e0;
+        mat3x4f out_p2;
         vec3f local_b0;
         mat3x4f local_a0;
-        f32 local_70;
-        f32 local_6c;
-        f32 local_68[2];
+        vec3f local_70;
 
         f32 p3sq = param_3 * param_3;
         f32 p4sq = param_4 * param_4;
@@ -555,186 +553,187 @@ namespace sr2 {
             (((ang_inertia.x * ang_inertia.y + ang_inertia.x * ang_inertia.z + ang_inertia.y * ang_inertia.z) - p3sq) - p4sq) - p5sq,
             ((ang_inertia.x * p5sq + ang_inertia.y * p4sq + ang_inertia.z * p3sq) - (param_3 + param_3) * param_4 * param_5) - ang_inertia.x * ang_inertia.y * ang_inertia.z,
             0.001f,
-            &local_70,
-            &local_6c,
-            local_68
+            &local_70.x,
+            &local_70.y,
+            &local_70.z
         );
 
         if (iVar2 == 1) {
-            ang_inertia.x = local_70;
-            ang_inertia.z = local_70;
-            ang_inertia.y = local_70;
+            ang_inertia.x = local_70.x;
+            ang_inertia.z = local_70.x;
+            ang_inertia.y = local_70.x;
             math::identity(*param_2);
             return param_2;
         }
-        if (iVar2 < 2) goto LAB_00289088;
-        if (iVar2 == 2) {
-            vec3f xAxis;
-            principalAxis(local_70, param_3, param_4, param_5, &xAxis);
-            math::copy(local_e0.x, xAxis);
 
-            if (xAxis.x >= 0.5773503f) {
-                ang_inertia = { local_70, local_6c, local_6c };
-                local_e0.y.x = -xAxis.y;
-                local_e0.y.y = 1.0f / sqrtf(local_e0.y.x * local_e0.y.x + xAxis.x * xAxis.x + 0.0);
-                local_e0.y.x = local_e0.y.x * local_e0.y.y;
-                local_e0.y.z = local_e0.y.y * 0.0f;
-                local_e0.y.y = xAxis.x * local_e0.y.y;
-                math::cross(local_e0.z, xAxis, local_e0.y);
-            }
-            else {
-                if (xAxis.y < 0.0f) {
-                    local_e0.x.x = -xAxis.x;
-                    xAxis.y = -xAxis.y;
-                    local_e0.x.z = -xAxis.z;
-                }
+        if (iVar2 >= 2) {
+            if (iVar2 == 2) {
+                vec3f xAxis;
+                principalAxis(local_70.x, param_3, param_4, param_5, &xAxis);
+                out_p2.x = xAxis;
 
-                if (xAxis.y >= 0.5773503f) {
-                    local_e0.y.x =  local_e0.x.x;
-                    local_e0.x.y = -local_e0.x.x;
-                    local_e0.y.z =  local_e0.x.z;
-                    ang_inertia.x = local_6c;
-                    ang_inertia.z = local_6c;
-                    ang_inertia.y = local_70;
-                    fVar4 = 1.0f / sqrtf(xAxis.y * xAxis.y + local_e0.x.y * local_e0.x.y + 0.0);
-                    fVar3 = fVar4 * 0.0f;
-                    local_e0.x.y = local_e0.x.y * fVar4;
-                    fVar4 = xAxis.y * fVar4;
-
-                    local_e0.z.x = local_e0.x.y * local_e0.x.z - fVar3 * xAxis.y;
-                    local_e0.z.y = fVar3 * local_e0.x.x - fVar4 * local_e0.x.z;
-                    local_e0.z.z = fVar4 * xAxis.y - local_e0.x.y * local_e0.x.x;
-
-                    local_e0.x.x = fVar4;
-                    local_e0.x.z = fVar3;
-                    local_e0.y.y = xAxis.y;
+                if (xAxis.x >= 0.5773503f) {
+                    ang_inertia = { local_70.x, local_70.y, local_70.y };
+                    f32 fac = 1.0f / sqrtf(xAxis.x * xAxis.x + xAxis.y * xAxis.y);
+                    out_p2.y.x = -xAxis.y * fac;
+                    out_p2.y.y =  xAxis.x * fac;
+                    out_p2.y.z =  0.0f    * fac;
+                    math::cross(out_p2.z, xAxis, out_p2.y);
                 } else {
-                    local_e0.z.x = local_e0.x.x;
-                    local_e0.z.y = xAxis.y;
-                    local_e0.z.z = local_e0.x.z;
-
-                    ang_inertia.x = local_6c;
-                    ang_inertia.z = local_70;
-                    ang_inertia.y = local_6c;
-
-                    if (local_e0.x.z < 0.0f) math::negate(local_e0.z);
-
-                    local_e0.x = { local_e0.z.z, 0.0f, -local_e0.z.x };
-                    math::normalize(local_e0.x);
-                    math::cross(local_e0.y, local_e0.z, local_e0.x);
-                }
-            }
-            goto LAB_00289088;
-        }
-        if (iVar2 != 3) goto LAB_00289088;
-        principalAxis(local_70, param_3, param_4, param_5, &local_e0.x);
-        principalAxis(local_6c, param_3, param_4, param_5, &local_e0.y);
-        math::copy(local_e0.z, local_e0.x);
-
-        fVar3 = math::dot(local_e0.x, local_e0.y);
-        if (fVar3 != 0.0f) {
-            local_e0.y.x -= fVar3 * local_e0.x.x;
-            local_e0.y.y -= fVar3 * local_e0.x.y;
-            local_e0.y.z -= fVar3 * local_e0.x.z;
-            math::normalize(local_e0.y);
-        }
-
-        vec3f fVar345 = local_e0.y;
-        if (local_e0.x.x >= 0.5773503f) {
-            if (local_e0.y.y < 0.0) math::negate(local_e0.y);
-
-            if (0.5773503f <= local_e0.y.y) {
-                math::cross(local_e0.z, local_e0.x, local_e0.y);
-                ang_inertia.x = local_70;
-                ang_inertia.z = local_68[0];
-            } else {
-                math::copy(local_e0.z, local_e0.y);
-                if (local_e0.y.z < 0.0f) math::negate(local_e0.z, local_e0.y);
-                ang_inertia.x = local_70;
-                ang_inertia.z = local_6c;
-                math::cross(local_e0.y, local_e0.z, local_e0.x);
-                local_6c = local_68[0];
-            }
-        } else {
-            if (local_e0.y.x >= 0.5773503f) {
-                bVar1 = local_e0.x.z < 0.0;
-                math::copy(local_e0.x, local_e0.y);
-                if (bVar1) math::negate(local_e0.z);
-
-                if (local_e0.z.z >= 0.5773503f) {
-                    math::mult(fVar345, local_e0.z, { local_e0.y.z, local_e0.y.x, local_e0.y.x });
-                    math::cross(
-                        local_e0.y,
-                        { local_e0.z.x, local_e0.z.y, fVar345.z },
-                        { fVar345.x, local_e0.y.y, local_e0.y.z }
-                    );
-                    local_6c = local_70;
-                    ang_inertia.x = local_6c;
-                    ang_inertia.z = local_6c;
-                    ang_inertia.y = local_68[0];
-                    goto LAB_00289088;
-                }
-
-                math::copy(local_e0.y, local_e0.z);
-                if (local_e0.z.y < 0.0f) math::negate(local_e0.y);
-
-                ang_inertia.x = local_6c;
-                ang_inertia.z = local_68[0];
-                math::cross(local_e0.z, fVar345, local_e0.y);
-                local_6c = local_70;
-            } else {
-                if (fabsf(local_e0.x.y) >= 0.5773503f) {
-                    math::copy(local_e0.z, local_e0.y);
-                    math::copy(local_e0.y, local_e0.x);
-
-                    if (local_e0.x.y < 0.0f) math::negate(local_e0.y);
-                    if (local_e0.y.z < 0.0f) math::negate(local_e0.z);
-
-                    if (local_e0.z.z >= 0.5773503f) {
-                        math::cross(local_e0.x, local_e0.y, local_e0.z);
-                        ang_inertia.x = local_6c;
-                        ang_inertia.y = local_70;
-                        ang_inertia.z = local_6c;
-                        goto LAB_00289088;
+                    if (xAxis.y < 0.0f) {
+                        out_p2.x.x = -xAxis.x;
+                        xAxis.y = -xAxis.y;
+                        out_p2.x.z = -xAxis.z;
                     }
 
-                    math::copy(local_e0.x, local_e0.z);
-                    if (local_e0.z.x < 0.0f) math::negate(local_e0.x, local_e0.z);
+                    if (xAxis.y >= 0.5773503f) {
+                        out_p2.y.x =  out_p2.x.x;
+                        out_p2.x.y = -out_p2.x.x;
+                        out_p2.y.z =  out_p2.x.z;
+                        ang_inertia.x = local_70.y;
+                        ang_inertia.z = local_70.y;
+                        ang_inertia.y = local_70.x;
+                        fVar4 = 1.0f / sqrtf(xAxis.y * xAxis.y + out_p2.x.y * out_p2.x.y + 0.0);
+                        fVar3 = fVar4 * 0.0f;
+                        out_p2.x.y = out_p2.x.y * fVar4;
+                        fVar4 = xAxis.y * fVar4;
 
-                    ang_inertia.x = local_6c;
-                    ang_inertia.z = local_68[0];
+                        out_p2.z.x = out_p2.x.y * out_p2.x.z - fVar3 * xAxis.y;
+                        out_p2.z.y = fVar3 * out_p2.x.x - fVar4 * out_p2.x.z;
+                        out_p2.z.z = fVar4 * xAxis.y - out_p2.x.y * out_p2.x.x;
 
-                    math::cross(local_e0.z, local_e0.x, local_e0.y);
-                    local_6c = local_70;
+                        out_p2.x.x = fVar4;
+                        out_p2.x.z = fVar3;
+                        out_p2.y.y = xAxis.y;
+                    } else {
+                        out_p2.z.x = out_p2.x.x;
+                        out_p2.z.y = xAxis.y;
+                        out_p2.z.z = out_p2.x.z;
+
+                        ang_inertia.x = local_70.y;
+                        ang_inertia.z = local_70.x;
+                        ang_inertia.y = local_70.y;
+
+                        if (out_p2.x.z < 0.0f) math::negate(out_p2.z);
+
+                        out_p2.x = { out_p2.z.z, 0.0f, -out_p2.z.x };
+                        math::normalize(out_p2.x);
+                        math::cross(out_p2.y, out_p2.z, out_p2.x);
+                    }
+                }
+            } else if (iVar2 == 3) {
+                principalAxis(local_70.x, param_3, param_4, param_5, &out_p2.x);
+                principalAxis(local_70.y, param_3, param_4, param_5, &out_p2.y);
+                math::copy(out_p2.z, out_p2.x);
+
+                fVar3 = math::dot(out_p2.x, out_p2.y);
+                if (fVar3 != 0.0f) {
+                    out_p2.y.x -= fVar3 * out_p2.x.x;
+                    out_p2.y.y -= fVar3 * out_p2.x.y;
+                    out_p2.y.z -= fVar3 * out_p2.x.z;
+                    math::normalize(out_p2.y);
+                }
+
+                vec3f fVar345 = out_p2.y;
+                if (out_p2.x.x >= 0.5773503f) {
+                    if (out_p2.y.y < 0.0) math::negate(out_p2.y);
+
+                    if (0.5773503f <= out_p2.y.y) {
+                        math::cross(out_p2.z, out_p2.x, out_p2.y);
+                        ang_inertia.x = local_70.x;
+                        ang_inertia.y = local_70.y;
+                        ang_inertia.z = local_70.z;
+                    } else {
+                        math::copy(out_p2.z, out_p2.y);
+                        if (out_p2.y.z < 0.0f) math::negate(out_p2.z, out_p2.y);
+                        ang_inertia.x = local_70.x;
+                        ang_inertia.y = local_70.z;
+                        ang_inertia.z = local_70.y;
+                        math::cross(out_p2.y, out_p2.z, out_p2.x);
+                    }
                 } else {
-                    if (local_e0.x.z < 0.0f) math::negate(local_e0.z);
-                    if (local_e0.y.y < 0.0f) math::negate(local_e0.y);
+                    if (out_p2.y.x >= 0.5773503f) {
+                        bVar1 = out_p2.x.z < 0.0;
+                        math::copy(out_p2.x, out_p2.y);
+                        if (bVar1) math::negate(out_p2.z);
 
-                    if (local_e0.y.y <= 0.5773503f) goto LAB_00289088;
-                    ang_inertia.x = local_68[0];
-                    ang_inertia.z = local_70;
+                        if (out_p2.z.z >= 0.5773503f) {
+                            math::mult(fVar345, out_p2.z, { out_p2.y.z, out_p2.y.x, out_p2.y.x });
+                            math::cross(
+                                out_p2.y,
+                                { out_p2.z.x, out_p2.z.y, fVar345.z },
+                                { fVar345.x, out_p2.y.y, out_p2.y.z }
+                            );
+                            local_70.y = local_70.x;
+                            ang_inertia.x = local_70.y;
+                            ang_inertia.z = local_70.y;
+                            ang_inertia.y = local_70.z;
+                        } else {
+                            math::copy(out_p2.y, out_p2.z);
+                            if (out_p2.z.y < 0.0f) math::negate(out_p2.y);
 
-                    math::cross(local_e0.x, local_e0.y, local_e0.z);
+                            ang_inertia.x = local_70.y;
+                            ang_inertia.y = local_70.x;
+                            ang_inertia.z = local_70.z;
+                            math::cross(out_p2.z, fVar345, out_p2.y);
+                            local_70.y = local_70.x;
+                        }
+                    } else {
+                        if (fabsf(out_p2.x.y) >= 0.5773503f) {
+                            math::copy(out_p2.z, out_p2.y);
+                            math::copy(out_p2.y, out_p2.x);
+
+                            if (out_p2.x.y < 0.0f) math::negate(out_p2.y);
+                            if (out_p2.y.z < 0.0f) math::negate(out_p2.z);
+
+                            if (out_p2.z.z >= 0.5773503f) {
+                                math::cross(out_p2.x, out_p2.y, out_p2.z);
+                                ang_inertia.x = local_70.y;
+                                ang_inertia.y = local_70.x;
+                                ang_inertia.z = local_70.y;
+                            } else {
+                                math::copy(out_p2.x, out_p2.z);
+                                if (out_p2.z.x < 0.0f) math::negate(out_p2.x, out_p2.z);
+
+                                ang_inertia.x = local_70.y;
+                                ang_inertia.y = local_70.x;
+                                ang_inertia.z = local_70.z;
+
+                                math::cross(out_p2.z, out_p2.x, out_p2.y);
+                            }
+                        } else {
+                            if (out_p2.x.z < 0.0f) math::negate(out_p2.z);
+                            if (out_p2.y.y < 0.0f) math::negate(out_p2.y);
+
+                            if (out_p2.y.y > 0.5773503f) {
+                                ang_inertia.x = local_70.z;
+                                ang_inertia.y = local_70.y;
+                                ang_inertia.z = local_70.x;
+
+                                math::cross(out_p2.x, out_p2.y, out_p2.z);
+                            }
+                        }
+                    }
                 }
             }
         }
-        ang_inertia.y = local_6c;
-    LAB_00289088:
-        math::zero(local_e0.w);
-        math::mult(local_a0, local_e0, world_transform);
+
+        math::zero(out_p2.w);
+        math::mult(local_a0, out_p2, world_transform);
 
         math::normalize(local_a0.x);
         math::normalize(local_a0.y);
         math::normalize(local_a0.z);
-        math::copy(*param_2, local_e0);
+        math::copy(*param_2, out_p2);
+
         return param_2;
     }
 
     void phInertialCS::getCMFilteredVelocity(vec3f* velocity) {
         math::copy(*velocity, world_velocity);
-        velocity->x += g_datTimeManager.InvSeconds * last_push.x;
-        velocity->y += g_datTimeManager.InvSeconds * last_push.y;
-        velocity->z += g_datTimeManager.InvSeconds * last_push.z;
+        velocity->x += datTimeManager::InvSeconds * last_push.x;
+        velocity->y += datTimeManager::InvSeconds * last_push.y;
+        velocity->z += datTimeManager::InvSeconds * last_push.z;
     }
     
     void phInertialCS::getLocalFilteredVelocity2(vec3f& out0, vec3f& vel) {
@@ -744,12 +743,12 @@ namespace sr2 {
         if (lastPushMagSq > 0.0001f) {
             f32 velDotPush = math::dot(vel, last_push);
             if (velDotPush < 0.0f) {
-                f32 fVar3 = lastPushMagSq * g_datTimeManager.InvSeconds * g_datTimeManager.InvSeconds;
-                f32 fVar2 = -(velDotPush * g_datTimeManager.InvSeconds);
+                f32 fVar3 = lastPushMagSq * datTimeManager::InvSeconds * datTimeManager::InvSeconds;
+                f32 fVar2 = -(velDotPush * datTimeManager::InvSeconds);
 
                 vec3f add;
-                if (fVar3 < fVar2) math::mult(add, last_push, g_datTimeManager.InvSeconds);
-                else math::mult(add, last_push, g_datTimeManager.InvSeconds * (fVar2 / fVar3));
+                if (fVar3 < fVar2) math::mult(add, last_push, datTimeManager::InvSeconds);
+                else math::mult(add, last_push, datTimeManager::InvSeconds * (fVar2 / fVar3));
 
                 math::add(vel, add);
             }

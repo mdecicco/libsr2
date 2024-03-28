@@ -93,7 +93,7 @@ namespace sr2 {
         }
     }
 
-    datParserNode* vehFluid::prep_parser(datParser* parser) {
+    datParserNode* vehFluid::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "Damp", &damping, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "Buoyancy", &buoyancy, 1, nullptr);
         return parser->add(PARSE_TYPE::FLOAT, "Current", &current, 1, nullptr);

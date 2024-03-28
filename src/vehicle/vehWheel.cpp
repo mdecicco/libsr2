@@ -77,7 +77,7 @@ namespace sr2 {
         return p->add(PARSE_TYPE::FLOAT, "SlidingFric", &sliding_friction, 1, nullptr);
     }
 
-    const char* vehWheel::file_type() {
+    const char* vehWheel::getFileType() {
         return "vehWheel";
     }
 
@@ -150,7 +150,7 @@ namespace sr2 {
             suspension_value = -suspension_extent;
         }
 
-        suspension_velocity = (suspension_value - last_sus_val) * g_datTimeManager.InvSeconds;
+        suspension_velocity = (suspension_value - last_sus_val) * datTimeManager::InvSeconds;
         f32 fVar9 = field_0x210 * suspension_value + 1.0f;
         field_0x200 = normal_load + (
             some_suspension_thing * suspension_value +
@@ -160,10 +160,10 @@ namespace sr2 {
         
         if (field_0x200 < 0.0f) {
             field_0x208 = 0.0f;
-            f32 fVar5 = some_suspension_thing * g_datTimeManager.Seconds;
+            f32 fVar5 = some_suspension_thing * datTimeManager::Seconds;
             field_0x200 = 0.0f;
             suspension_value = (some_suspension_damping_factor * last_sus_val - suspension_extent * fVar5) / (fVar5 + some_suspension_damping_factor);
-            suspension_velocity = (suspension_value - last_sus_val) * g_datTimeManager.InvSeconds;
+            suspension_velocity = (suspension_value - last_sus_val) * datTimeManager::InvSeconds;
         } else {
             f32 fVar5 = 0.0f;
             bool bVar3 = false;
@@ -173,7 +173,7 @@ namespace sr2 {
                 f32 fVar6 = ics->calcCollisionNoFriction(field_0x178, world_transform_1.y, ground_contact_pt.contact_point);
                 bVar2 = fVar6 > 0.0f;
                 if (fVar6 > 0.0f) {
-                    fVar10 = fVar6 * 0.25f * g_datTimeManager.InvSeconds;
+                    fVar10 = fVar6 * 0.25f * datTimeManager::InvSeconds;
                     fVar5 = (-suspension_damping_coefficient * fVar10) / field_0x178;
                 }
 
@@ -195,14 +195,14 @@ namespace sr2 {
             }
 
             if (bVar3) {
-                last_sus_val = (suspension_value - last_sus_val) * g_datTimeManager.InvSeconds;
+                last_sus_val = (suspension_value - last_sus_val) * datTimeManager::InvSeconds;
                 fVar9 = field_0x210 * suspension_value + 1.0f;
                 suspension_velocity = last_sus_val;
                 field_0x200 = normal_load + (some_suspension_thing * suspension_value + some_suspension_damping_factor * last_sus_val) * fVar9;
             }
 
             if (bVar4) field_0x208 = 0.0f;
-            else field_0x208 = some_suspension_damping_factor * fVar9 + (some_suspension_thing * g_datTimeManager.Seconds) / p2;
+            else field_0x208 = some_suspension_damping_factor * fVar9 + (some_suspension_thing * datTimeManager::Seconds) / p2;
 
             if (bVar2) {
                 field_0x200 += fVar10;
@@ -214,7 +214,7 @@ namespace sr2 {
     f32 vehWheel::getBumpDisplacement(f32 unk) {
         if (!material || material->field_0x38 == 0.0f) return 0.0f;
 
-        field_0x1e4 += unk * g_datTimeManager.Seconds * (math::frand() + 0.618f);
+        field_0x1e4 += unk * datTimeManager::Seconds * (math::frand() + 0.618f);
         if (material->width == 0.0f) field_0x1e4 = 0.0f;
         else field_0x1e4 -= (f32(i32(field_0x1e4 / material->width)) * material->width);
 
@@ -503,14 +503,14 @@ namespace sr2 {
             f32 newDisp = getBumpDisplacement(sqrtf(field_0x170 * field_0x170 + field_0x174 * field_0x174));
             bump_displacement = newDisp;
             
-            dispPerSecond = (newDisp - oldDisp) * g_datTimeManager.InvSeconds;
+            dispPerSecond = (newDisp - oldDisp) * datTimeManager::InvSeconds;
 
             f32 tenthOfArcLengthPerSec = fabsf(some_rps) * 0.1f * radius;
             if (field_0x1d8 < material->field_0x3c) {
-                f32 x = field_0x1d8 + (tenthOfArcLengthPerSec * g_datTimeManager.Seconds);
+                f32 x = field_0x1d8 + (tenthOfArcLengthPerSec * datTimeManager::Seconds);
                 field_0x1d8 = material->field_0x3c < x ? material->field_0x3c : x;
             } else if (field_0x1d8 > material->field_0x3c) {
-                f32 x = field_0x1d8 - (tenthOfArcLengthPerSec * g_datTimeManager.Seconds);
+                f32 x = field_0x1d8 - (tenthOfArcLengthPerSec * datTimeManager::Seconds);
                 field_0x1d8 = material->field_0x3c > x ? material->field_0x3c : x;
             }
         }
@@ -537,7 +537,7 @@ namespace sr2 {
         math::add(world_transform_1.w, verticalDisplacement);
 
         f32 radSq = radius * radius;
-        f32 unk0 = radSq * (some_tire_disp_lng_factor + something_to_do_with_tire_damp_coef_lng_and_gravity * g_datTimeManager.InvSeconds);
+        f32 unk0 = radSq * (some_tire_disp_lng_factor + something_to_do_with_tire_damp_coef_lng_and_gravity * datTimeManager::InvSeconds);
         f32 unk1 = (((radSq / fabsf(field_0x174)) * (material_friction * static_friction)) / optimum_slip_percent) * field_0x200;
 
         bool bVar7 = true;
@@ -610,7 +610,7 @@ namespace sr2 {
                 }
             }
         } else {
-            f32 unk2 = (field_0x200 * (material_friction * static_friction) * g_datTimeManager.InvSeconds) / (some_tire_disp_lng_factor * radius);
+            f32 unk2 = (field_0x200 * (material_friction * static_friction) * datTimeManager::InvSeconds) / (some_tire_disp_lng_factor * radius);
             if (p1 < 0.0f) {
                 if (some_rps < -unk2) {
                     *out1 = -unk2;

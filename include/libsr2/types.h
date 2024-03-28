@@ -29,6 +29,7 @@ namespace sr2 {
 	typedef u8                undefined;
 	typedef u16               undefined2;
 	typedef u32               undefined4;
+	typedef u64               undefined8;
 	typedef undefined*        pointer;
 
 	struct vec2f {
@@ -92,6 +93,8 @@ namespace sr2 {
 		vec4f operator/=(f32 rhs);
 		f32 operator[](u8 axis) const;
 		f32& operator[](u8 axis);
+		
+		void zero();
 
 		f32 x, y, z, w;
 	};
@@ -191,6 +194,19 @@ namespace sr2 {
 		mission_unk5       = 0x5,
 		mission_unk6       = 0x6
 	};
+
+    enum LANGUAGE {
+        English = 0,
+        Spanish,
+        French,
+        German,
+        Italian,
+        Portugese,
+        Japanese,
+        Chinese,
+        Korean,
+        Norwegian
+    };
 };
 
 #pragma pack(pop)

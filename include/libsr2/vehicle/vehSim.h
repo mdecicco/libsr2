@@ -19,7 +19,7 @@ namespace sr2 {
             virtual ~vehSim();
 
             // parFileIO
-            virtual const char* file_type() const;
+            virtual const char* getFileType() const;
 
             // phColliderBase
             virtual void reset();

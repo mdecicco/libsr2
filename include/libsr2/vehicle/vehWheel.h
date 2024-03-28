@@ -15,7 +15,7 @@ namespace sr2 {
             ~vehWheel();
 
             virtual datParserNode* prepare_parser(datParser* p);
-            virtual const char* file_type();
+            virtual const char* getFileType();
 
             void addNormalLoad(f32 load);
             void setNormalLoad(f32 load);

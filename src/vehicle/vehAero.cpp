@@ -26,7 +26,7 @@ namespace sr2 {
         vehicle = veh;
     }
 
-    datParserNode* vehAero::prep_parser(datParser* parser) {
+    datParserNode* vehAero::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::VEC3F, "AngCDamp", &angular_c_damping, 1, nullptr);
         parser->add(PARSE_TYPE::VEC3F, "AngVelDamp", &angular_velocity_damping, 1, nullptr);
         parser->add(PARSE_TYPE::VEC3F, "AngVel2Damp", &angular_velocity_damping_2, 1, nullptr);
@@ -34,7 +34,7 @@ namespace sr2 {
         return parser->add(PARSE_TYPE::FLOAT, "Down", &down, 1, nullptr);
     }
 
-    const char* vehAero::file_type() {
+    const char* vehAero::getFileType() {
         return "vehAero";
     }
 
@@ -60,7 +60,7 @@ namespace sr2 {
                     else unk1 = 0.0f;
 
                     unk1 = (-unk1 * angular_c_damping.x - unk.x * angular_velocity_damping.x) - absUnk.x * unk.x * angular_velocity_damping_2.x;
-                    if (absUnk.x < fabsf(unk1) * g_datTimeManager.Seconds) unk1 = -unk.x * g_datTimeManager.InvSeconds;
+                    if (absUnk.x < fabsf(unk1) * datTimeManager::Seconds) unk1 = -unk.x * datTimeManager::InvSeconds;
                     if (absUnk.x < 1.0f) unk1 = unk1 * absUnk.x;
                     if (field_0xc != 1.0f) unk1 = unk1 * field_0xc;
 
@@ -79,7 +79,7 @@ namespace sr2 {
                     else unk1 = -0.0f;
 
                     unk1 = (unk1 * angular_c_damping.y - unk.y * angular_velocity_damping.y) - absUnk.y * unk.y * angular_velocity_damping_2.y;
-                    if (absUnk.y < fabsf(unk1) * g_datTimeManager.Seconds) unk1 = -unk.y * g_datTimeManager.InvSeconds;
+                    if (absUnk.y < fabsf(unk1) * datTimeManager::Seconds) unk1 = -unk.y * datTimeManager::InvSeconds;
                     if (absUnk.y < 1.0) unk1 = unk1 * absUnk.y;
                     if (field_0xc != 1.0) unk1 = unk1 * field_0xc;
 
@@ -98,7 +98,7 @@ namespace sr2 {
                     else unk1 = -0.0f;
 
                     unk1 = (unk1 * angular_c_damping.z - unk.z * angular_velocity_damping.z) - absUnk.z * unk.z * angular_velocity_damping_2.z;
-                    if (absUnk.z < fabsf(unk1) * g_datTimeManager.Seconds) unk1 = -unk.z * g_datTimeManager.InvSeconds;
+                    if (absUnk.z < fabsf(unk1) * datTimeManager::Seconds) unk1 = -unk.z * datTimeManager::InvSeconds;
                     if (absUnk.z < 1.0f) unk1 = unk1 * absUnk.z;
                     if (field_0xc != 1.0f) unk1 = unk1 * field_0xc;
 

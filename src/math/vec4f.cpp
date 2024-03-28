@@ -62,4 +62,8 @@ namespace sr2 {
     f32& vec4f::operator[](u8 axis) {
         return (&x)[axis];
     }
+	
+    void vec4f::zero() {
+        x = y = z = w = 0.0f;
+    }
 };

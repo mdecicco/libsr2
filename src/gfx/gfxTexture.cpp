@@ -22,4 +22,10 @@ namespace sr2 {
 		tex_env = env;
 		// this->UpdateRegs();
 	}
+
+	void gfxTexture::release(gfxTexture* tex) {
+		if (!tex) return;
+		tex->ref_count--;
+		if (tex->ref_count == 0) delete tex;
+	}
 };

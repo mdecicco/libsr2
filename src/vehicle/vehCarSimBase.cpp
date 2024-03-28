@@ -47,15 +47,15 @@ namespace sr2 {
     vehCarSimBase::~vehCarSimBase() {
     }
         
-    const char* vehCarSimBase::directory() const {
+    const char* vehCarSimBase::getDirectory() const {
         return "tune/vehicle";
     }
 
-    const char* vehCarSimBase::file_type() const {
+    const char* vehCarSimBase::getFileType() const {
         return "vehCarSim";
     }
 
-    datParserNode* vehCarSimBase::prep_parser(datParser* parser) {
+    datParserNode* vehCarSimBase::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "Mass", &mass, 1, nullptr);    
         parser->add(PARSE_TYPE::VEC3F, "InertiaBox", &inertia_box, 1, nullptr);
         parser->add(PARSE_TYPE::VEC3F, "CenterOfMass", &center_of_mass, 1, nullptr);
@@ -65,16 +65,16 @@ namespace sr2 {
         parser->add(PARSE_TYPE::FLOAT, "BoundGravity", &bound_gravity, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "AirGravity", &air_gravity, 1, nullptr);
         parser->add(PARSE_TYPE::INT32, "DrivetrainType", &drivetrain_type, 1, nullptr);
-        aero->prep_parser(parser->add_parser("Aero", nullptr));
-        fluid->prep_parser(parser->add_parser("Fluid", nullptr));
-        engine->prep_parser(parser->add_parser("Engine", nullptr));
-        transmission->prep_parser(parser->add_parser("Trans", nullptr));
-        drivetrainArray->prep_parser(parser->add_parser("Drivetrain", nullptr));
-        if (freetrain) freetrain->prep_parser(parser->add_parser("Freetrain", nullptr));
-        wheels[0]->prep_parser(parser->add_parser("WheelFront", nullptr));
-        wheels[2]->prep_parser(parser->add_parser("WheelBack", nullptr));
-        if (axles[0]) axles[0]->prep_parser(parser->add_parser("AxleFront", nullptr));
-        if (axles[1]) axles[1]->prep_parser(parser->add_parser("AxleBack", nullptr));
+        aero->prepParser(parser->add_parser("Aero", nullptr));
+        fluid->prepParser(parser->add_parser("Fluid", nullptr));
+        engine->prepParser(parser->add_parser("Engine", nullptr));
+        transmission->prepParser(parser->add_parser("Trans", nullptr));
+        drivetrainArray->prepParser(parser->add_parser("Drivetrain", nullptr));
+        if (freetrain) freetrain->prepParser(parser->add_parser("Freetrain", nullptr));
+        wheels[0]->prepParser(parser->add_parser("WheelFront", nullptr));
+        wheels[2]->prepParser(parser->add_parser("WheelBack", nullptr));
+        if (axles[0]) axles[0]->prepParser(parser->add_parser("AxleFront", nullptr));
+        if (axles[1]) axles[1]->prepParser(parser->add_parser("AxleBack", nullptr));
 
         // not real
         return nullptr;
@@ -428,7 +428,7 @@ namespace sr2 {
     }
     
     bool vehCarSimBase::load(const char* vehicleName) {
-        set_name(vehicleName);
+        setName(vehicleName);
         m_flags |= 1;
         return parFileIO::load();
     }

@@ -67,7 +67,7 @@ namespace sr2 {
         }
     }
 
-    void vehEngine::init(vehCarSimBase* veh, char* modelname, char* partname) {
+    void vehEngine::init(vehCarSimBase* veh, const char* modelname, const char* partname) {
         bool loaded = false;
 
         // ics = (veh->veh).sim.col.ics;
@@ -184,7 +184,7 @@ namespace sr2 {
     
         if (!drivetrains->engine) {
             if (field21_0x5a == 0) {
-                rps += (torque / angular_inertia) * g_datTimeManager.Seconds;
+                rps += (torque / angular_inertia) * datTimeManager::Seconds;
 
                 if (rps > max_rps) rps = max_rps;
                 else if (rps < 0.0f) rps = 0.0f;
@@ -202,7 +202,7 @@ namespace sr2 {
                 f32 gearChangeTimeElapsed = gear_change_duration - gear_change_time;
                 f32 newRpm = rps * math::RPS_TO_RPM;
                 rpm = (gearChangeTimeElapsed * newRpm + gear_change_time * unk_rpm_0_0) / gear_change_duration;
-                gear_change_time -= g_datTimeManager.Seconds;
+                gear_change_time -= datTimeManager::Seconds;
             } else {
                 changing_gears = 0;
                 transmission->setGearChangeFlag(0);
@@ -215,10 +215,10 @@ namespace sr2 {
             f32 unk = angular_inertia * (torque / torque_at_opt_rps) * 0.05f;
 
             if (jiggle_angle < unk) {
-                jiggle_angle += g_datTimeManager.Seconds * 0.5f;
+                jiggle_angle += datTimeManager::Seconds * 0.5f;
                 if (jiggle_angle > unk) jiggle_angle = unk;
             } else if (jiggle_angle > unk) {
-                jiggle_angle -= g_datTimeManager.Seconds * 0.5f;
+                jiggle_angle -= datTimeManager::Seconds * 0.5f;
                 if (jiggle_angle < unk) jiggle_angle = unk;
             }
 
@@ -240,12 +240,12 @@ namespace sr2 {
         }
 
         if (boost_remaining > 0.0f) {
-            boost_remaining -= g_datTimeManager.Seconds;
+            boost_remaining -= datTimeManager::Seconds;
             if (boost_remaining <= 0.0f) stopBoosting();
         }
     }
 
-    datParserNode* vehEngine::prep_parser(datParser* parser) {
+    datParserNode* vehEngine::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "AngInertia", &angular_inertia, 1, nullptr);                                                                                  
         parser->add(PARSE_TYPE::FLOAT, "MaxHorsePower", &max_horsepower, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "IdleRPM", &idle_rpm, 1, nullptr);
@@ -256,7 +256,7 @@ namespace sr2 {
         return parser->add(PARSE_TYPE::FLOAT, "BoostHP", &boost_horsepower, 1, nullptr);
     }
 
-    const char* vehEngine::file_type() {
+    const char* vehEngine::getFileType() {
         return "vehEngine";
     }
 };
