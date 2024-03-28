@@ -12,6 +12,7 @@
 #include <libsr2/gfx/gfx.h>
 #include <libsr2/mission/MissionWeatherData.h>
 #include <libsr2/libsr2.h>
+#include <libsr2/ui/ui2Base.h>
 
 namespace sr2 {
     GameLoadState::GameLoadState() {
@@ -25,7 +26,16 @@ namespace sr2 {
     void GameLoadState::Reset() {
         next_load_switch_mode = load_switch_mode = 0;
 
-        // i18n::txtStringTable::Load(&g_gameplayText, "gameplay", g_languageId, 0xffff, false);
+        // note: This isn't how it actually works in the game. It actually refers to
+        //       a global instance of txtStringTable and global LANGUAGE variable which
+        //       never changes from English. I've decided that `g_gameplayText` and
+        //       `g_languageId` just belong on the global ui2Base instance.
+        WidgetRef<ui2Base> gm = ui2Base::getGlobalMaster();
+        LANGUAGE lang;
+        u32 langFlags;
+        gm->getLangInfo(&lang, &langFlags);
+        gm->getGameplayText().load("gameplay", lang, 0xffff, false);
+
         // if (gfx::pipeline::CopyToFront != 4) {
             // gfx::pipeline::FlickerBlend = 0x40;
             // gfx::pipeline::FlickerXShift = 0;

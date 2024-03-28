@@ -58,8 +58,8 @@ namespace sr2 {
         m_menu = new ui2Menu(nameBuf0, m_buttonCount, 1, master);
 
         if (p5) {
-            m_menu->method_0x70(p5, SOME_WIDGET_ENUM::UNK29, 0x800080000);
-            m_menu->method_0x70(p5, SOME_WIDGET_ENUM::UNK26, 0x800080000);
+            m_menu->method_0x70(p5, WidgetEventType::UNK29, 0x800080000);
+            m_menu->method_0x70(p5, WidgetEventType::UNK26, 0x800080000);
             auto var = ui2Base::getGlobalMaster()->findWidget(p5, "ui2Variable");
             // var->method_0x70(getName(), SOME_WIDGET_ENUM::UNK39, 0x1ebac8ffff0000);
             // var->method_0x70(getName(), SOME_WIDGET_ENUM::UNK40, 0x1ebac8ffff0000);
@@ -67,38 +67,38 @@ namespace sr2 {
         
         snprintf(nameBuf0, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf0, nullptr);
-        m_menuRepeater->method_0x68(m_menu, SOME_WIDGET_ENUM::UNK12, 0x800080000);
+        m_menuRepeater->method_0x68(m_menu, WidgetEventType::UNK12, 0x800080000);
 
         if (field_0x168) {
             snprintf(nameBuf0, bufLen, "%s_Cursor_img", p1);
             m_cursorImg = new ui2Image(nameBuf0, "uichevron", 0, 0, 0, nullptr);
             // m_cursorImg->FUN_001f5db0(2);
-            m_cursorImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK8, nullRef);
+            m_cursorImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::UNK8, nullRef);
             
             snprintf(nameBuf0, bufLen, "%s_Cursor_tmr", p1);
             m_cursorTimer = new ui2Timer(nameBuf0, 1.4f, 1, 1, nullptr);
-            m_cursorTimer->method_0x68(m_menu, SOME_WIDGET_ENUM::UNK34, 0x800080000);
+            m_cursorTimer->method_0x68(m_menu, WidgetEventType::UNK34, 0x800080000);
 
             snprintf(nameBuf0, bufLen, "%s_Cursor_l_snd", p1);
             m_cursorLSound = new ui2Sound(nameBuf0, 49, nullptr);
             m_cursorLSound->FUN_00208068(-1.0f);
-            m_cursorLSound->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK33, nullRef);
-            m_cursorTimer->method_0x68(m_cursorLSound, SOME_WIDGET_ENUM::UNK34, 0x800080000);
+            m_cursorLSound->method_0xb0(WidgetEventType::UNK34, WidgetEventType::UNK33, nullRef);
+            m_cursorTimer->method_0x68(m_cursorLSound, WidgetEventType::UNK34, 0x800080000);
             m_cursorLSound->FUN_00207fc8();
             m_cursorLSound->FUN_00207fe0(0.45f);
 
             snprintf(nameBuf0, bufLen, "%s_Cursor_r_snd", p1);
             m_cursorRSound = new ui2Sound(nameBuf0, 50, nullptr);
             m_cursorRSound->FUN_00208068(1.0f);
-            m_cursorRSound->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK33, nullRef);
-            m_cursorTimer->method_0x68(m_cursorRSound, SOME_WIDGET_ENUM::UNK34, 0x800080000);
+            m_cursorRSound->method_0xb0(WidgetEventType::UNK34, WidgetEventType::UNK33, nullRef);
+            m_cursorTimer->method_0x68(m_cursorRSound, WidgetEventType::UNK34, 0x800080000);
             m_cursorRSound->FUN_00207fc8();
             m_cursorRSound->FUN_00207fe0(0.45f);
 
             snprintf(nameBuf0, bufLen, "%s_Heading_txt", p1);
             snprintf(nameBuf1, bufLen, "%s_Heading", p2);
             m_headingText = new ui2TranslatedText(nameBuf0, nameBuf1, 0, 0, 0, nullptr);
-            m_headingText->setColorU32(0x806cb4e1); // ???
+            m_headingText->setColorU32(0x806cb4e1);
             m_headingText->field_0x48 = 0;
         }
 
@@ -107,8 +107,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_left_Arrow_tmr", p1);
         m_leftArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_leftArrowTimer->method_0x68(m_leftArrowImg, SOME_WIDGET_ENUM::UNK34, 0x800080000);
-        m_leftArrowImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK4, field_0x130);
+        m_leftArrowTimer->method_0x68(m_leftArrowImg, WidgetEventType::UNK34, 0x800080000);
+        m_leftArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0x130);
         m_leftArrowImg->setColor(field_0x130);
         m_leftArrowImg->field_0x48 = 0;
 
@@ -117,8 +117,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_right_Arrow_tmr", p1);
         m_rightArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_rightArrowTimer->method_0x68(m_rightArrowImg, SOME_WIDGET_ENUM::UNK34, 0x800080000);
-        m_rightArrowImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK4, field_0x130);
+        m_rightArrowTimer->method_0x68(m_rightArrowImg, WidgetEventType::UNK34, 0x800080000);
+        m_rightArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0x130);
         m_rightArrowImg->setColor(field_0x130);
         m_rightArrowImg->field_0x48 = 0;
 
@@ -138,7 +138,7 @@ namespace sr2 {
         m_menuItemsTbl->setRowSize(0, 0);
         m_menuItemsTbl->setRowSize(29, 1);
         m_menuItemsTbl->setRowSize(0, 2);
-        m_menu->method_0x68(m_menuItemsTbl, SOME_WIDGET_ENUM::UNK29, 0x800080000);
+        m_menu->method_0x68(m_menuItemsTbl, WidgetEventType::UNK29, 0x800080000);
 
         if (field_0x158 == 0) {
             m_menuItemsTbl->setColSizes(80, -1, -2);
@@ -176,7 +176,7 @@ namespace sr2 {
         delete [] nameBuf0;
         delete [] nameBuf1;
 
-        m_menuItemsTbl->method_0x70(getName(), SOME_WIDGET_ENUM::UNK30, 0x1ebac8ffff0000);
-        m_menu->method_0x70(getName(), SOME_WIDGET_ENUM::UNK12, 0x1ebac8ffff0000);
+        m_menuItemsTbl->method_0x70(getName(), WidgetEventType::UNK30, 0x1ebac8ffff0000);
+        m_menu->method_0x70(getName(), WidgetEventType::UNK12, 0x1ebac8ffff0000);
     }
 };

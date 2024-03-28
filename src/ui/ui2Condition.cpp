@@ -25,9 +25,9 @@ namespace sr2 {
         delete m_someObject;
     }
 
-    void ui2Condition::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
-        if (!field_0x1c || p2 != SOME_WIDGET_ENUM::UNK42) {
-            ui2Widget::method_0x30(p1, p2, p3);
+    void ui2Condition::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
+        if (!field_0x1c || p2 != WidgetEventType::UNK42) {
+            ui2Widget::onEvent(p1, p2, p3);
             return;
         }
 

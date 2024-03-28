@@ -19,34 +19,34 @@ namespace sr2 {
         field_0x48 = 1;
     }
 
-    void ui2Visual::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Visual::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         if (!field_0x1c) {
-            ui2Widget::method_0x30(p1, p2, p3);
+            ui2Widget::onEvent(p1, p2, p3);
             return;
         }
 
         switch (p2) {
-            case SOME_WIDGET_ENUM::UNK3: {
+            case WidgetEventType::SetPosition: {
                 if (!p3) return;
                 setPos(p3.cast<ui2Position>());
                 return;
             }
-            case SOME_WIDGET_ENUM::UNK4: {
+            case WidgetEventType::SetColor: {
                 if (!p3) return;
                 setColor(p3.cast<ui2Color>());
                 return;
             }
-            case SOME_WIDGET_ENUM::UNK6: {
+            case WidgetEventType::UNK6: {
                 method_0x110(true);
                 return;
             }
-            case SOME_WIDGET_ENUM::UNK7: {
+            case WidgetEventType::UNK7: {
                 method_0x110(false);
                 return;
             }
             default: {
-                if (p2 > SOME_WIDGET_ENUM::UNK4) {
-                    ui2Widget::method_0x30(p1, p2, p3);
+                if (p2 > WidgetEventType::SetColor) {
+                    ui2Widget::onEvent(p1, p2, p3);
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace sr2 {
         m_pos = pos;
 
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK11, p1, w);
+        method_0x98(WidgetEventType::UNK11, p1, w);
     }
 
     void ui2Visual::setColorU32(u32 color) {
@@ -84,7 +84,7 @@ namespace sr2 {
         m_color = color;
         
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK13, p1, w);
+        method_0x98(WidgetEventType::UNK13, p1, w);
     }
 
     void ui2Visual::method_0x110(undefined4 p1) {
@@ -92,8 +92,8 @@ namespace sr2 {
         field_0x78 = p1;
         ui::BaseRef w;
 
-        if (p1) method_0x98(SOME_WIDGET_ENUM::UNK15, nullptr, w);
-        else method_0x98(SOME_WIDGET_ENUM::UNK14, nullptr, w);
+        if (p1) method_0x98(WidgetEventType::UNK15, nullptr, w);
+        else method_0x98(WidgetEventType::UNK14, nullptr, w);
     }
     
     undefined4 ui2Visual::method_0x118() {

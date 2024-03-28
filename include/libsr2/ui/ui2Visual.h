@@ -12,7 +12,7 @@ namespace sr2 {
 
             void init();
 
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
             virtual void method_0xe8(i32 x, i32 y);
             virtual void setPos(const WidgetRef<ui2Position>& p1);
             virtual void setColorU32(u32 color);

@@ -49,16 +49,16 @@ namespace sr2 {
         ui2Widget::reset();
     }
 
-    void ui2Menu::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Menu::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         if (!field_0x1c) {
-            ui2Widget::method_0x30(p1, p2, p3);
+            ui2Widget::onEvent(p1, p2, p3);
             return;
         }
 
         GridCell& someCell = m_grid[m_rowCount * m_someColIdx + m_someRowIdx];
 
         switch (p2) {
-            case SOME_WIDGET_ENUM::UNK16: {
+            case WidgetEventType::UNK16: {
                 field_0x98->col = m_someColIdx;
                 field_0x98->row = m_someRowIdx;
 
@@ -66,7 +66,7 @@ namespace sr2 {
 
                 ui::BaseRef found = ui2Base::getGlobalMaster()->findWidget(someCell.str.get());
                 if (found) {
-                    void (*unk)(ui::BaseRef&, SOME_WIDGET_ENUM, ui::BaseRef&) = nullptr;
+                    void (*unk)(ui::BaseRef&, WidgetEventType, ui::BaseRef&) = nullptr;
 
                     // ???
                     // if (someCell.field_0x1a < 0) unk = someCell.field_0x1c;
@@ -76,14 +76,14 @@ namespace sr2 {
 
                     ui::BaseRef self = this;
 
-                    unk(/* ???, */ self, SOME_WIDGET_ENUM::UNK22, found);
+                    unk(/* ???, */ self, WidgetEventType::UNK22, found);
                 }
 
                 ui::BaseRef w;
-                method_0x98(SOME_WIDGET_ENUM::UNK22, field_0x98, w);
+                method_0x98(WidgetEventType::UNK22, field_0x98, w);
                 break;
             }
-            case SOME_WIDGET_ENUM::UNK17: {
+            case WidgetEventType::UNK17: {
                 field_0x98->col = m_someColIdx;
                 field_0x98->row = m_someRowIdx;
 
@@ -91,7 +91,7 @@ namespace sr2 {
 
                 ui::BaseRef found = ui2Base::getGlobalMaster()->findWidget(someCell.str.get());
                 if (found) {
-                    void (*unk)(ui::BaseRef&, SOME_WIDGET_ENUM, const ui::BaseRef&) = nullptr;
+                    void (*unk)(ui::BaseRef&, WidgetEventType, const ui::BaseRef&) = nullptr;
 
                     // ???
                     // if (someCell.field_0x1a < 0) unk = someCell.field_0x1c;
@@ -101,31 +101,31 @@ namespace sr2 {
 
                     ui::BaseRef self = this;
 
-                    unk(/* ???, */ self, SOME_WIDGET_ENUM::UNK23, field_0x98);
+                    unk(/* ???, */ self, WidgetEventType::UNK23, field_0x98);
                 }
 
                 ui::BaseRef w;
-                method_0x98(SOME_WIDGET_ENUM::UNK23, field_0x98, w);
+                method_0x98(WidgetEventType::UNK23, field_0x98, w);
                 break;
             }
-            case SOME_WIDGET_ENUM::UNK18: {
+            case WidgetEventType::UNK18: {
                 FUN_001f9990(m_someColIdx, FUN_001fad48());
                 return;
             }
-            case SOME_WIDGET_ENUM::UNK19: {
+            case WidgetEventType::UNK19: {
                 FUN_001f9990(m_someColIdx, FUN_001fae08());
                 return;
             }
-            case SOME_WIDGET_ENUM::UNK20: {
+            case WidgetEventType::UNK20: {
                 FUN_001f9990(FUN_001faed0(), m_someRowIdx);
                 return;
             }
-            case SOME_WIDGET_ENUM::UNK21: {
+            case WidgetEventType::UNK21: {
                 FUN_001f9990(FUN_001faf90(), m_someRowIdx);
                 return;
             }
             default: {
-                ui2Widget::method_0x30(p1, p2, p3);
+                ui2Widget::onEvent(p1, p2, p3);
                 return;
             }
         }
@@ -159,7 +159,7 @@ namespace sr2 {
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }
 
-    void ui2Menu::FUN_001f85c0(i32 row, i32 col, SOME_WIDGET_ENUM p3, const ui::BaseRef& p4) {
+    void ui2Menu::FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4) {
         GridCell& someCell = m_grid[m_rowCount * col + row];
         someCell.field_0x20 = 1;
         someCell.field_0x24 = p3;
@@ -167,7 +167,7 @@ namespace sr2 {
         someCell.field_0x30 = 0;
     }
     
-    void ui2Menu::FUN_001f86c8(i32 row, i32 col, SOME_WIDGET_ENUM p3, const ui::BaseRef& p4) {
+    void ui2Menu::FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4) {
         GridCell& someCell = m_grid[m_rowCount * col + row];
         someCell.field_0x20 = 1;
         someCell.field_0x24 = p3;
@@ -253,11 +253,11 @@ namespace sr2 {
             return;
         }
 
-        SOME_WIDGET_ENUM someVal;
-        if (p3) someVal = SOME_WIDGET_ENUM::UNK24;
-        else someVal = SOME_WIDGET_ENUM::UNK25;
+        WidgetEventType someVal;
+        if (p3) someVal = WidgetEventType::UNK24;
+        else someVal = WidgetEventType::UNK25;
 
-        void (*unk)(ui::BaseRef&, SOME_WIDGET_ENUM, ui::BaseRef&) = nullptr;
+        void (*unk)(ui::BaseRef&, WidgetEventType, ui::BaseRef&) = nullptr;
 
         // ???
         // if (someCell.field_0x1a < 0) unk = someCell.field_0x1c;
@@ -268,7 +268,7 @@ namespace sr2 {
         ui::BaseRef self = this;
         ui::BaseRef nullRef;
 
-        unk(/* ???, */ self, SOME_WIDGET_ENUM::UNK24, nullRef);
+        unk(/* ???, */ self, WidgetEventType::UNK24, nullRef);
         
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }

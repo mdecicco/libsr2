@@ -52,33 +52,33 @@ namespace sr2 {
 
         snprintf(nameBuf, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf, nullptr);
-        m_menuRepeater->method_0x68(*m_menu, SOME_WIDGET_ENUM::UNK12, 0x800080000);
+        m_menuRepeater->method_0x68(*m_menu, WidgetEventType::UNK12, 0x800080000);
 
         snprintf(nameBuf, bufLen, "%s_Cursor_tmr", p1);
         m_cursorTimer = new ui2Timer(nameBuf, 1.4f, 1, 1, nullptr);
-        m_cursorTimer->method_0xb0(SOME_WIDGET_ENUM::UNK29, SOME_WIDGET_ENUM::UNK41, nullRef);
-        m_menu->method_0x68(*m_cursorTimer, SOME_WIDGET_ENUM::UNK29, 0x800080000);
+        m_cursorTimer->method_0xb0(WidgetEventType::UNK29, WidgetEventType::UNK41, nullRef);
+        m_menu->method_0x68(*m_cursorTimer, WidgetEventType::UNK29, 0x800080000);
 
         snprintf(nameBuf, bufLen, "%s_Cursor_l_snd", p1);
         m_cursorLSound = new ui2Sound(nameBuf, 0x31, nullptr);
         m_cursorLSound->FUN_00208068(-1.0f);
-        m_cursorLSound->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK33, nullRef);
-        m_cursorTimer->method_0x68(*m_cursorLSound, SOME_WIDGET_ENUM::UNK34, 0x800080000);
+        m_cursorLSound->method_0xb0(WidgetEventType::UNK34, WidgetEventType::UNK33, nullRef);
+        m_cursorTimer->method_0x68(*m_cursorLSound, WidgetEventType::UNK34, 0x800080000);
         m_cursorLSound->FUN_00207fc8();
         m_cursorLSound->FUN_00207fe0(0.45f);
 
         snprintf(nameBuf, bufLen, "%s_Cursor_r_snd", p1);
         m_cursorRSound = new ui2Sound(nameBuf, 0x32, nullptr);
         m_cursorRSound->FUN_00208068(1.0f);
-        m_cursorRSound->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK33, nullRef);
-        m_cursorTimer->method_0x68(*m_cursorRSound, SOME_WIDGET_ENUM::UNK34, 0x800080000);
+        m_cursorRSound->method_0xb0(WidgetEventType::UNK34, WidgetEventType::UNK33, nullRef);
+        m_cursorTimer->method_0x68(*m_cursorRSound, WidgetEventType::UNK34, 0x800080000);
         m_cursorLSound->FUN_00207fc8();
         m_cursorLSound->FUN_00207fe0(0.45f);
 
         if (p4) {
-            m_menu->method_0x70(p4, SOME_WIDGET_ENUM::UNK26, 0x800080000);
+            m_menu->method_0x70(p4, WidgetEventType::UNK26, 0x800080000);
             auto var = ui2Base::getGlobalMaster()->findWidget(p4, "ui2Variable").cast<ui2Variable>();
-            var->method_0x70(var->getName(), SOME_WIDGET_ENUM::UNK40, 0x1e6318ffff0000);
+            var->method_0x70(var->getName(), WidgetEventType::UNK40, 0x1e6318ffff0000);
         }
 
         snprintf(nameBuf, bufLen, "%s_Menu_Items_tbl", p1);
@@ -88,7 +88,7 @@ namespace sr2 {
         m_menuItemsTbl->setColSizes(30, -1, -2);
         m_menuItemsTbl->setColSize(64, 0);
         m_menuItemsTbl->setColSize(120, 1);
-        m_menu->method_0x68(*m_menuItemsTbl, SOME_WIDGET_ENUM::UNK29, 0x800080000);
+        m_menu->method_0x68(*m_menuItemsTbl, WidgetEventType::UNK29, 0x800080000);
 
         if (field_0x144) {
             snprintf(nameBuf, bufLen, "%s_Desc_rep", p1);
@@ -111,8 +111,8 @@ namespace sr2 {
 
         snprintf(nameBuf, bufLen, "%s_up_Arrow_tmr", p1);
         m_upArrowTimer = new ui2Timer(nameBuf, 0.2f, 0, 0, nullptr);
-        m_upArrowTimer->method_0x68(*m_upArrowImg, SOME_WIDGET_ENUM::UNK34, 0x800080000);
-        m_upArrowImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK4, field_0xec);
+        m_upArrowTimer->method_0x68(*m_upArrowImg, WidgetEventType::UNK34, 0x800080000);
+        m_upArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0xec);
         m_upArrowImg->setColor(field_0xec);
         m_upArrowImg->field_0x48 = 0;
         m_upArrowImg->method_0x110(0);
@@ -122,8 +122,8 @@ namespace sr2 {
 
         snprintf(nameBuf, bufLen, "%s_down_Arrow_tmr", p1);
         m_downArrowTimer = new ui2Timer(nameBuf, 0.2f, 0, 0, nullptr);
-        m_downArrowTimer->method_0x68(*m_downArrowImg, SOME_WIDGET_ENUM::UNK34, 0x800080000);
-        m_downArrowImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK4, field_0xec);
+        m_downArrowTimer->method_0x68(*m_downArrowImg, WidgetEventType::UNK34, 0x800080000);
+        m_downArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0xec);
         m_downArrowImg->setColor(field_0xec);
         m_downArrowImg->field_0x48 = 0;
         m_downArrowImg->method_0x110(0);
@@ -131,15 +131,15 @@ namespace sr2 {
         snprintf(nameBuf, bufLen, "%s_Select_l_snd", p1);
         m_selectLSound = new ui2Sound(nameBuf, 62, nullptr);
         m_selectLSound->FUN_00208068(-1.0f);
-        m_selectLSound->method_0xb0(SOME_WIDGET_ENUM::UNK29, SOME_WIDGET_ENUM::UNK33, nullRef);
-        m_selectLSound->method_0x68(m_selectLSound, SOME_WIDGET_ENUM::UNK29, SOME_WIDGET_ENUM::UNK33);
+        m_selectLSound->method_0xb0(WidgetEventType::UNK29, WidgetEventType::UNK33, nullRef);
+        m_selectLSound->method_0x68(m_selectLSound, WidgetEventType::UNK29, WidgetEventType::UNK33);
         m_selectLSound->FUN_00207fc8();
 
         snprintf(nameBuf, bufLen, "%s_Select_r_snd", p1);
         m_selectRSound = new ui2Sound(nameBuf, 63, nullptr);
         m_selectRSound->FUN_00208068(1.0f);
-        m_selectRSound->method_0xb0(SOME_WIDGET_ENUM::UNK29, SOME_WIDGET_ENUM::UNK33, nullRef);
-        m_selectRSound->method_0x68(m_selectRSound, SOME_WIDGET_ENUM::UNK29, SOME_WIDGET_ENUM::UNK33);
+        m_selectRSound->method_0xb0(WidgetEventType::UNK29, WidgetEventType::UNK33, nullRef);
+        m_selectRSound->method_0x68(m_selectRSound, WidgetEventType::UNK29, WidgetEventType::UNK33);
         m_selectRSound->FUN_00207fc8();
 
         snprintf(nameBuf, bufLen, "%s_all_tbl", p1);
@@ -173,6 +173,6 @@ namespace sr2 {
 
         delete [] nameBuf;
 
-        method_0x70(getName(), SOME_WIDGET_ENUM::UNK12, 0x1e6318ffff0000);
+        method_0x70(getName(), WidgetEventType::UNK12, 0x1e6318ffff0000);
     }
 };

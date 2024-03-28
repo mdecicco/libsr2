@@ -4,7 +4,7 @@
 
 namespace sr2 {
     class ui2Widget;
-    enum SOME_WIDGET_ENUM : u32;
+    enum WidgetEventType : u32;
 
     class UnkWidgetBinTree1 {
         public:
@@ -13,14 +13,14 @@ namespace sr2 {
                 Node* parent;
                 Node* left;
                 Node* right;
-                SOME_WIDGET_ENUM someSortingValue;
-                SOME_WIDGET_ENUM field_0x14;
+                WidgetEventType someSortingValue;
+                WidgetEventType field_0x14;
                 ui::BaseRef widget;
             };
 
             struct UnkData {
-                SOME_WIDGET_ENUM a;
-                SOME_WIDGET_ENUM b;
+                WidgetEventType a;
+                WidgetEventType b;
                 ui2WidgetBase* widget;
             };
 
@@ -32,7 +32,7 @@ namespace sr2 {
             Node* FUN_0020b7b0(const UnkData& unk);
             Node* FUN_0020b818(Node* p1, Node* p2, const UnkData& unk);
             Node* FUN_0020bc00(const UnkData& unk);
-            void maybeRemove(SOME_WIDGET_ENUM p1, const UnkData& unk);
+            void maybeRemove(WidgetEventType p1, const UnkData& unk);
             Node* getRoot() const;
         
         protected:

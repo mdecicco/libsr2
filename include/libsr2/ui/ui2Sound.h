@@ -10,7 +10,7 @@ namespace sr2 {
             ui2Sound(char* name, i32 p2, const WidgetRef<ui2Master>& master);
             virtual ~ui2Sound();
 
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
             virtual void draw();
             virtual const char* getType() const;
             virtual bool isA(const char* type) const;

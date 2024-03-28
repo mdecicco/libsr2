@@ -77,23 +77,23 @@ namespace sr2 {
         if (field_0x1c) FUN_001fd138();
     }
     
-    void ui2Table::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Table::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         if (!field_0x1c || !p3) {
-            ui2Widget::method_0x30(p1, p2, p3);
+            ui2Widget::onEvent(p1, p2, p3);
             return;
         }
 
-        if (p2 == SOME_WIDGET_ENUM::UNK3) {
+        if (p2 == WidgetEventType::SetPosition) {
             FUN_001fc660(p3.cast<ui2Position>());
             return;
         }
         
-        if (p2 == SOME_WIDGET_ENUM::UNK29) {
+        if (p2 == WidgetEventType::UNK29) {
             // FUN_001fd0d8(?, ?)
             return;
         }
         
-        ui2Widget::method_0x30(p1, p2, p3);
+        ui2Widget::onEvent(p1, p2, p3);
     }
 
     void ui2Table::method_0x58() {
@@ -150,7 +150,7 @@ namespace sr2 {
         m_pos = newPos;
 
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK11, p1, w);
+        method_0x98(WidgetEventType::UNK11, p1, w);
 
         field_0x8c = true;
         FUN_001fd138();
@@ -412,7 +412,7 @@ namespace sr2 {
     void ui2Table::FUN_001fd690() {
         if (m_colCount < 1) {
             ui::BaseRef w;
-            method_0x98(SOME_WIDGET_ENUM::UNK30, nullptr, w);
+            method_0x98(WidgetEventType::UNK30, nullptr, w);
             return;
         }
 
@@ -433,7 +433,7 @@ namespace sr2 {
                 if (!w) continue;
 
                 // Calculates pcVar10 in some bizarre way involving someCell.field_0x18
-                // (*pcVar10)(w + iVar8, this, SOME_WIDGET_ENUM::UNK3, field_0xcc);
+                // (*pcVar10)(w + iVar8, this, SOME_WIDGET_ENUM::SetPosition, field_0xcc);
 
                 if (offset.x < m_pos.x - field_0xac.x) {
                     // Calculates pcVar10 in some bizarre way involving someCell.field_0x18
@@ -465,7 +465,7 @@ namespace sr2 {
         }
 
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK30, nullptr, w);
+        method_0x98(WidgetEventType::UNK30, nullptr, w);
     }
 
     bool ui2Table::FUN_001fdd88() {

@@ -25,7 +25,7 @@ namespace sr2 {
             void init(u32 rowCount, u32 colCount);
 
             virtual void draw();
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
             virtual void method_0x58();
             virtual void prepParserAgain(datParser* parser);
 

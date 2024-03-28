@@ -22,28 +22,28 @@ namespace sr2 {
         m_strEventData = new ASCIIStringEventData();
     }
 
-    void ui2Variable::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Variable::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         if (!field_0x1c) {
-            ui2Widget::method_0x30(p1, p2, p3);
+            ui2Widget::onEvent(p1, p2, p3);
             return;
         }
 
-        if (p2 == SOME_WIDGET_ENUM::UNK26) {
+        if (p2 == WidgetEventType::UNK26) {
             if (!p3) return;
             FUN_002024c0(p3.cast<ASCIIStringEventData>());
         } else {
-            if (p2 < SOME_WIDGET_ENUM::UNK43) {
-                if (p2 == SOME_WIDGET_ENUM::UNK37) {
+            if (p2 < WidgetEventType::UNK43) {
+                if (p2 == WidgetEventType::UNK37) {
                     if (!p3) return;
                     FUN_00202310(p3.cast<IntegerEventData>());
                     return;
-                } else if (p2 == SOME_WIDGET_ENUM::UNK44) {
+                } else if (p2 == WidgetEventType::UNK44) {
                     FUN_00202580();
                     return;
                 }
             }
 
-            ui2Widget::method_0x30(p1, p2, p3);
+            ui2Widget::onEvent(p1, p2, p3);
         }
     }
 
@@ -59,7 +59,7 @@ namespace sr2 {
         field_0x78 = p1->data;
 
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK39, p1, w);
+        method_0x98(WidgetEventType::UNK39, p1, w);
     }
     
     void ui2Variable::FUN_002023a0(const char* p1) {
@@ -75,7 +75,7 @@ namespace sr2 {
         field_0x8c = 2;
 
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK40, p1, w);
+        method_0x98(WidgetEventType::UNK40, p1, w);
     }
 
     void ui2Variable::FUN_00202580() {
@@ -83,7 +83,7 @@ namespace sr2 {
         field_0x8c = 0;
 
         ui::BaseRef w;
-        method_0x98(SOME_WIDGET_ENUM::UNK45, nullptr, w);
+        method_0x98(WidgetEventType::UNK45, nullptr, w);
     }
 
     undefined4 ui2Variable::FUN_00202610() {

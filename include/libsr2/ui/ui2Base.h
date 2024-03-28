@@ -17,7 +17,7 @@ namespace sr2 {
             virtual void releaseRef();
             virtual void method_0x48();
             virtual bool loadWidget();
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
             virtual void draw();
 
             virtual void loadStrings(const char* p1, LANGUAGE lang, u32 stringFlags);

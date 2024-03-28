@@ -31,14 +31,14 @@ namespace sr2 {
         ui2Widget::reset();
     }
 
-    void ui2Screen::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
-        if (p2 == SOME_WIDGET_ENUM::UNK27) {
+    void ui2Screen::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
+        if (p2 == WidgetEventType::UNK27) {
             if (field_0x1c) method_0x100();
-        } else if (p2 == SOME_WIDGET_ENUM::UNK28) {
+        } else if (p2 == WidgetEventType::UNK28) {
             method_0xa8(1);
             field_0x84 = 1;
         } else {
-            ui2Widget::method_0x30(p1, p2, p3);
+            ui2Widget::onEvent(p1, p2, p3);
         }
     }
 

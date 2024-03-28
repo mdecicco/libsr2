@@ -11,7 +11,7 @@ namespace sr2 {
             virtual ~ui2Variable();
 
             void init();
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
 
             void FUN_002021f0(undefined4 p1);
             void FUN_00202310(const WidgetRef<IntegerEventData>& p1);

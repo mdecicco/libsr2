@@ -12,7 +12,7 @@ namespace sr2 {
                 undefined4 field_0x14;
                 undefined8 field_0x18;
                 undefined4 field_0x20;
-                SOME_WIDGET_ENUM field_0x24;
+                WidgetEventType field_0x24;
                 ui::BaseRef field_0x28;
                 undefined4 field_0x30;
             };
@@ -23,13 +23,13 @@ namespace sr2 {
             void init();
 
             virtual void reset();
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
 
             void FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, u64 p5);
             void FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, u64 p5);
             void FUN_001f84d8(i32 row, i32 col);
-            void FUN_001f85c0(i32 row, i32 col, SOME_WIDGET_ENUM p3, const ui::BaseRef& p4);
-            void FUN_001f86c8(i32 row, i32 col, SOME_WIDGET_ENUM p3, const ui::BaseRef& p4);
+            void FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4);
+            void FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4);
             void FUN_001f87d8(i32 row, i32 col, ui2Widget* p3);
             void FUN_001f88c8(i32 row, i32 col, ui2Widget* p3);
             void FUN_001f89b8(i32 row, i32 col, const char* p3);

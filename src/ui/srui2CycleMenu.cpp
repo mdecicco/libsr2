@@ -1,5 +1,6 @@
 #include <libsr2/ui/srui2CycleMenu.h>
 #include <libsr2/ui/ui2Base.h>
+#include <libsr2/ui/ui2Variable.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -54,22 +55,22 @@ namespace sr2 {
         m_menu = new ui2Menu(nameBuf0, m_rowCount, 1, parent);
 
         if (p6) {
-            m_menu->method_0x70(p6, SOME_WIDGET_ENUM::UNK37, 0x800080000);
-            m_menu->method_0x70(p6, SOME_WIDGET_ENUM::UNK26, 0x800080000);
+            m_menu->method_0x70(p6, WidgetEventType::UNK37, 0x800080000);
+            m_menu->method_0x70(p6, WidgetEventType::UNK26, 0x800080000);
 
-            auto var = ui2Base::getGlobalMaster()->findWidget(p6, "ui2Variable");
-            // var->method_0x70(getName(), SOME_WIDGET_ENUM::UNK39, 0x1efb30ffff0000);
-            // var->method_0x70(getName(), SOME_WIDGET_ENUM::UNK40, 0x1efb30ffff0000);
+            auto var = ui2Base::getGlobalMaster()->findWidget(p6, "ui2Variable").cast<ui2Variable>();
+            var->method_0x70(getName(), WidgetEventType::UNK39, 0x1efb30ffff0000);
+            var->method_0x70(getName(), WidgetEventType::UNK40, 0x1efb30ffff0000);
         }
 
         snprintf(nameBuf0, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf0, nullptr);
-        m_menuRepeater->method_0x68(m_menu, SOME_WIDGET_ENUM::UNK12, 0x800080000);
+        m_menuRepeater->method_0x68(m_menu, WidgetEventType::UNK12, 0x800080000);
 
         if (p3) {
             snprintf(nameBuf0, bufLen, "%s_Heading_txt", p1);
             m_headingText = new ui2TranslatedText(nameBuf0, p3, 0, 0, 0, nullptr);
-            m_headingText->setColorU32(0x8034ab40); // ???
+            m_headingText->setColorU32(0x8034ab40);
             m_headingText->field_0x48 = 0;
         }
 
@@ -78,8 +79,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_left_Arrow_tmr", p1);
         m_leftArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_leftArrowTimer->method_0x68(m_leftArrowImg, SOME_WIDGET_ENUM::UNK34, 0x800080000);
-        m_leftArrowImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK4, field_0xf8);
+        m_leftArrowTimer->method_0x68(m_leftArrowImg, WidgetEventType::UNK34, 0x800080000);
+        m_leftArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0xf8);
         m_leftArrowImg->setColor(field_0xf8);
         
 
@@ -88,8 +89,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_right_Arrow_tmr", p1);
         m_rightArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_rightArrowTimer->method_0x68(m_rightArrowImg, SOME_WIDGET_ENUM::UNK34, 0x800080000);
-        m_rightArrowImg->method_0xb0(SOME_WIDGET_ENUM::UNK34, SOME_WIDGET_ENUM::UNK4, field_0xf8);
+        m_rightArrowTimer->method_0x68(m_rightArrowImg, WidgetEventType::UNK34, 0x800080000);
+        m_rightArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0xf8);
         m_rightArrowImg->setColor(field_0xf8);
 
         snprintf(nameBuf0, bufLen, "%s_Menu_Items_tbl", p1);
@@ -119,10 +120,10 @@ namespace sr2 {
         m_notSelectableText->setBounds(width, 900);
         m_notSelectableText->setAlignment(0);
         m_menuItemsTbl->FUN_001fc6f8(m_notSelectableText, m_rowCount, 0, 0x800080000);
-        m_menu->method_0x68(m_notSelectableText, SOME_WIDGET_ENUM::UNK29, 0x800080000);
-        m_menu->method_0x68(m_notSelectableText, SOME_WIDGET_ENUM::UNK38, 0x800080000);
-        m_notSelectableText->method_0xb0(SOME_WIDGET_ENUM::UNK29, SOME_WIDGET_ENUM::UNK7, nullRef);
-        m_notSelectableText->method_0xb0(SOME_WIDGET_ENUM::UNK38, SOME_WIDGET_ENUM::UNK6, nullRef);
+        m_menu->method_0x68(m_notSelectableText, WidgetEventType::UNK29, 0x800080000);
+        m_menu->method_0x68(m_notSelectableText, WidgetEventType::UNK38, 0x800080000);
+        m_notSelectableText->method_0xb0(WidgetEventType::UNK29, WidgetEventType::UNK7, nullRef);
+        m_notSelectableText->method_0xb0(WidgetEventType::UNK38, WidgetEventType::UNK6, nullRef);
 
         m_someWidgetArr0 = new ui::BaseRef[m_rowCount];
         m_someWidgetArr1 = new ui::BaseRef[m_rowCount];
@@ -132,7 +133,7 @@ namespace sr2 {
         delete [] nameBuf0;
         delete [] nameBuf1;
 
-        m_menu->method_0x70(getName(), SOME_WIDGET_ENUM::UNK12, 0x1efb30ffff0000);
-        m_allTbl->method_0x70(getName(), SOME_WIDGET_ENUM::UNK30, 0x1efb30ffff0000);
+        m_menu->method_0x70(getName(), WidgetEventType::UNK12, 0x1efb30ffff0000);
+        m_allTbl->method_0x70(getName(), WidgetEventType::UNK30, 0x1efb30ffff0000);
     }
 };

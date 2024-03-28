@@ -26,7 +26,7 @@ namespace sr2 {
             );
             virtual ~ui2Condition();
 
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
 
             void FUN_00200c40(const char* p1);
             void FUN_00200c70(const ui::NamedRef& p1);

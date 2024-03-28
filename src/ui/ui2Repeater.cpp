@@ -13,19 +13,19 @@ namespace sr2 {
     ui2Repeater::~ui2Repeater() {
     }
 
-    void ui2Repeater::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Repeater::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         bool someCond = false;
 
         if (!field_0x1c) {
-            if (p2 == SOME_WIDGET_ENUM::UNK0) {
-                ui2Widget::method_0x30(p1, p2, p3);
+            if (p2 == WidgetEventType::UNK0) {
+                ui2Widget::onEvent(p1, p2, p3);
             }
 
             someCond = field_0x1c;
             
             if (!field_0x1c) {
-                if (!field_0x7c || p2 != SOME_WIDGET_ENUM::UNK2) {
-                    ui2Widget::method_0x30(p1, p2, p3);
+                if (!field_0x7c || p2 != WidgetEventType::UNK2) {
+                    ui2Widget::onEvent(p1, p2, p3);
                 }
                 return;
             }
@@ -39,8 +39,8 @@ namespace sr2 {
             method_0x98(p2, p3, w);
         }
             
-        if (!someCond && !field_0x7c || p2 != SOME_WIDGET_ENUM::UNK2) {
-            ui2Widget::method_0x30(p1, p2, p3);
+        if (!someCond && !field_0x7c || p2 != WidgetEventType::UNK2) {
+            ui2Widget::onEvent(p1, p2, p3);
         }
     }
 

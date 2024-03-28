@@ -74,7 +74,7 @@ namespace sr2 {
         baseReleaseRef();
     }
     
-    void ui2Widget::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Widget::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         if (p2 == 0xa0000069) {
             method_0xa0(0);
             return;
@@ -89,7 +89,7 @@ namespace sr2 {
         method_0xa0(1);
     }
 
-    void ui2Widget::method_0x38(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Widget::method_0x38(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         auto root = m_someBinTree1.getRoot();
 
         if (!field_0x38) {
@@ -101,7 +101,7 @@ namespace sr2 {
             while (true) {
                 if (found == root || found->someSortingValue != p2) break;
 
-                method_0x30(p1, found->field_0x14, p3);
+                onEvent(p1, found->field_0x14, p3);
 
                 auto n = found->right;
                 if (!n) {
@@ -123,7 +123,7 @@ namespace sr2 {
                 someCond = true;
             }
 
-            if (someCond) method_0x30(p1, p2, p3);
+            if (someCond) onEvent(p1, p2, p3);
         }
     }
 
@@ -133,25 +133,25 @@ namespace sr2 {
     void ui2Widget::method_0x58() {
     }
 
-    void ui2Widget::method_0x68(const ui::NamedRef& ref, SOME_WIDGET_ENUM p2, u64 p3) {
+    void ui2Widget::method_0x68(const ui::NamedRef& ref, WidgetEventType p2, u64 p3) {
         method_0x70(ref->getName(), p2, p3);
     }
 
-    void ui2Widget::method_0x70(const char* p1, SOME_WIDGET_ENUM p2, u64 p3) {
+    void ui2Widget::method_0x70(const char* p1, WidgetEventType p2, u64 p3) {
         if (p2 + 0x7ffffff6 < 2) {
-            method_0x70(p1, SOME_WIDGET_ENUM::UNK9, p3);
-            method_0x70(p1, SOME_WIDGET_ENUM::UNK10, p3);
-        } else if (p2 != SOME_WIDGET_ENUM::UNK35) {
+            method_0x70(p1, WidgetEventType::UNK9, p3);
+            method_0x70(p1, WidgetEventType::UNK10, p3);
+        } else if (p2 != WidgetEventType::UNK35) {
             // todo
             // nonsense 
             // Looks like it's removing from m_someBinTree0
             return;
         }
 
-        if (p2 != SOME_WIDGET_ENUM::UNK36 && p2 != SOME_WIDGET_ENUM::UNK35) return;
+        if (p2 != WidgetEventType::UNK36 && p2 != WidgetEventType::UNK35) return;
         
-        method_0x70(p1, SOME_WIDGET_ENUM::UNK0, p3);
-        method_0x70(p1, SOME_WIDGET_ENUM::UNK2, p3);
+        method_0x70(p1, WidgetEventType::UNK0, p3);
+        method_0x70(p1, WidgetEventType::UNK2, p3);
     }
 
     void ui2Widget::method_0x78(const ui::NamedRef& ref, i32 p2, u64 p3) {
@@ -176,7 +176,7 @@ namespace sr2 {
         // 0x00209278
     }
     
-    void ui2Widget::method_0x98(SOME_WIDGET_ENUM p1, const ui::BaseRef& p2, ui::BaseRef& p3) {
+    void ui2Widget::method_0x98(WidgetEventType p1, const ui::BaseRef& p2, ui::BaseRef& p3) {
         WidgetRef<ui2Base> master = ui2Base::getGlobalMaster();
         UnkWidgetBinTree0::Node* someNode = nullptr;
         auto baseRoot = m_someBinTree0.getRoot();
@@ -193,7 +193,7 @@ namespace sr2 {
 
                 while (true) {
                     if (someNode == baseRoot || someNode->someSortingValue != p1) {
-                        someNode = m_someBinTree0.FUN_0020b748(SOME_WIDGET_ENUM::UNK12);
+                        someNode = m_someBinTree0.FUN_0020b748(WidgetEventType::UNK12);
                         doBreak = true;
                         break;
                     }
@@ -227,7 +227,7 @@ namespace sr2 {
         while (true) {
             bool doBreak = false;
             while (true) {
-                if (someNode == baseRoot || someNode->someSortingValue != SOME_WIDGET_ENUM::UNK12) {
+                if (someNode == baseRoot || someNode->someSortingValue != WidgetEventType::UNK12) {
                     doBreak = true;
                     break;
                 }
@@ -262,8 +262,8 @@ namespace sr2 {
         if (field_0x1c != p1) {
             field_0x1c = p1;
             ui::BaseRef w;
-            if (p1 == 1) method_0x98(SOME_WIDGET_ENUM::UNK9, nullptr, w);
-            else method_0x98(SOME_WIDGET_ENUM::UNK10, nullptr, w);
+            if (p1 == 1) method_0x98(WidgetEventType::UNK9, nullptr, w);
+            else method_0x98(WidgetEventType::UNK10, nullptr, w);
         }
 
         if (!field_0x1c) field_0x40 = 0;
@@ -273,7 +273,7 @@ namespace sr2 {
         field_0x40 = p1;
     }
 
-    void ui2Widget::method_0xb0(SOME_WIDGET_ENUM p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Widget::method_0xb0(WidgetEventType p1, WidgetEventType p2, const ui::BaseRef& p3) {
         ui2WidgetBase* w = *p3;
         UnkWidgetBinTree1::UnkData d;
         d.a = p1;
@@ -295,7 +295,7 @@ namespace sr2 {
         }
     }
 
-    void ui2Widget::method_0xb8(SOME_WIDGET_ENUM p1, SOME_WIDGET_ENUM p2) {
+    void ui2Widget::method_0xb8(WidgetEventType p1, WidgetEventType p2) {
         UnkWidgetBinTree1::UnkData search;
         search.a = p1;
 

@@ -121,9 +121,9 @@ namespace sr2 {
         return m_master->loadWidget();
     }
     
-    void ui2Base::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
-        if (!field_0x1c || p2 != SOME_WIDGET_ENUM::UNK46) {
-            ui2Widget::method_0x30(p1, p2, p3);
+    void ui2Base::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
+        if (!field_0x1c || p2 != WidgetEventType::UNK46) {
+            ui2Widget::onEvent(p1, p2, p3);
             return;
         }
 
@@ -159,7 +159,7 @@ namespace sr2 {
         m_master->method_0xc8();
 
         ui::BaseRef w;
-        m_master->method_0x98(SOME_WIDGET_ENUM::UNK47, lang.cast<ui2WidgetBase>(), w);
+        m_master->method_0x98(WidgetEventType::UNK47, lang.cast<ui2WidgetBase>(), w);
 
         if (field_0x16c == 1 && field_0x168) loadWidget();
     }

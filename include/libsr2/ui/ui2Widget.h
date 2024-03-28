@@ -8,15 +8,15 @@
 namespace sr2 {
     class ui2String;
 
-    enum SOME_WIDGET_ENUM : u32 {
+    enum WidgetEventType : u32 {
         UNK12 = 0x80000001,
         UNK36 = 0x8000000a,
         UNK35 = 0x8000000c,
         UNK0  = 0xa0000064,
         UNK1  = 0xa0000065,
         UNK2  = 0xa0000069,
-        UNK3  = 0xa00003e8,
-        UNK4  = 0xa00003f2,
+        SetPosition  = 0xa00003e8,
+        SetColor     = 0xa00003f2,
         UNK5  = 0xa00003f4,
         UNK6  = 0xa00003fc,
         UNK7  = 0xa00003fd,
@@ -73,21 +73,21 @@ namespace sr2 {
 
             virtual void releaseRef();
             virtual void reset();
-            virtual void method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
-            virtual void method_0x38(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void method_0x38(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
             virtual void method_0x48();
             virtual void method_0x58();
-            virtual void method_0x68(const ui::NamedRef& ref, SOME_WIDGET_ENUM p2, u64 p3);
-            virtual void method_0x70(const char* p1, SOME_WIDGET_ENUM p2, u64 p3);
+            virtual void method_0x68(const ui::NamedRef& ref, WidgetEventType p2, u64 p3);
+            virtual void method_0x70(const char* p1, WidgetEventType p2, u64 p3);
             virtual void method_0x78(const ui::NamedRef& ref, i32 p2, u64 p3);
             virtual void method_0x80(const char* p1, i32 p2, i32 p3);
             virtual void method_0x88(const ui::NamedRef& ref);
             virtual void method_0x90(const char* p1);
-            virtual void method_0x98(SOME_WIDGET_ENUM p1, const ui::BaseRef& p2, ui::BaseRef& p3);
+            virtual void method_0x98(WidgetEventType p1, const ui::BaseRef& p2, ui::BaseRef& p3);
             virtual void method_0xa0(bool p1);
             virtual void method_0xa8(i32 p1);
-            virtual void method_0xb0(SOME_WIDGET_ENUM p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3);
-            virtual void method_0xb8(SOME_WIDGET_ENUM p1, SOME_WIDGET_ENUM p2);
+            virtual void method_0xb0(WidgetEventType p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void method_0xb8(WidgetEventType p1, WidgetEventType p2);
             virtual void method_0xc0(bool p1);
             virtual void method_0xc8();
             virtual void prepParserAgain(datParser* parser);

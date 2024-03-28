@@ -27,17 +27,17 @@ namespace sr2 {
     ui2Sound::~ui2Sound() {
     }
 
-    void ui2Sound::method_0x30(const ui::BaseRef& p1, SOME_WIDGET_ENUM p2, const ui::BaseRef& p3) {
+    void ui2Sound::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
         if (!field_0x1c) return;
 
         switch (p2) {
-            case SOME_WIDGET_ENUM::UNK48: {
+            case WidgetEventType::UNK48: {
                 if (Aud3DObjectManager::isAlive()) {
                     FUN_00207f78();
                 }
                 break;
             }
-            case SOME_WIDGET_ENUM::UNK33: {
+            case WidgetEventType::UNK33: {
                 if (!Aud3DObjectManager::isAlive()) return;
                 if (field_0x88) return;
                 if (field_0x80 > 0) {
@@ -52,16 +52,16 @@ namespace sr2 {
                 }
                 break;
             }
-            case SOME_WIDGET_ENUM::UNK49: {
+            case WidgetEventType::UNK49: {
                 if (Aud3DObjectManager::isAlive()) field_0x88 = 1;
                 break;
             }
-            case SOME_WIDGET_ENUM::UNK50: {
+            case WidgetEventType::UNK50: {
                 if (Aud3DObjectManager::isAlive()) field_0x88 = 0;
                 break;
             }
-            case SOME_WIDGET_ENUM::UNK51: break;
-            default: ui2Widget::method_0x30(p1, p2, p3);
+            case WidgetEventType::UNK51: break;
+            default: ui2Widget::onEvent(p1, p2, p3);
         }
     }
     
