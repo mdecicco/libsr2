@@ -412,7 +412,7 @@ namespace sr2 {
 
         for (u32 i = 0;i < m_path_tex_count;i++) {
             // textures[path_texture_ids[i]]->setMipmapBias(-8.0f, 1);
-            u32 env = textures[path_texture_ids[i]]->tex_env;
+            u32 env = textures[path_texture_ids[i]]->getTexEnv();
             textures[path_texture_ids[i]]->setTexEnv(env & 0xfffefffe | 1);
         }
     }
@@ -511,7 +511,7 @@ namespace sr2 {
                     tex = gfxTexture::get(texPath.c_str(), 1, 1);
                 }
 
-                if (tex) tex->setTexEnv(tex->tex_env | 0x10001);
+                if (tex) tex->setTexEnv(tex->getTexEnv() | 0x10001);
 
                 u32 tidx = texture_count + idx;
                 textures[tidx] = tex;

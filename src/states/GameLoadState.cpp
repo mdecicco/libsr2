@@ -7,12 +7,14 @@
 #include <libsr2/sim/phMaterial.h>
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/utilities/utils.h>
-#include <libsr2/utilities/argParser.h>
+#include <libsr2/utilities/datArgParser.h>
 #include <libsr2/utilities/msgMsgSource.h>
 #include <libsr2/gfx/gfx.h>
 #include <libsr2/mission/MissionWeatherData.h>
 #include <libsr2/libsr2.h>
 #include <libsr2/ui/ui2Base.h>
+
+#include <assert.h>
 
 namespace sr2 {
     GameLoadState::GameLoadState() {
@@ -135,10 +137,7 @@ namespace sr2 {
                 }
                 */
 
-                if (player_count == 4) {
-                    // ???
-                    exit(-1);
-                }
+                assert(player_count != 4);
 
                 std::string wheel_ptx = format("ptx_wheel_%s", map_name);
                 if (datAssetManager::exists("texture", wheel_ptx.c_str(), "tex")) {

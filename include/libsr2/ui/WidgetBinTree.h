@@ -21,16 +21,21 @@ namespace sr2 {
             WidgetBinTree();
             ~WidgetBinTree();
 
+            void init();
+            void deinit();
+
             void reset();
             void destroyNode(Node* node);
-            WidgetBinTree FUN_00204b68(const char* name);
+            Node* FUN_00204760(bool p1, Node* node, const ui::NamedRef& widget);
+            WidgetBinTree FUN_00204b68(const ui::NamedRef& widget);
+            void FUN_00204de8(WidgetBinTree* p1, WidgetBinTree* p2);
             u32 FUN_00205458(const char* name);
             Node* FUN_0020b748(i32 value);
             WidgetBinTree findByName(const char* name);
             Node* findWidgetByName(const char* name);
+            void findNearestNode0(WidgetBinTree* p1, const char* search);
+            void findNearestNode1(WidgetBinTree* p1, const char* search);
             Node* getRoot() const;
-            void setRoot(Node* root);
-            void setRoot(Node* root, u32 someCount);
         
         protected:
             Node* m_root;

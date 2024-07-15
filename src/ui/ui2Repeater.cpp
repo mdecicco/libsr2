@@ -13,34 +13,29 @@ namespace sr2 {
     ui2Repeater::~ui2Repeater() {
     }
 
-    void ui2Repeater::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
+    void ui2Repeater::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
         bool someCond = false;
 
-        if (!field_0x1c) {
-            if (p2 == WidgetEventType::UNK0) {
-                ui2Widget::onEvent(p1, p2, p3);
+        if (!m_isActive) {
+            if (event == WidgetEventType::UNK0) {
+                ui2Widget::onEvent(source, event, data);
             }
 
-            someCond = field_0x1c;
+            someCond = m_isActive;
             
-            if (!field_0x1c) {
-                if (!field_0x7c || p2 != WidgetEventType::UNK2) {
-                    ui2Widget::onEvent(p1, p2, p3);
+            if (!m_isActive) {
+                if (!field_0x7c || event != WidgetEventType::UNK2) {
+                    ui2Widget::onEvent(source, event, data);
                 }
                 return;
             }
         }
 
-        if (field_0x78 == 1) {
-            ui::BaseRef w = p1;
-            method_0x98(p2, p3, w);
-        } else {
-            ui::BaseRef w;
-            method_0x98(p2, p3, w);
-        }
+        if (field_0x78 == 1) dispatchEvent(event, data, source);
+        else dispatchEvent(event, data);
             
-        if (!someCond && !field_0x7c || p2 != WidgetEventType::UNK2) {
-            ui2Widget::onEvent(p1, p2, p3);
+        if (!someCond && !field_0x7c || event != WidgetEventType::UNK2) {
+            ui2Widget::onEvent(source, event, data);
         }
     }
 

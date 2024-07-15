@@ -64,7 +64,7 @@ namespace sr2 {
             } else {
                 u32 len = strlen(text);
                 m_text = new char[len + 1];
-                strncpy(m_text, text, len);
+                strncpy(m_text, text, len + 1);
                 m_ownsPtr = true;
             }
         } else if (!text) {

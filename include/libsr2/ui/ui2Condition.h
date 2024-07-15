@@ -26,7 +26,7 @@ namespace sr2 {
             );
             virtual ~ui2Condition();
 
-            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
 
             void FUN_00200c40(const char* p1);
             void FUN_00200c70(const ui::NamedRef& p1);
@@ -39,7 +39,7 @@ namespace sr2 {
         protected:
             Data* m_someObject;
 
-            ui2String field_0x78;
+            ui2String m_variableName;
             undefined4 field_0x88;
     };
 };

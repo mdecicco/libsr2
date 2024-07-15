@@ -14,7 +14,7 @@ namespace sr2 {
     i32 ui2Sound::DAT_00362ec8[4] = { 0 };
     i32 ui2Sound::DAT_00362ed8[4] = { 0 };
 
-    ui2Sound::ui2Sound(char* name, i32 p2, const WidgetRef<ui2Master>& master) : ui2Widget(name, master, true) {
+    ui2Sound::ui2Sound(const char* name, i32 p2, const WidgetRef<ui2Master>& master) : ui2Widget(name, master, true) {
         field_0x78 = nullptr;
         field_0x7c = -1;
         field_0x80 = -1;
@@ -27,10 +27,10 @@ namespace sr2 {
     ui2Sound::~ui2Sound() {
     }
 
-    void ui2Sound::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (!field_0x1c) return;
+    void ui2Sound::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (!m_isActive) return;
 
-        switch (p2) {
+        switch (event) {
             case WidgetEventType::UNK48: {
                 if (Aud3DObjectManager::isAlive()) {
                     FUN_00207f78();
@@ -61,7 +61,7 @@ namespace sr2 {
                 break;
             }
             case WidgetEventType::UNK51: break;
-            default: ui2Widget::onEvent(p1, p2, p3);
+            default: ui2Widget::onEvent(source, event, data);
         }
     }
     

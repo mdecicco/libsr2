@@ -87,7 +87,7 @@ namespace sr2 {
             msgMessage* msg = (msgMessage*)&buffer[sendIdx][off];
 
             for (u32 s = 0;s < sinkCount;s++) {
-                if (!(masks[s] & 1 << (msg->type >> 0xb))) continue;
+                if (!(masks[s] & 1 << (u16(msg->type) >> 0xb))) continue;
                 if (((msg->flags & 0x1f) != (targets[s] & 0x1f)) && !(targets[s] & 0x80)) continue;
 
                 sinks[s]->onMessage(msg);

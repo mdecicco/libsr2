@@ -5,7 +5,7 @@
 #include <string.h>
 
 namespace sr2 {
-    bool txtStringTable::txtStringData::load(Stream* fp, u16 strFlags) {
+    bool txtStringData::load(Stream* fp, u16 strFlags) {
         hash = 0;
         font = nullptr;
         text = nullptr;
@@ -57,12 +57,32 @@ namespace sr2 {
         return false;
     }
 
+    u32 strTblHash(const char* str) { 
+        char cVar1;
+        char cVar2;
+        u32 uVar3;
+        u32 uVar4;
+        
+        uVar3 = 0;
+        cVar2 = *str;
+        cVar1 = *str;
+        while (cVar1 != '\0') {
+            uVar3 = uVar3 * 0x10 + i32(cVar2);
+            uVar4 = uVar3 & 0xf0000000;
+            if (uVar4 != 0) uVar3 = uVar3 ^ uVar4 >> 0x18 ^ uVar4;
 
+            str++;
+            cVar2 = *str;
+            cVar1 = *str;
+        }
+        return uVar3;
+    }
 
     txtStringTable::txtStringTable() {
         m_isInitialized = false;
         m_keyCount = 0;
         m_keys = nullptr;
+        m_someFlag = 0;
     }
 
     txtStringTable::~txtStringTable() {
@@ -142,11 +162,44 @@ namespace sr2 {
         for (u32 i = 0;i < stringCount;i++) {
             txtStringData* data = new txtStringData();
             if (data->load(fp, strFlags)) {
-                m_stringMap.insert(std::pair<size_t, txtStringData*>(data->hash, data));
+                m_stringMap.insert(std::pair(data->hash, data));
             }
         }
 
         fp->close();
         return stringCount != 0;
+    }
+
+    void txtStringTable::setSomeFlag(u32 flag) {
+        m_someFlag = flag;
+    }
+
+    txtStringData* txtStringTable::findString(const char* str) {
+        u32 hash = strTblHash(str);
+        auto it = m_stringMap.find(hash);
+        if (it != m_stringMap.end()) return it->second;
+
+        wchar_t outBuf[32] = { 0 };
+
+        if (m_someFlag == 2) {
+            char buf[32] = "!!";
+            strcat(buf, str);
+            strcat(buf, "!!");
+            i32 len = i32(strlen(buf));
+            for (u32 i = 0;i < len;i++) outBuf[i] = buf[i];
+        } else {
+            i32 len = i32(strlen(str));
+            for (u32 i = 0;i < len;i++) outBuf[i] = str[i];
+        }
+
+        txtStringData* data = new txtStringData;
+        u32 len = wcslen(outBuf);
+        data->text = new wchar_t[len + 1];
+        memcpy(data->text, outBuf, len * 2);
+        data->hash = hash;
+        data->font = txtFontTex::get(nullptr);
+
+        m_stringMap.insert(std::pair(hash, data));
+        return data;
     }
 };

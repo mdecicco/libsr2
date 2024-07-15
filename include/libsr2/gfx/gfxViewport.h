@@ -8,7 +8,6 @@ namespace sr2 {
     namespace gfx {
         class gfxViewport {
             public:
-                // 0x002edab0
                 gfxViewport();
                 ~gfxViewport();
 

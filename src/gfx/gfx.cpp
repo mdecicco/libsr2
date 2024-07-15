@@ -2,6 +2,10 @@
 #include <libsr2/gfx/gfxViewport.h>
 #include <libsr2/math/mat4x4f.h>
 #include <libsr2/utilities/timer.h>
+#include <libsr2/managers/datTimeManager.h>
+#include <libsr2/io/ioPad.h>
+#include <libsr2/io/ioKeyboard.h>
+#include <libsr2/globals.h>
 
 namespace sr2 {
     namespace gfx {
@@ -87,7 +91,14 @@ namespace sr2 {
             }
 
             void Manage() {
-                // FUN_002ff518();
+                DAT_003b11c8 = DAT_003b11b4;
+                DAT_003b11b4 = DAT_003b11a0;
+
+                ioKeyboard::Update();
+                ioPad::UpdateAll();
+                // ioFFWheel::UpdateAll();
+
+                // todo: some profiling stuff
             }
 
             void BeginFrame() {
@@ -122,8 +133,7 @@ namespace sr2 {
             }
 
             void UpdateFade() {
-                f32 dt = 0.0f; // datTimeManager::Seconds
-                FadeValue += FadeStep * dt;
+                FadeValue += FadeStep * datTimeManager::Seconds;
                 if (FadeValue > 1.0f) FadeValue = 1.0f;
                 Fade = FadeStart + (FadeEnd - FadeStart) * FadeValue;
             }

@@ -48,11 +48,7 @@ namespace sr2 {
                 return m_ref == nullptr;
             }
 
-            T* operator->() {
-                return m_ref;
-            }
-
-            const T* operator->() const {
+            T* operator->() const {
                 return m_ref;
             }
 
@@ -61,7 +57,7 @@ namespace sr2 {
             }
 
             template <typename W>
-            std::enable_if_t<std::is_base_of_v<T, W>, void>
+            std::enable_if_t<std::is_base_of_v<T, W> || std::is_same_v<T, W>, void>
             operator=(W* ref) {
                 release();
                 
@@ -70,8 +66,16 @@ namespace sr2 {
             }
 
             template <typename W>
-            std::enable_if_t<std::is_base_of_v<T, W>, void>
-            operator=(const WidgetRef<W>& ref) {
+            bool operator==(W* ref) {
+                return m_ref == (T*)ref;
+            }
+            
+            template <typename W>
+            bool operator!=(W* ref) {
+                return m_ref != (T*)ref;
+            }
+
+            void operator=(const WidgetRef<T>& ref) {
                 release();
                 
                 m_ref = (T*)*ref;
@@ -79,27 +83,13 @@ namespace sr2 {
             }
 
             template <typename W>
-            std::enable_if_t<std::is_base_of_v<T, W>, bool>
-            operator==(W* ref) {
-                return m_ref == ref;
+            bool operator==(const WidgetRef<W>& ref) {
+                return m_ref == (T*)*ref;
             }
 
             template <typename W>
-            std::enable_if_t<std::is_base_of_v<T, W>, bool>
-            operator==(const WidgetRef<W>& ref) {
-                return m_ref == ref.m_ref;
-            }
-
-            template <typename W>
-            std::enable_if_t<std::is_base_of_v<T, W>, bool>
-            operator!=(W* ref) {
-                return m_ref != ref;
-            }
-
-            template <typename W>
-            std::enable_if_t<std::is_base_of_v<T, W>, bool>
-            operator!=(const WidgetRef<W>& ref) {
-                return m_ref != ref.m_ref;
+            bool operator!=(const WidgetRef<W>& ref) {
+                return m_ref != (T*)*ref;
             }
 
             void operator=(nullptr_t) {

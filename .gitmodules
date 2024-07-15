@@ -1,0 +1,3 @@
+[submodule "deps/renderer"]
+	path = deps/renderer
+	url = https://github.com/mdecicco/renderer.git

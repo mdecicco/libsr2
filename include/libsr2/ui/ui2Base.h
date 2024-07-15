@@ -7,6 +7,8 @@
 #include <libsr2/i18n/txtStringTable.h>
 
 #include <vector>
+#include <string>
+#include <unordered_map>
 
 namespace sr2 {
     class ui2Base : public ui2Widget {
@@ -17,7 +19,7 @@ namespace sr2 {
             virtual void releaseRef();
             virtual void method_0x48();
             virtual bool loadWidget();
-            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             virtual void draw();
 
             virtual void loadStrings(const char* p1, LANGUAGE lang, u32 stringFlags);
@@ -42,63 +44,16 @@ namespace sr2 {
             static ui2String* getSomeStrings();
 
             static void FUN_001f2ae0();
-            static void FUN_001fe638();
             static void FUN_002f7e88();
-
-            static undefined4 DAT_00362d7c;
-            static f32 FLOAT_00362d84;
-            static f32 FLOAT_00362d88;
-            static f32 FLOAT_00362d90;
-            static undefined4 DAT_008d53e0;
-            static undefined4 DAT_008d53fc;
-            static undefined4 DAT_008d541c;
-            static f32 FLOAT_00362d8c;
-            static undefined4 DAT_008d5380;
-            static undefined4 DAT_00362d80;
-            static undefined4 DAT_008d53e4;
-            static undefined4 DAT_008d53e8;
-            static undefined4 DAT_008d53ec;
-            static undefined4 DAT_008d53f0;
-            static undefined4 DAT_008d53f4;
-            static undefined4 DAT_008d53f8;
-            static undefined4 DAT_008d5400;
-            static undefined4 DAT_008d5418;
-            static undefined4 DAT_008d5388;
-            static undefined4 DAT_008d5390;
-            static undefined4 DAT_008d539c;
-            static undefined4 DAT_008d5398;
-            static undefined4 DAT_008d53a0;
-            static undefined4 DAT_008d53ac;
-            static undefined4 DAT_008d5404;
-            static undefined4 DAT_008d5408;
-            static undefined4 DAT_008d540c;
-            static undefined4 DAT_008d5410;
-            static undefined4 DAT_008d5414;
-            static undefined4 DAT_008d538c;
-            static undefined4 DAT_008d5394;
-            static undefined4 DAT_008d53a4;
-            static undefined4 DAT_008d5384;
-            static undefined4 DAT_008d53a8;
-            static undefined4 DAT_008d53d8;
-            static undefined4 DAT_00362d78;
-            static undefined4 DAT_008d53b0;
-            static undefined4 DAT_008d53b4;
-            static undefined4 DAT_008d53bc;
-            static undefined4 DAT_008d53b8;
-            static undefined4 DAT_008d53c0;
-            static undefined4 DAT_008d53cc;
-            static undefined4 DAT_008d53c8;
-            static undefined4 DAT_008d53d4;
-            static undefined4 DAT_008d53dc;
-            static undefined4 DAT_008d53c4;
-            static undefined4 DAT_008d53d0;
-            static undefined4 DAT_00362d14;
         
         protected:
             static u32 nextWidgetId;
             static ui2Base* globalMaster;
 
             WidgetBinTree m_widgets;
+            std::unordered_map<std::string, ui2Widget*> m_widgetsTestMap;
+
+
             WidgetRef<ui2Master> m_master;
             ui2String m_languageDirs[10];
             ui2String m_someStrings[3];

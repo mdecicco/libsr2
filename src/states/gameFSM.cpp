@@ -4,7 +4,7 @@
 #include <libsr2/states/InGamePausedState.h>
 #include <libsr2/states/InMenuState.h>
 #include <libsr2/states/MenuLoadState.h>
-#include <libsr2/utilities/argParser.h>
+#include <libsr2/utilities/datArgParser.h>
 #include <libsr2/libsr2.h>
 
 namespace sr2 {

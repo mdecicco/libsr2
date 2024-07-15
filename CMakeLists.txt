@@ -42,19 +42,23 @@ add_sources("src/vehicle"   "vehicle")
 add_sources("src/mission"   "mission")
 add_sources("src/unknown"   "unknown")
 add_sources("src/creature"  "creature")
+add_sources("src/frontend"  "frontend")
 add_sources("src/managers"  "managers")
 add_sources("src/particles" "particles")
 add_sources("src/instances" "instances")
 add_sources("src/utilities" "utilities")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_subdirectory(test)
+add_subdirectory(deps)
+add_subdirectory(game)
 
 add_library(libsr2 ${all_sources})
 
 target_include_directories(libsr2 PUBLIC src)
 target_include_directories(libsr2 PUBLIC include)
 target_include_directories(libsr2 PUBLIC "deps/zlib/include")
+target_include_directories(libsr2 PUBLIC "deps/renderer/include")
+target_include_directories(libsr2 PUBLIC "deps/renderer/deps/utils/include")
 target_include_directories(libsr2 PUBLIC "C:\\Program Files (x86)\\OpenAL 1.1 SDK\\include")
 
 target_link_directories(libsr2 PUBLIC "C:\\Program Files (x86)\\OpenAL 1.1 SDK\\libs\\Win64")
@@ -63,11 +67,15 @@ target_link_directories(libsr2 PUBLIC lib)
 SET(debug_libs 
 	debug/zlibstaticd
 	OpenAL32
+    utils
+    render
 )
 
 SET(release_libs
 	release/zlibstatic
 	OpenAL32
+    utils
+    render
 )
 
 target_link_libraries(libsr2 ${debug_libs})

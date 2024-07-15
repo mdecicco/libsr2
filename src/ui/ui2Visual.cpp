@@ -8,6 +8,8 @@ namespace sr2 {
         field_0x78 = 1;
         m_pos = { x, y };
         m_color = 0x80ffffff;
+
+        init();
     }
 
     ui2Visual::~ui2Visual() {
@@ -19,21 +21,21 @@ namespace sr2 {
         field_0x48 = 1;
     }
 
-    void ui2Visual::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (!field_0x1c) {
-            ui2Widget::onEvent(p1, p2, p3);
+    void ui2Visual::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (!m_isActive) {
+            ui2Widget::onEvent(source, event, data);
             return;
         }
 
-        switch (p2) {
+        switch (event) {
             case WidgetEventType::SetPosition: {
-                if (!p3) return;
-                setPos(p3.cast<ui2Position>());
+                if (!data) return;
+                setPos(data.cast<ui2Position>());
                 return;
             }
             case WidgetEventType::SetColor: {
-                if (!p3) return;
-                setColor(p3.cast<ui2Color>());
+                if (!data) return;
+                setColor(data.cast<ui2Color>());
                 return;
             }
             case WidgetEventType::UNK6: {
@@ -45,8 +47,8 @@ namespace sr2 {
                 return;
             }
             default: {
-                if (p2 > WidgetEventType::SetColor) {
-                    ui2Widget::onEvent(p1, p2, p3);
+                if (event > WidgetEventType::SetColor) {
+                    ui2Widget::onEvent(source, event, data);
                 }
             }
         }
@@ -64,8 +66,7 @@ namespace sr2 {
         if (pos.x == m_pos.x && pos.y == m_pos.y) return;
         m_pos = pos;
 
-        ui::BaseRef w;
-        method_0x98(WidgetEventType::UNK11, p1, w);
+        dispatchEvent(WidgetEventType::UNK11, p1);
     }
 
     void ui2Visual::setColorU32(u32 color) {
@@ -83,24 +84,22 @@ namespace sr2 {
         if (m_color == color) return;
         m_color = color;
         
-        ui::BaseRef w;
-        method_0x98(WidgetEventType::UNK13, p1, w);
+        dispatchEvent(WidgetEventType::UNK13, p1);
     }
 
     void ui2Visual::method_0x110(undefined4 p1) {
         if (field_0x78 == p1) return;
         field_0x78 = p1;
-        ui::BaseRef w;
 
-        if (p1) method_0x98(WidgetEventType::UNK15, nullptr, w);
-        else method_0x98(WidgetEventType::UNK14, nullptr, w);
+        if (p1) dispatchEvent(WidgetEventType::UNK15, nullptr);
+        else dispatchEvent(WidgetEventType::UNK14, nullptr);
     }
     
     undefined4 ui2Visual::method_0x118() {
         return field_0x78;
     }
     
-    void ui2Visual::prepParserAgain(datParser* parser) {
+    void ui2Visual::configureParser(datParser* parser) {
         char buf[160] = { 0 };
         snprintf(buf, 160, "%s.PosX", m_widgetName->get());
         parser->add(PARSE_TYPE::INT32, buf, &m_pos.x, 1, nullptr);

@@ -11,7 +11,7 @@ namespace sr2 {
             struct Cell {
                 ui2String value;
                 vec2i offset;
-                u64 field_0x18;
+                SomeWidgetCallback callback;
             };
 
             struct RowColInfo {
@@ -25,14 +25,14 @@ namespace sr2 {
             void init(u32 rowCount, u32 colCount);
 
             virtual void draw();
-            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             virtual void method_0x58();
-            virtual void prepParserAgain(datParser* parser);
+            virtual void configureParser(datParser* parser);
 
             void FUN_001fc540(i32 x, i32 y);
             void FUN_001fc660(const WidgetRef<ui2Position>& p1);
-            void FUN_001fc6f8(const ui::NamedRef& p1, u32 col, u32 row, u64 p4);
-            void FUN_001fc818(const char* p1, u32 col, u32 row, u64 p4);
+            void FUN_001fc6f8(const ui::NamedRef& p1, u32 col, u32 row, SomeWidgetCallback p4);
+            void FUN_001fc818(const char* p1, u32 col, u32 row, SomeWidgetCallback p4);
             void FUN_001fc958(u32 col, u32 row);
             void FUN_001fc9f0(u32 col, u32 row, const std::initializer_list<ui2Widget*>& args);
             void FUN_001fcae0(u32 col, u32 row, const std::initializer_list<ui2Widget*>& args);

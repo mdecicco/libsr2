@@ -2,6 +2,8 @@
 #include <libsr2/types.h>
 #include <libsr2/ui/ui2Widget.h>
 
+#include <utils/Array.h>
+
 namespace sr2 {
     class ui2Master : public ui2Widget {
         public:
@@ -32,8 +34,8 @@ namespace sr2 {
             virtual void method_0x48();
             virtual bool loadWidget();
             virtual void method_0x58();
-            virtual void method_0xc8();
-            virtual void prepParserAgain(datParser* parser);
+            virtual void method_0xc8(u32 p1);
+            virtual void configureParser(datParser* parser);
             virtual const char* getType() const;
             virtual bool isA(const char* type) const;
             virtual void method_0xe8();
@@ -45,7 +47,9 @@ namespace sr2 {
             i32 deleteFromUnk1(const ui::NamedRef& p1);
         
         protected:
-            Unk0* m_unk0;
-            Unk1* m_unk1;
+            // Unk0* m_unk0;
+            // Unk1* m_unk1;
+            utils::Array<Unk0> m_testUnk0;
+            utils::Array<Unk1> m_testUnk1;
     };
 };

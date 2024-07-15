@@ -7,9 +7,9 @@ namespace sr2 {
         const char* name,
         u32 sz,
         const WidgetRef<ui2Master>& master
-    ) : ui2Widget(name, master, true), field_0x7c(sz) {
-        field_0x78 = 0;
-        field_0x8c = 0;
+    ) : ui2Widget(name, master, true), m_stringData(sz) {
+        m_integerData = 0;
+        m_type = VariableType::Unknown;
 
         init();
     }
@@ -22,83 +22,88 @@ namespace sr2 {
         m_strEventData = new ASCIIStringEventData();
     }
 
-    void ui2Variable::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (!field_0x1c) {
-            ui2Widget::onEvent(p1, p2, p3);
+    void ui2Variable::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (!m_isActive) {
+            ui2Widget::onEvent(source, event, data);
             return;
         }
 
-        if (p2 == WidgetEventType::UNK26) {
-            if (!p3) return;
-            FUN_002024c0(p3.cast<ASCIIStringEventData>());
+        if (event == WidgetEventType::UNK26) {
+            if (!data) return;
+            setStringData(data.cast<ASCIIStringEventData>());
         } else {
-            if (p2 < WidgetEventType::UNK43) {
-                if (p2 == WidgetEventType::UNK37) {
-                    if (!p3) return;
-                    FUN_00202310(p3.cast<IntegerEventData>());
+            if (event < WidgetEventType::UNK43) {
+                if (event == WidgetEventType::UNK37) {
+                    if (!data) return;
+                    setIntegerData(data.cast<IntegerEventData>());
                     return;
-                } else if (p2 == WidgetEventType::UNK44) {
-                    FUN_00202580();
+                } else if (event == WidgetEventType::UNK44) {
+                    maybeClearValue();
                     return;
                 }
             }
 
-            ui2Widget::onEvent(p1, p2, p3);
+            ui2Widget::onEvent(source, event, data);
         }
     }
 
-    void ui2Variable::FUN_002021f0(undefined4 p1) {
-        m_intEventData->data = p1;
-        FUN_00202310(m_intEventData);
+    void ui2Variable::setIntegerData(i32 data) {
+        m_intEventData->data = data;
+        setIntegerData(m_intEventData);
     }
     
-    void ui2Variable::FUN_00202310(const WidgetRef<IntegerEventData>& p1) {
-        if (field_0x8c == 1 && field_0x78 == p1->data) return;
+    void ui2Variable::setIntegerData(const WidgetRef<IntegerEventData>& data) {
+        if (m_type == VariableType::Integer && m_integerData == data->data) return;
 
-        field_0x8c = 1;
-        field_0x78 = p1->data;
+        m_type = VariableType::Integer;
+        m_integerData = data->data;
 
-        ui::BaseRef w;
-        method_0x98(WidgetEventType::UNK39, p1, w);
+        dispatchEvent(WidgetEventType::UNK39, data);
     }
     
-    void ui2Variable::FUN_002023a0(const char* p1) {
-        m_strEventData->data = p1;
-        FUN_002024c0(m_strEventData);
+    void ui2Variable::setStringData(const char* data) {
+        m_strEventData->data = data;
+        setStringData(m_strEventData);
     }
     
-    void ui2Variable::FUN_002024c0(const WidgetRef<ASCIIStringEventData>& p1) {
-        const char* v = p1->data;
-        if (field_0x8c == 2 && strcmp(field_0x7c.get(), v) == 0) return;
+    void ui2Variable::setStringData(const WidgetRef<ASCIIStringEventData>& data) {
+        const char* v = data->data;
+        if (m_type == VariableType::String && strcmp(m_stringData.get(), v) == 0) return;
 
-        field_0x7c.set(v);
-        field_0x8c = 2;
+        m_stringData.set(v);
+        m_type = VariableType::String;
 
-        ui::BaseRef w;
-        method_0x98(WidgetEventType::UNK40, p1, w);
+        dispatchEvent(WidgetEventType::UNK40, data);
     }
 
-    void ui2Variable::FUN_00202580() {
-        if (field_0x8c == 0) return;
-        field_0x8c = 0;
+    void ui2Variable::maybeClearValue() {
+        if (m_type == VariableType::Unknown) return;
+        m_type = VariableType::Unknown;
 
-        ui::BaseRef w;
-        method_0x98(WidgetEventType::UNK45, nullptr, w);
+        dispatchEvent(WidgetEventType::UNK45, nullptr);
     }
 
-    undefined4 ui2Variable::FUN_00202610() {
-        return field_0x8c;
+    VariableType ui2Variable::getType() {
+        return m_type;
     }
 
-    undefined4 ui2Variable::FUN_00202618() {
-        return field_0x78;
+    i32 ui2Variable::getIntegerData() {
+        return m_integerData;
     }
 
-    const char* ui2Variable::FUN_00202620() {
-        return field_0x7c.get();
+    const char* ui2Variable::getStringData() {
+        return m_stringData.get();
     }
     
-    void ui2Variable::FUN_00202628(ui2Variable* p1) {
-        // todo
+    WidgetRef<ui2EventData> ui2Variable::getEvent() {
+        if (m_type == VariableType::Integer) {
+            m_intEventData->data = m_integerData;
+            return m_intEventData;
+        } else if (m_type == VariableType::String) {
+            m_strEventData->data = m_stringData.get();
+            return m_strEventData;
+        }
+
+        return nullptr;
     }
 };

@@ -1,6 +1,6 @@
 #include <libsr2/utilities/GameArchive.h>
 #include <libsr2/utilities/Data.h>
-#include <libsr2/utilities/argParser.h>
+#include <libsr2/utilities/datArgParser.h>
 #include <libsr2/utilities/timer.h>
 #include <libsr2/utilities/utils.h>
 #include <libsr2/utilities/msgMsgSource.h>
@@ -11,12 +11,24 @@
 #include <libsr2/gfx/gfx.h>
 #include <libsr2/gfx/gfxTextureMovie.h>
 #include <libsr2/ui/GameLoadingScreen.h>
+#include <libsr2/io/ioKeyboard.h>
+#include <libsr2/io/ioPad.h>
 #include <libsr2/libsr2.h>
+#include <libsr2/globals.h>
+
+#include <utils/Window.h>
+#include <render/utils/SimpleDebugDraw.h>
+#include <render/utils/ImGui.h>
+#include <render/vulkan/CommandBuffer.h>
+#include <render/vulkan/Instance.h>
+#include <render/vulkan/SwapChain.h>
+#include <render/vulkan/LogicalDevice.h>
 
 #include <string>
 #include <filesystem>
 #include <thread>
 #include <stdio.h>
+#include <assert.h>
 
 namespace sr2 {
     u64 g_HostTimer = 1;
@@ -81,19 +93,62 @@ namespace sr2 {
         should_pause = false;
         just_update = false;
         should_exit = false;
+        m_currentFrame = nullptr;
+
+        m_window = new utils::Window("Smuggler's Run 2", 640 * debug_ui_scale, 480 * debug_ui_scale);
+        m_window->subscribe(&ioKeyboard::gKeyboard);
+        if (!m_window->setOpen(true)) throw std::exception("Failed to open window");
+        if (!initRendering(m_window)) throw std::exception("Failed to initialize renderer");
+        if (!initDebugDrawing()) throw std::exception("Failed to initialize debug drawer");
+        if (!initImGui()) throw std::exception("Failed to initialize ImGui");
     }
 
     GameEngine::~GameEngine() {
         delete fsm;
         delete g_Archives;
+
+        getLogicalDevice()->waitForIdle();
+        shutdownRendering();
+
+        m_window->unsubscribe(&ioKeyboard::gKeyboard);
+        delete m_window;
     }
 
-    void GameEngine::BeginFrame() {
+    void GameEngine::BeginFrame(bool doClear) {
+        if (m_currentFrame) {
+            // Not actually game logic, may need refactors to allow
+            // code to independently begin/end frames? or refactor code that
+            // independently begins/ends frames?
+            return;
+        }
+
         // IO::ioInput::Poll();
         gfx::pipeline::Manage();
         gfx::pipeline::BeginFrame();
-        if (just_update) gfx::pipeline::Clear(3, gfx::g_clearColor, 1.0f, 0);
+        if (doClear) gfx::pipeline::Clear(3, gfx::g_clearColor, 1.0f, 0);
         g_HostTimer = timer::Ticks();
+
+        m_currentFrame = getFrame();
+        m_currentFrame->begin();
+        m_currentFrame->setClearColor(0, render::vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+        m_currentFrame->setClearDepthStencil(1, 1.0f, 0);
+
+        getDebugDraw()->begin(m_currentFrame->getSwapChainImageIndex());
+
+        auto cb = m_currentFrame->getCommandBuffer();
+        cb->beginRenderPass(
+            getRenderPass(),
+            m_currentFrame->getSwapChain(),
+            m_currentFrame->getFramebuffer()
+        );
+
+        
+        getImGui()->begin();
+
+        // todo: after binding pipeline
+        // auto screenSize = m_currentFrame->getSwapChain()->getExtent();
+        // cb->setViewport(0, screenSize.height, screenSize.width, -f32(screenSize.height), 0, 1);
+        // cb->setScissor(0, 0, screenSize.width, screenSize.height);
     }
 
     void GameEngine::EndFrame() {
@@ -105,6 +160,30 @@ namespace sr2 {
             // gfx::DrawFont(0x18, 0x18, tm.c_str(), 0x80ffffff);
         }
 
+        
+        auto dd = getDebugDraw();
+        auto cb = m_currentFrame->getCommandBuffer();
+        if (dd) {
+            cb->endRenderPass();
+            dd->end(cb);
+
+            cb->beginRenderPass(
+                getRenderPass(),
+                m_currentFrame->getSwapChain(),
+                m_currentFrame->getFramebuffer()
+            );
+            dd->draw(cb);
+            getImGui()->end(m_currentFrame);
+            cb->endRenderPass();
+        } else {
+            getImGui()->end(m_currentFrame);
+            cb->endRenderPass();
+        }
+
+        m_currentFrame->end();
+        releaseFrame(m_currentFrame);
+        m_currentFrame = nullptr;
+
         gfx::pipeline::EndFrame();
         t = timer::Ticks() - g_FrameTimer;
         gfx::g_FrameTime = f32(t) * 3.390842e-06f;
@@ -112,7 +191,10 @@ namespace sr2 {
     }
 
     bool GameEngine::Update() {
-        BeginFrame();
+        if (!m_window->isOpen()) return false;
+        m_window->pollEvents();
+
+        BeginFrame(just_update);
 
         // FUN_002ed360(0, 1);
         // FUN_002ed360(1, 1);
@@ -202,5 +284,25 @@ namespace sr2 {
             }
             default: break;
         }
+    }
+
+    bool GameEngine::setupInstance(render::vulkan::Instance* instance) {
+        instance->enableValidation();
+        instance->subscribeLogger(this);
+        return true;
+    }
+
+    void GameEngine::onLogMessage(utils::LOG_LEVEL level, const utils::String& scope, const utils::String& message) {
+        if (level == utils::LOG_LEVEL::LOG_FATAL) {
+            MessageBoxA(m_window->getHandle(), message.c_str(), scope.c_str(), MB_ICONEXCLAMATION);
+        }
+
+        printf("[%s]: %s\n", scope.c_str(), message.c_str());
+        fflush(stdout);
+        assert(level != utils::LOG_LEVEL::LOG_FATAL && level != utils::LOG_LEVEL::LOG_ERROR);
+    }
+
+    render::core::FrameContext* GameEngine::currentFrame() {
+        return m_currentFrame;
     }
 };

@@ -10,26 +10,28 @@ namespace sr2 {
             virtual ~ui2Screen();
 
             virtual void reset();
-            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             virtual void method_0x48();
             virtual bool loadWidget();
             virtual void method_0x58();
             virtual void draw();
-            virtual void method_0xa0(bool p1);
-            virtual void method_0xc8();
-            virtual void prepParserAgain(datParser* parser);
+            virtual void setActive(bool p1);
             virtual void method_0xe8(i32 p1);
-            virtual void method_0xf0() = 0;
-            virtual void method_0xf8() = 0;
+            virtual void method_0xc8(u32 p1);
+            virtual void configureParser(datParser* parser);
+            virtual void initScreen() = 0;
+            virtual void deinitScreen() = 0;
             virtual void method_0x100();
+            virtual const char* getType() const;
+            virtual bool isA(const char* type) const;
 
-            void FUN_001fbab0();
-            void FUN_001fbbe0();
+            void init();
+            void deinit();
 
         public:
             WidgetRef<ui2Master> m_master;
+            bool m_isInitialized;
 
-            undefined4 field_0x80;
             undefined4 field_0x84;
     };
 };

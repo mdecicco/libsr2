@@ -1,56 +1,11 @@
 #include <libsr2/ui/ui2Base.h>
+#include <libsr2/ui/ui2Input.h>
+#include <libsr2/globals.h>
 
 #include <stdio.h>
+#include <assert.h>
 
 namespace sr2 {
-    undefined4 ui2Base::DAT_00362d7c = 0;
-    f32 ui2Base::FLOAT_00362d84 = 0;
-    f32 ui2Base::FLOAT_00362d88 = 0;
-    f32 ui2Base::FLOAT_00362d90 = 0;
-    undefined4 ui2Base::DAT_008d53e0 = 0;
-    undefined4 ui2Base::DAT_008d53fc = 0;
-    undefined4 ui2Base::DAT_008d541c = 0;
-    f32 ui2Base::FLOAT_00362d8c = 0;
-    undefined4 ui2Base::DAT_008d5380 = 0;
-    undefined4 ui2Base::DAT_00362d80 = 0;
-    undefined4 ui2Base::DAT_008d53e4 = 0;
-    undefined4 ui2Base::DAT_008d53e8 = 0;
-    undefined4 ui2Base::DAT_008d53ec = 0;
-    undefined4 ui2Base::DAT_008d53f0 = 0;
-    undefined4 ui2Base::DAT_008d53f4 = 0;
-    undefined4 ui2Base::DAT_008d53f8 = 0;
-    undefined4 ui2Base::DAT_008d5400 = 0;
-    undefined4 ui2Base::DAT_008d5418 = 0;
-    undefined4 ui2Base::DAT_008d5388 = 0;
-    undefined4 ui2Base::DAT_008d5390 = 0;
-    undefined4 ui2Base::DAT_008d539c = 0;
-    undefined4 ui2Base::DAT_008d5398 = 0;
-    undefined4 ui2Base::DAT_008d53a0 = 0;
-    undefined4 ui2Base::DAT_008d53ac = 0;
-    undefined4 ui2Base::DAT_008d5404 = 0;
-    undefined4 ui2Base::DAT_008d5408 = 0;
-    undefined4 ui2Base::DAT_008d540c = 0;
-    undefined4 ui2Base::DAT_008d5410 = 0;
-    undefined4 ui2Base::DAT_008d5414 = 0;
-    undefined4 ui2Base::DAT_008d538c = 0;
-    undefined4 ui2Base::DAT_008d5394 = 0;
-    undefined4 ui2Base::DAT_008d53a4 = 0;
-    undefined4 ui2Base::DAT_008d5384 = 0;
-    undefined4 ui2Base::DAT_008d53a8 = 0;
-    undefined4 ui2Base::DAT_008d53d8 = 0;
-    undefined4 ui2Base::DAT_00362d78 = 0;
-    undefined4 ui2Base::DAT_008d53b0 = 0;
-    undefined4 ui2Base::DAT_008d53b4 = 0;
-    undefined4 ui2Base::DAT_008d53bc = 0;
-    undefined4 ui2Base::DAT_008d53b8 = 0;
-    undefined4 ui2Base::DAT_008d53c0 = 0;
-    undefined4 ui2Base::DAT_008d53cc = 0;
-    undefined4 ui2Base::DAT_008d53c8 = 0;
-    undefined4 ui2Base::DAT_008d53d4 = 0;
-    undefined4 ui2Base::DAT_008d53dc = 0;
-    undefined4 ui2Base::DAT_008d53c4 = 0;
-    undefined4 ui2Base::DAT_008d53d0 = 0;
-    undefined4 ui2Base::DAT_00362d14 = 0;
     u32 ui2Base::nextWidgetId = 0;
     ui2Base* ui2Base::globalMaster = nullptr;
 
@@ -64,6 +19,8 @@ namespace sr2 {
         field_0x16c = 0;
         field_0x170 = 0;
         field_0x174 = 0;
+
+        m_widgets.init();
 
         const char* prefix = "~";
         if (m_widgetName->get()[0] == '~') prefix = "";
@@ -86,11 +43,12 @@ namespace sr2 {
 
         m_masters.push_back(m_master);
 
-        FUN_001fe638();
+        ui2Input::FUN_001fe638();
     }
 
     ui2Base::~ui2Base() {
         FUN_001f2ae0();
+        m_widgets.deinit();
     }
 
 
@@ -121,15 +79,15 @@ namespace sr2 {
         return m_master->loadWidget();
     }
     
-    void ui2Base::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (!field_0x1c || p2 != WidgetEventType::UNK46) {
-            ui2Widget::onEvent(p1, p2, p3);
+    void ui2Base::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (!m_isActive || event != WidgetEventType::UNK46) {
+            ui2Widget::onEvent(source, event, data);
             return;
         }
 
-        if (!p3) return;
+        if (!data) return;
 
-        loadStringsInner(p3.cast<ui2Unknown0>());
+        loadStringsInner(data.cast<ui2Unknown0>());
     }
 
     void ui2Base::draw() {
@@ -156,10 +114,9 @@ namespace sr2 {
         m_gameplayText.kill();
         m_gameplayText.load(field_0x98, m_currentLang, m_stringFlags, false);
 
-        m_master->method_0xc8();
+        m_master->method_0xc8(1);
 
-        ui::BaseRef w;
-        m_master->method_0x98(WidgetEventType::UNK47, lang.cast<ui2WidgetBase>(), w);
+        m_master->dispatchEvent(WidgetEventType::UNK47, lang);
 
         if (field_0x16c == 1 && field_0x168) loadWidget();
     }
@@ -178,32 +135,52 @@ namespace sr2 {
     }
 
     undefined4 ui2Base::FUN_00203bb0(const ui::NamedRef& p1) {
-        WidgetBinTree found = m_widgets.findByName(p1->getName());
-        if (found.getRoot() != m_widgets.getRoot()) {
-            // todo: assert
-            exit(-1);
-        }
+        // probably insert
+        assert(m_widgetsTestMap.count(p1->getName()) == 0);
+        m_widgetsTestMap.insert(std::pair(p1->getName(), *p1));
+        p1->addRef();
 
-        m_widgets.FUN_00204b68(p1->getName());
         return 1;
+
+        // WidgetBinTree found = m_widgets.findByName(p1->getName());
+        // assert(found.getRoot() == m_widgets.getRoot());
+
+        // m_widgets.FUN_00204b68(p1);
+        // return 1;
     }
 
     u32 ui2Base::FUN_00203d38(const ui::NamedRef& p1) {
-        return m_widgets.FUN_00205458(p1->getName());
+        // probably remove
+        auto it = m_widgetsTestMap.find(p1->getName());
+
+        if (it == m_widgetsTestMap.end()) return 0;
+        m_widgetsTestMap.erase(it);
+        return 1;
+
+        // return m_widgets.FUN_00205458(p1->getName());
     }
 
     ui::BaseRef ui2Base::findWidget(const char* name, const char* type) {
-        WidgetBinTree::Node* n = m_widgets.findWidgetByName(name);
+        auto it = m_widgetsTestMap.find(name);
 
-        if (n == m_widgets.getRoot()) {
-            return ui::BaseRef();
-        }
+        if (it == m_widgetsTestMap.end()) return ui::BaseRef();
+        ui2Widget* w = it->second;
 
-        if (type && !n->widget.cast<ui2Widget>()->isA(type)) {
-            return ui::BaseRef();
-        }
+        if (type && !w->isA(type)) return ui::BaseRef();
 
-        return n->widget;
+        return w;
+
+        // WidgetBinTree::Node* n = m_widgets.findWidgetByName(name);
+
+        // if (n == m_widgets.getRoot()) {
+        //     return ui::BaseRef();
+        // }
+
+        // if (type && !n->widget.cast<ui2Widget>()->isA(type)) {
+        //     return ui::BaseRef();
+        // }
+
+        // return n->widget;
     }
 
 
@@ -266,56 +243,6 @@ namespace sr2 {
             FUN_002f7e88();
             DAT_00362d14 = 0;
         }
-    }
-
-    void ui2Base::FUN_001fe638() {
-        DAT_00362d7c = 0x331;
-        FLOAT_00362d84 = 0.15;
-        FLOAT_00362d88 = 0.5;
-        FLOAT_00362d90 = 0.7;
-        DAT_008d53e0 = 0x1c;
-        DAT_008d53fc = 0xf;
-        DAT_008d541c = 0x100;
-        FLOAT_00362d8c = 0.7;
-        DAT_008d5380 = 0x2000;
-        DAT_00362d80 = 7;
-        DAT_008d53e4 = 0xe;
-        DAT_008d53e8 = 200;
-        DAT_008d53ec = 0xd0;
-        DAT_008d53f0 = 0xcb;
-        DAT_008d53f4 = 0xcd;
-        DAT_008d53f8 = 0x39;
-        DAT_008d5400 = 0x40;
-        DAT_008d5418 = 0x800;
-        DAT_008d5388 = 0x8000;
-        DAT_008d5390 = 0x1000;
-        DAT_008d539c = 3;
-        DAT_008d5398 = 0x4000;
-        DAT_008d53a0 = 0x10;
-        DAT_008d53ac = 5;
-        DAT_008d5404 = 0x10;
-        DAT_008d5408 = 0x1000;
-        DAT_008d540c = 0x4000;
-        DAT_008d5410 = 0x8000;
-        DAT_008d5414 = 0x2000;
-        DAT_008d538c = 1;
-        DAT_008d5394 = 2;
-        DAT_008d53a4 = 4;
-        DAT_008d5384 = 0;
-        DAT_008d53a8 = 0x20;
-        DAT_008d53d8 = 2;
-        DAT_00362d78 = 1;
-        DAT_008d53b0 = 0x40;
-        DAT_008d53b4 = 6;
-        DAT_008d53bc = 7;
-        DAT_008d53b8 = 0x80;
-        DAT_008d53c0 = 4;
-        DAT_008d53cc = 9;
-        DAT_008d53c8 = 8;
-        DAT_008d53d4 = 10;
-        DAT_008d53dc = 0xb;
-        DAT_008d53c4 = 8;
-        DAT_008d53d0 = 1;
     }
 
     void ui2Base::FUN_002f7e88() {

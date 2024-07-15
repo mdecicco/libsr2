@@ -3,6 +3,9 @@
 #include <libsr2/managers/datAssetManager.h>
 #include <libsr2/gfx/gfxTexture.h>
 #include <libsr2/gfx/gfxImage.h>
+#include <libsr2/globals.h>
+
+#include <render/utils/ImGui.h>
 
 #include <string.h>
 
@@ -57,6 +60,7 @@ namespace sr2 {
         field_0x194 = 0;
         m_someArrCount = 0;
         m_glyphs = nullptr;
+        m_name = nullptr;
         m_glyphCount = 0;
         m_glyphIndices[0] = 0;
 
@@ -87,6 +91,29 @@ namespace sr2 {
 
     txtFontTex::~txtFontTex() {
         destroy();
+    }
+
+    void txtFontTex::draw(
+        f32 param_1,
+        f32 param_2,
+        i32 param_3,
+        i32 param_4,
+        wchar_t *param_5,
+        const TextDisplayData& param_6,
+        i32 param_7,
+        i32 **param_8
+    ) {
+        char text[512] = { 0 };
+        wcstombs(text, param_5, 512);
+
+        auto dl = ImGui::GetWindowDrawList();
+        dl->AddText(
+            ImGui::GetFont(),
+            debug_ui_font_size * debug_ui_scale,
+            ImVec2((param_1 + param_6.pos.x) * debug_ui_scale, (param_2 + param_6.pos.y) * debug_ui_scale),
+            param_6.color,
+            text
+        );
     }
 
     void txtFontTex::destroy() {
@@ -162,16 +189,20 @@ namespace sr2 {
             }
         }
 
+        auto epsilonCheck = [](f32 val, f32 cmp) {
+            return fabsf(val - cmp) < 0.000001f;
+        };
+
         f32 maybeVersion = 0.0f;
         fp->read(&maybeVersion, 4);
         fp->read(&field_0x1f8, 4);
         fp->read(&field_0x1fc, 4);
         fp->read(&field_0x200, 4);
 
-        if (maybeVersion >= 1.01) fp->read(&field_0x204, 4);
+        if (maybeVersion > 1.01 || epsilonCheck(maybeVersion, 1.01)) fp->read(&field_0x204, 4);
         field_0x204 = field_0x200 * 2;
 
-        if (maybeVersion >= 1.02) {
+        if (maybeVersion > 1.02 || epsilonCheck(maybeVersion, 1.02)) {
             fp->read(&field_0x208, 4);
             fp->read(&field_0x20c, 4);
             fp->read(&field_0x210, 4);
@@ -220,8 +251,8 @@ namespace sr2 {
                 }
             }
 
-            if (m_someOtherTexArr[i]) m_someOtherTexArr[i]->setTexEnv(m_someOtherTexArr[i]->tex_env & 0xfffbffff);
-            if (m_someTexArr[i]) m_someTexArr[i]->setTexEnv(m_someTexArr[i]->tex_env & 0xfffbffff);
+            if (m_someOtherTexArr[i]) m_someOtherTexArr[i]->setTexEnv(m_someOtherTexArr[i]->getTexEnv() & 0xfffbffff);
+            if (m_someTexArr[i]) m_someTexArr[i]->setTexEnv(m_someTexArr[i]->getTexEnv() & 0xfffbffff);
         }
 
         datAssetManager::setIgnorePrefix(prevIgnorePrefix);
@@ -253,7 +284,7 @@ namespace sr2 {
 
         u64 unk1 = 0;
 
-        if (!fontName) {
+        if (!fontName || !*fontName) {
             fontName = "arial112";
             unk1 = 0x50;
         } else {
@@ -261,7 +292,7 @@ namespace sr2 {
                 char ch = fontName[i];
                 if (ch - 0x41 < 0x1a) ch += 0x20;
                 buf[i] = ch;
-                if (fontName[i] == 0) break;
+                if (fontName[i + 1] == 0) break;
             }
         }
 

@@ -1,6 +1,7 @@
 #include <libsr2/ui/ui2Widget.h>
 #include <libsr2/ui/ui2String.h>
 #include <libsr2/ui/ui2Base.h>
+#include <libsr2/ui/ui2EventData.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -8,7 +9,7 @@
 namespace sr2 {
     ui2Widget::ui2Widget(const char* name, const WidgetRef<ui2Master>& master, bool doAssignMaster) {
         field_0x18 = false;
-        field_0x1c = true;
+        m_isActive = true;
         m_addedToMasterUnk0 = false;
         field_0x24 = 0;
         field_0x28 = 0;
@@ -16,7 +17,7 @@ namespace sr2 {
         m_widgetName = nullptr;
         field_0x40 = 0;
         field_0x44 = 0;
-        field_0x4c = 0;
+        m_shouldBeLoaded = false;
         field_0x5c = nullptr;
 
         // memset(&field_0x68, 0, 8);
@@ -54,10 +55,8 @@ namespace sr2 {
 
         m_refCount--;
 
-        // uhhhh... It looks like the code is doing this:
-        // if (m_refCount == 0 && this) delete this;
-        //
-        // But I don't think I should do that
+        // uhhhh... Rockstar? Why have you done this
+        if (m_refCount == 0 && this) delete this;
     }
     
     void ui2Widget::reset() {
@@ -69,27 +68,27 @@ namespace sr2 {
 
         field_0x38 = 1;
         m_master = nullptr;
-        field_0x1c = 0;
+        m_isActive = 0;
 
         baseReleaseRef();
     }
     
-    void ui2Widget::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (p2 == 0xa0000069) {
-            method_0xa0(0);
+    void ui2Widget::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (event == WidgetEventType::UNK2) {
+            setActive(false);
             return;
         }
-        if (p2 > 0xa0000069) return;
-        if (p2 != 0xa0000064) {
-            if (p2 != 0xa0000065) return;
+        if (event > WidgetEventType::UNK2) return;
+        if (event != WidgetEventType::UNK0) {
+            if (event != WidgetEventType::UNK1) return;
             method_0xa8(1);
             return;
         }
 
-        method_0xa0(1);
+        setActive(1);
     }
 
-    void ui2Widget::method_0x38(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
+    void ui2Widget::method_0x38(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
         auto root = m_someBinTree1.getRoot();
 
         if (!field_0x38) {
@@ -123,7 +122,7 @@ namespace sr2 {
                 someCond = true;
             }
 
-            if (someCond) onEvent(p1, p2, p3);
+            if (!someCond) onEvent(p1, p2, p3);
         }
     }
 
@@ -133,111 +132,104 @@ namespace sr2 {
     void ui2Widget::method_0x58() {
     }
 
-    void ui2Widget::method_0x68(const ui::NamedRef& ref, WidgetEventType p2, u64 p3) {
-        method_0x70(ref->getName(), p2, p3);
+    void ui2Widget::addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback) {
+        addListener(listener->getName(), event, callback);
     }
-
-    void ui2Widget::method_0x70(const char* p1, WidgetEventType p2, u64 p3) {
-        if (p2 + 0x7ffffff6 < 2) {
-            method_0x70(p1, WidgetEventType::UNK9, p3);
-            method_0x70(p1, WidgetEventType::UNK10, p3);
-        } else if (p2 != WidgetEventType::UNK35) {
-            // todo
-            // nonsense 
-            // Looks like it's removing from m_someBinTree0
+    
+    void ui2Widget::addListener(const char* listenerName, WidgetEventType event, SomeWidgetCallback callback) {
+        if (event == WidgetEventType::UNK36 || event == WidgetEventType::UNK58) {
+            // above condition used to be `p2 + 0x7ffffff6 < 2`
+            // this is the same thing (I think...) but it makes more sense
+            addListener(listenerName, WidgetEventType::Activate, callback);
+            addListener(listenerName, WidgetEventType::Deactivate, callback);
+        } else if (event != WidgetEventType::UNK35) {
+            UnkWidgetBinTree0::UnkData d;
+            d.callback = nullptr;
+            d.event = event;
+            UnkWidgetBinTree0::Node* found = m_someBinTree0.FUN_0020b6e8(d);
+            found->unk.str.set(listenerName);
+            found->unk.callback = callback;
             return;
         }
 
-        if (p2 != WidgetEventType::UNK36 && p2 != WidgetEventType::UNK35) return;
+        if (event != WidgetEventType::UNK36 && event != WidgetEventType::UNK35) return;
         
-        method_0x70(p1, WidgetEventType::UNK0, p3);
-        method_0x70(p1, WidgetEventType::UNK2, p3);
+        addListener(listenerName, WidgetEventType::UNK0, callback);
+        addListener(listenerName, WidgetEventType::UNK2, callback);
     }
 
-    void ui2Widget::method_0x78(const ui::NamedRef& ref, i32 p2, u64 p3) {
-        method_0x80(ref->getName(), p2, p3);
+    void ui2Widget::removeListener(const ui::NamedRef& listener, WidgetEventType event) {
+        removeListener(listener->getName(), event);
     }
 
-    void ui2Widget::method_0x80(const char* p1, i32 p2, i32 p3) {
-        // ... nonsense
-        // Looks like it's inserting to m_someBinTree0
+    void ui2Widget::removeListener(const char* listenerName, WidgetEventType event) {
         // todo
         // 0x00208b60
     }
 
-    void ui2Widget::method_0x88(const ui::NamedRef& ref) {
-        method_0x90(ref->getName());
+    void ui2Widget::removeAllListeners(const ui::NamedRef& listener) {
+        removeAllListeners(listener->getName());
     }
 
-    void ui2Widget::method_0x90(const char* p1) {
-        // ... nonsense
-        // Looks like it's inserting to m_someBinTree0
+    void ui2Widget::removeAllListeners(const char* listenerName) {
         // todo
         // 0x00209278
     }
-    
-    void ui2Widget::method_0x98(WidgetEventType p1, const ui::BaseRef& p2, ui::BaseRef& p3) {
+
+    void ui2Widget::dispatchEvent(WidgetEventType event, const WidgetRef<ui2EventData>& data, const ui::NamedRef& source) {
+        if (!m_isActive || field_0x38) return;
+
         WidgetRef<ui2Base> master = ui2Base::getGlobalMaster();
         UnkWidgetBinTree0::Node* someNode = nullptr;
         auto baseRoot = m_someBinTree0.getRoot();
 
+        someNode = m_someBinTree0.FUN_0020b748(event);
+
         // Interesting note:
         // Both the top level while loops in this function are nearly identical
+        while (true) {
+            bool doBreak = false;
 
-        if (field_0x1c && !field_0x38) {
-            if (!p3) p3 = this;
-
-            someNode = m_someBinTree0.FUN_0020b748(p1);
             while (true) {
-                bool doBreak = false;
-
-                while (true) {
-                    if (someNode == baseRoot || someNode->someSortingValue != p1) {
-                        someNode = m_someBinTree0.FUN_0020b748(WidgetEventType::UNK12);
-                        doBreak = true;
-                        break;
-                    }
-
-                    ui::BaseRef found = master->findWidget(someNode->text.get());
-                    if (found) {
-                        // wtf?
-                        // Not only is the decompilation incorrect (or I'm dumb),
-                        // but the apparent behavior is just bizarre...
-                        // See the if statement under 0x00209a24
-                    }
-                    
-                    auto n = someNode->right;
-                    if (!n) break;
-
-                    while (n->left) n = n->left;
-                    someNode = n;
+                if (someNode == baseRoot || someNode->unk.event != event) {
+                    baseRoot = m_someBinTree0.FUN_0020b748(WidgetEventType::UNK12);
+                    someNode = baseRoot;
+                    doBreak = true;
+                    break;
                 }
 
-                if (doBreak) break;
-
-                auto n = someNode->parent;
-                while (someNode == n->right) {
-                    someNode = n;
-                    n = n->parent;
+                ui::NamedRef found = master->findWidget(someNode->unk.str.get()).cast<ui2Widget>();
+                if (found) {
+                    ((*found)->*someNode->unk.callback)(!source ? this : source, event, data);
                 }
-                if (someNode->right != n) someNode = n;
+                
+                auto n = someNode->right;
+                if (!n) break;
+
+                while (n->left) n = n->left;
+                someNode = n;
             }
+
+            if (doBreak) break;
+
+            auto n = someNode->parent;
+            while (someNode == n->right) {
+                someNode = n;
+                n = n->parent;
+            }
+            if (someNode->right != n) someNode = n;
         }
 
         while (true) {
             bool doBreak = false;
             while (true) {
-                if (someNode == baseRoot || someNode->someSortingValue != WidgetEventType::UNK12) {
-                    doBreak = true;
-                    break;
+                if (someNode == baseRoot || someNode->unk.event != WidgetEventType::UNK12) {
+                    return;
                 }
 
-                auto found = master->findWidget(someNode->text.get());
+                ui::NamedRef found = master->findWidget(someNode->unk.str.get()).cast<ui2Widget>();
                 if (found) {
-                    // wtf?
-                    // Not only is the decompilation incorrect (or I'm dumb),
-                    // but the apparent behavior is just bizarre...
-                    // See the if statement under 0x00209b84
+                    ((*found)->*someNode->unk.callback)(!source ? this : source, event, data);
                 }
 
                 auto n = someNode->right;
@@ -258,15 +250,14 @@ namespace sr2 {
         }
     }
 
-    void ui2Widget::method_0xa0(bool p1) {
-        if (field_0x1c != p1) {
-            field_0x1c = p1;
-            ui::BaseRef w;
-            if (p1 == 1) method_0x98(WidgetEventType::UNK9, nullptr, w);
-            else method_0x98(WidgetEventType::UNK10, nullptr, w);
+    void ui2Widget::setActive(bool p1) {
+        if (m_isActive != p1) {
+            m_isActive = p1;
+            if (p1 == 1) dispatchEvent(WidgetEventType::Activate, nullptr);
+            else dispatchEvent(WidgetEventType::Deactivate, nullptr);
         }
 
-        if (!field_0x1c) field_0x40 = 0;
+        if (!m_isActive) field_0x40 = 0;
     }
 
     void ui2Widget::method_0xa8(i32 p1) {
@@ -306,19 +297,19 @@ namespace sr2 {
     }
 
     void ui2Widget::method_0xc0(bool p1) {
-        field_0x4c = p1;
+        m_shouldBeLoaded = p1;
         if (p1) setName(m_widgetName->get());
     }
 
-    void ui2Widget::method_0xc8() {
+    void ui2Widget::method_0xc8(u32 p1) {
     }
 
-    void ui2Widget::prepParserAgain(datParser* parser) {
+    void ui2Widget::configureParser(datParser* parser) {
     }
 
     void ui2Widget::draw() {
         if (field_0x40 > 0) field_0x40--;
-        if (field_0x40 == 0) method_0xa0(1);
+        if (field_0x40 == 0) setActive(true);
     }
 
     const char* ui2Widget::getName() const {
@@ -374,8 +365,8 @@ namespace sr2 {
         return m_master;
     }
 
-    bool ui2Widget::FUN_0020a070() {
-        return field_0x1c;
+    bool ui2Widget::isActive() {
+        return m_isActive;
     }
 
     void ui2Widget::addToMasterUnk0(i32 p1, u64 p2) {
@@ -399,7 +390,7 @@ namespace sr2 {
         // memset(&field_0x68, 0, 8);
     }
     
-    void ui2Widget::FUN_0020aa80(i32 p1, u64 p2) {
+    void ui2Widget::addToMasterUnk0IfNecessary(i32 p1) {
         if (!m_addedToMasterUnk0) return;
         addToMasterUnk0(p1, field_0x68);
     }
@@ -420,7 +411,7 @@ namespace sr2 {
         field_0x28 = 0;
     }
     
-    void ui2Widget::FUN_0020ac08(i32* p1, u64 p2) {
+    void ui2Widget::FUN_0020ac08(const ui::NamedRef& p1, u64 p2) {
         if (p2 & 1) {
             // m_someBinTree0.FUN_0020be20(p1 + 0x10);
         }
@@ -429,9 +420,13 @@ namespace sr2 {
             // m_someBinTree1.FUN_0020c0d8(p1 + 0x2c);
         }
     }
+    
+    bool ui2Widget::shouldBeLoaded() {
+        return m_shouldBeLoaded;
+    }
 
     bool ui2Widget::loadWidget() {
-        if (!field_0x4c) return false;
+        if (!m_shouldBeLoaded) return false;
         return load();
     }
 };

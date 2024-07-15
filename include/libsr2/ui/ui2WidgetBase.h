@@ -15,5 +15,6 @@ namespace sr2 {
 
         protected:
             u32 m_refCount;
+            undefined* field_0xc;
     };
 };

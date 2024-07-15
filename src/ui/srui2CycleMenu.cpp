@@ -55,17 +55,17 @@ namespace sr2 {
         m_menu = new ui2Menu(nameBuf0, m_rowCount, 1, parent);
 
         if (p6) {
-            m_menu->method_0x70(p6, WidgetEventType::UNK37, 0x800080000);
-            m_menu->method_0x70(p6, WidgetEventType::UNK26, 0x800080000);
+            m_menu->addListener(p6, WidgetEventType::UNK37, &ui2Widget::method_0x38);
+            m_menu->addListener(p6, WidgetEventType::UNK26, &ui2Widget::method_0x38);
 
             auto var = ui2Base::getGlobalMaster()->findWidget(p6, "ui2Variable").cast<ui2Variable>();
-            var->method_0x70(getName(), WidgetEventType::UNK39, 0x1efb30ffff0000);
-            var->method_0x70(getName(), WidgetEventType::UNK40, 0x1efb30ffff0000);
+            var->addListener(getName(), WidgetEventType::UNK39, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
+            var->addListener(getName(), WidgetEventType::UNK40, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
         }
 
         snprintf(nameBuf0, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf0, nullptr);
-        m_menuRepeater->method_0x68(m_menu, WidgetEventType::UNK12, 0x800080000);
+        m_menuRepeater->addListener(m_menu, WidgetEventType::UNK12, &ui2Widget::method_0x38);
 
         if (p3) {
             snprintf(nameBuf0, bufLen, "%s_Heading_txt", p1);
@@ -79,8 +79,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_left_Arrow_tmr", p1);
         m_leftArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_leftArrowTimer->method_0x68(m_leftArrowImg, WidgetEventType::UNK34, 0x800080000);
-        m_leftArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0xf8);
+        m_leftArrowTimer->addListener(m_leftArrowImg, WidgetEventType::TimerFinished, &ui2Widget::method_0x38);
+        m_leftArrowImg->method_0xb0(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0xf8);
         m_leftArrowImg->setColor(field_0xf8);
         
 
@@ -89,8 +89,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_right_Arrow_tmr", p1);
         m_rightArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_rightArrowTimer->method_0x68(m_rightArrowImg, WidgetEventType::UNK34, 0x800080000);
-        m_rightArrowImg->method_0xb0(WidgetEventType::UNK34, WidgetEventType::SetColor, field_0xf8);
+        m_rightArrowTimer->addListener(m_rightArrowImg, WidgetEventType::TimerFinished, &ui2Widget::method_0x38);
+        m_rightArrowImg->method_0xb0(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0xf8);
         m_rightArrowImg->setColor(field_0xf8);
 
         snprintf(nameBuf0, bufLen, "%s_Menu_Items_tbl", p1);
@@ -102,10 +102,10 @@ namespace sr2 {
         m_allTbl = new ui2Table(nameBuf0, 5, 1, x, y, parent);
         m_allTbl->setColSizes(0, -1, -2);
 
-        if (p3) m_allTbl->FUN_001fc6f8(m_headingText, 0, 0, 0x800080000);
-        m_allTbl->FUN_001fc6f8(m_leftArrowImg, 1, 0, 0x800080000);
-        m_allTbl->FUN_001fc6f8(m_menuItemsTbl, 2, 0, 0x800080000);
-        m_allTbl->FUN_001fc6f8(m_rightArrowImg, 3, 0, 0x800080000);                                                                                    
+        if (p3) m_allTbl->FUN_001fc6f8(m_headingText, 0, 0, &ui2Widget::method_0x38);
+        m_allTbl->FUN_001fc6f8(m_leftArrowImg, 1, 0, &ui2Widget::method_0x38);
+        m_allTbl->FUN_001fc6f8(m_menuItemsTbl, 2, 0, &ui2Widget::method_0x38);
+        m_allTbl->FUN_001fc6f8(m_rightArrowImg, 3, 0, &ui2Widget::method_0x38);                                                                                    
         m_allTbl->setColSize(m_headingOffset, 0);
         m_allTbl->setColSize(36, 1);
         m_allTbl->setColSize(m_innerWidth, 2);
@@ -119,9 +119,9 @@ namespace sr2 {
         i32 width = m_allTbl->getRowSize(2);
         m_notSelectableText->setBounds(width, 900);
         m_notSelectableText->setAlignment(0);
-        m_menuItemsTbl->FUN_001fc6f8(m_notSelectableText, m_rowCount, 0, 0x800080000);
-        m_menu->method_0x68(m_notSelectableText, WidgetEventType::UNK29, 0x800080000);
-        m_menu->method_0x68(m_notSelectableText, WidgetEventType::UNK38, 0x800080000);
+        m_menuItemsTbl->FUN_001fc6f8(m_notSelectableText, m_rowCount, 0, &ui2Widget::method_0x38);
+        m_menu->addListener(m_notSelectableText, WidgetEventType::UNK29, &ui2Widget::method_0x38);
+        m_menu->addListener(m_notSelectableText, WidgetEventType::UNK38, &ui2Widget::method_0x38);
         m_notSelectableText->method_0xb0(WidgetEventType::UNK29, WidgetEventType::UNK7, nullRef);
         m_notSelectableText->method_0xb0(WidgetEventType::UNK38, WidgetEventType::UNK6, nullRef);
 
@@ -133,7 +133,10 @@ namespace sr2 {
         delete [] nameBuf0;
         delete [] nameBuf1;
 
-        m_menu->method_0x70(getName(), WidgetEventType::UNK12, 0x1efb30ffff0000);
-        m_allTbl->method_0x70(getName(), WidgetEventType::UNK30, 0x1efb30ffff0000);
+        m_menu->addListener(getName(), WidgetEventType::UNK12, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
+        m_allTbl->addListener(getName(), WidgetEventType::UNK30, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
+    }
+
+    void srui2CycleMenu::FUN_001efb30(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
     }
 };

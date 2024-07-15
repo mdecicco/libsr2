@@ -6,13 +6,19 @@
 
 namespace sr2 {
     ui2Screen::ui2Screen(const char* name, const WidgetRef<ui2Master>& master) : ui2Widget(name, master, true) {
-        u32 masterNameLen = strlen(name);
-        char* masterName = new char[masterNameLen + 8];
-        snprintf(masterName, masterNameLen, "%s-Master", masterName);
+        char* masterName = nullptr;
+        
+        if (name) {
+            u32 masterNameLen = strlen(name);
+            masterName = new char[masterNameLen + 8];
+            snprintf(masterName, masterNameLen + 8, "%s-Master", name);
+        }
+        
         m_master = new ui2Master(masterName, nullptr, false);
-        delete [] masterName;
+        
+        if (masterName) delete [] masterName;
 
-        field_0x80 = 0;
+        m_isInitialized = false;
         field_0x84 = 0;
 
         m_master->method_0xc0(false);
@@ -26,24 +32,24 @@ namespace sr2 {
     }
 
     void ui2Screen::reset() {
-        FUN_001fbbe0();
+        deinit();
         m_master->reset();
         ui2Widget::reset();
     }
 
-    void ui2Screen::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (p2 == WidgetEventType::UNK27) {
-            if (field_0x1c) method_0x100();
-        } else if (p2 == WidgetEventType::UNK28) {
+    void ui2Screen::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (event == WidgetEventType::UNK27) {
+            if (m_isActive) method_0x100();
+        } else if (event == WidgetEventType::UNK28) {
             method_0xa8(1);
             field_0x84 = 1;
         } else {
-            ui2Widget::onEvent(p1, p2, p3);
+            ui2Widget::onEvent(source, event, data);
         }
     }
 
     void ui2Screen::method_0x48() {
-        FUN_001fbab0();
+        init();
         m_master->method_0x48();
         method_0x100();
     }
@@ -59,25 +65,17 @@ namespace sr2 {
 
     void ui2Screen::draw() {
         ui2Widget::draw();
-        if (field_0x1c) m_master->draw();
+        if (m_isActive) m_master->draw();
     }
 
-    void ui2Screen::method_0xa0(bool p1) {
-        bool u = field_0x1c;
-        ui2Widget::method_0xa0(p1);
+    void ui2Screen::setActive(bool p1) {
+        bool wasActive = m_isActive;
+        ui2Widget::setActive(p1);
 
-        if (u != p1 && p1 && field_0x84 == 1) {
+        if (wasActive != p1 && p1 && field_0x84 == 1) {
             method_0x100();
             field_0x84 = 0;
         }
-    }
-
-    void ui2Screen::method_0xc8() {
-        m_master->method_0xc8();
-    }
-    
-    void ui2Screen::prepParserAgain(datParser* parser) {
-        m_master->prepParserAgain(parser);
     }
 
     void ui2Screen::method_0xe8(i32 p1) {
@@ -85,20 +83,39 @@ namespace sr2 {
         field_0x84 = 1;
     }
 
+    void ui2Screen::method_0xc8(u32 p1) {
+        m_master->method_0xc8(p1);
+    }
+    
+    void ui2Screen::configureParser(datParser* parser) {
+        m_master->configureParser(parser);
+    }
+
     void ui2Screen::method_0x100() {
     }
 
-    void ui2Screen::FUN_001fbab0() {
-        ui2Base::getGlobalMaster()->pushMaster(m_master);
-        method_0xf0();
-
-        field_0x80 = 1;
+    const char* ui2Screen::getType() const {
+        return "ui2Screen";
     }
 
-    void ui2Screen::FUN_001fbbe0() {
-        if (field_0x80) {
-            field_0x80 = 0;
-            method_0xf8();
-        }
+    bool ui2Screen::isA(const char* type) const {
+        if (strcmp("ui2Screen", type) == 0) return true;
+        return strcmp(getType(), type) == 0;
+    }
+
+    void ui2Screen::init() {
+        WidgetRef<ui2Base> gm = ui2Base::getGlobalMaster();
+        gm->pushMaster(m_master);
+
+        initScreen();
+        m_isInitialized = true;
+
+        gm->popMaster();
+    }
+
+    void ui2Screen::deinit() {
+        if (!m_isInitialized) return;
+        m_isInitialized = false;
+        deinitScreen();
     }
 };

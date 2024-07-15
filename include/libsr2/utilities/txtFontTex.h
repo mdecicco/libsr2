@@ -6,6 +6,22 @@ namespace sr2 {
     class Stream;
     class gfxTexture;
     class gfxImage;
+    
+    struct TextDisplayData {
+        u32 flags;
+        vec2i pos;
+        i32 top;
+        i32 bottom;
+        i32 left;
+        i32 right;
+        u32 color;
+
+        undefined4 field_0x1c;
+        undefined4 field_0x20;
+        undefined4 field_0x24;
+        undefined4 field_0x28;
+        undefined4 field_0x2c;
+    };
 
     class txtFontTexGlyph {
         public:
@@ -28,6 +44,17 @@ namespace sr2 {
             txtFont(u64 p1);
             ~txtFont();
 
+            virtual void draw(
+                f32 param_1,
+                f32 param_2,
+                i32 param_3,
+                i32 param_4,
+                wchar_t *param_5,
+                const TextDisplayData& param_6,
+                i32 param_7,
+                i32 **param_8
+            ) = 0;
+
         protected:
             static txtFont* first;
 
@@ -41,6 +68,17 @@ namespace sr2 {
         public:
             txtFontTex(u64 p1);
             ~txtFontTex();
+
+            virtual void draw(
+                f32 param_1,
+                f32 param_2,
+                i32 param_3,
+                i32 param_4,
+                wchar_t *param_5,
+                const TextDisplayData& param_6,
+                i32 param_7,
+                i32 **param_8
+            );
 
             void destroy();
             void reset(u32 glyphCount, const char* fontName);

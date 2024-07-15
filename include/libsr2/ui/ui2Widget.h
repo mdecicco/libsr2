@@ -1,6 +1,6 @@
 #pragma once
 #include <libsr2/types.h>
-#include <libsr2/ui/ui2WidgetBase.h>
+#include <libsr2/ui/ui2EventData.h>
 #include <libsr2/ui/WidgetRef.h>
 #include <libsr2/ui/UnkWidgetBinTree1.h>
 #include <libsr2/io/parFileIO.h>
@@ -8,10 +8,12 @@
 namespace sr2 {
     class ui2String;
 
-    enum WidgetEventType : u32 {
+    enum class WidgetEventType : u32 {
         UNK12 = 0x80000001,
         UNK36 = 0x8000000a,
+        UNK58 = 0x8000000b,
         UNK35 = 0x8000000c,
+        UNK59 = 0x80000c1c,
         UNK0  = 0xa0000064,
         UNK1  = 0xa0000065,
         UNK2  = 0xa0000069,
@@ -21,7 +23,9 @@ namespace sr2 {
         UNK6  = 0xa00003fc,
         UNK7  = 0xa00003fd,
         UNK8  = 0xa00007d0,
-        UNK41 = 0xa0000fa0,
+        StartTimer = 0xa0000fa0,
+        SetTimerDuration = 0xa0000fb4,
+        UNK60 = 0xa000139c,
         UNK46 = 0xa0001770,
         UNK27 = 0xa0001f4a,
         UNK28 = 0xa0001f54,
@@ -35,20 +39,26 @@ namespace sr2 {
         UNK49 = 0xa00032ca,
         UNK50 = 0xa00032cb,
         UNK51 = 0xa00032cc,
-        UNK9  = 0xc0000064,
-        UNK10 = 0xc0000069,
+        Activate = 0xc0000064,
+        Deactivate = 0xc0000069,
         UNK11 = 0xc00003e8,
         UNK13 = 0xc00003f2,
         UNK14 = 0xc00003fc,
         UNK15 = 0xc00003fd,
-        UNK16 = 0xc0000bb8,
-        UNK17 = 0xc0000bb9,
-        UNK18 = 0xc0000bba,
-        UNK19 = 0xc0000bbb,
-        UNK20 = 0xc0000bbc,
-        UNK21 = 0xc0000bbd,
+        UNK57 = 0xc00007da,
+        AcceptPressed = 0xc0000bb8,
+        BackPressed = 0xc0000bb9,
+        UpPressed = 0xc0000bba,
+        DownPressed = 0xc0000bbb,
+        LeftPressed = 0xc0000bbc,
+        RightPressed = 0xc0000bbd,
         UNK52 = 0xc0000bbe,
-        UNK34 = 0xc0000faa,
+        StartPressed = 0xc0000bcc,
+        SelectPressed = 0xc0000bcd,
+        TimerStarted = 0xc0000fa0,
+        TimerFinished = 0xc0000faa,
+        TimerDurationChanged = 0xc0000fb4,
+        TextChanged = 0xc000139c,
         UNK47 = 0xc0001770,
         UNK29 = 0xc0001b58,
         UNK53 = 0xc0001b62,
@@ -63,7 +73,9 @@ namespace sr2 {
         UNK45 = 0xc00023f0,
         UNK30 = 0xc0002af8,
         UNK31 = 0xc0002b02,
-        UNK32 = 0xc0002b0c
+        UNK32 = 0xc0002b0c,
+        UNK55 = 0xc0002ee0,
+        UNK56 = 0xc0002ef4
     };
 
     class ui2Widget : public ui2WidgetBase, public parFileIO {
@@ -73,24 +85,24 @@ namespace sr2 {
 
             virtual void releaseRef();
             virtual void reset();
-            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
-            virtual void method_0x38(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
+            virtual void method_0x38(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3);
             virtual void method_0x48();
             virtual void method_0x58();
-            virtual void method_0x68(const ui::NamedRef& ref, WidgetEventType p2, u64 p3);
-            virtual void method_0x70(const char* p1, WidgetEventType p2, u64 p3);
-            virtual void method_0x78(const ui::NamedRef& ref, i32 p2, u64 p3);
-            virtual void method_0x80(const char* p1, i32 p2, i32 p3);
-            virtual void method_0x88(const ui::NamedRef& ref);
-            virtual void method_0x90(const char* p1);
-            virtual void method_0x98(WidgetEventType p1, const ui::BaseRef& p2, ui::BaseRef& p3);
-            virtual void method_0xa0(bool p1);
+            virtual void addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback);
+            virtual void addListener(const char* listenerName, WidgetEventType event, SomeWidgetCallback callback);
+            virtual void removeListener(const ui::NamedRef& listener, WidgetEventType event);
+            virtual void removeListener(const char* listenerName, WidgetEventType event);
+            virtual void removeAllListeners(const ui::NamedRef& listener);
+            virtual void removeAllListeners(const char* listenerName);
+            virtual void dispatchEvent(WidgetEventType event, const WidgetRef<ui2EventData>& data = nullptr, const ui::NamedRef& source = nullptr);
+            virtual void setActive(bool p1);
             virtual void method_0xa8(i32 p1);
             virtual void method_0xb0(WidgetEventType p1, WidgetEventType p2, const ui::BaseRef& p3);
             virtual void method_0xb8(WidgetEventType p1, WidgetEventType p2);
             virtual void method_0xc0(bool p1);
-            virtual void method_0xc8();
-            virtual void prepParserAgain(datParser* parser);
+            virtual void method_0xc8(u32 p1);
+            virtual void configureParser(datParser* parser);
             virtual void draw();
             virtual bool loadWidget();
             virtual const char* getName() const;
@@ -105,16 +117,17 @@ namespace sr2 {
 
             ui2String* generateName();
             WidgetRef<ui2Master> getMaster();
-            bool FUN_0020a070();
+            bool isActive();
             void addToMasterUnk0(i32 p1, u64 p2);
             void removeFromMasterUnk0();
-            void FUN_0020aa80(i32 p1, u64 p2);
+            void addToMasterUnk0IfNecessary(i32 p1);
             void addToMasterUnk1();
             void removeFromMasterUnk1();
-            void FUN_0020ac08(i32* p1, u64 p2);
+            void FUN_0020ac08(const ui::NamedRef& p1, u64 p2);
+            bool shouldBeLoaded();
 
             bool field_0x18;                       
-            bool field_0x1c;
+            bool m_isActive;
             undefined4 field_0x24;
             undefined4 field_0x28;
             u8 field_0x34;
@@ -122,7 +135,6 @@ namespace sr2 {
             i32 field_0x40;
             undefined4 field_0x44;
             undefined4 field_0x48;
-            undefined4 field_0x4c;
             ui2Widget* field_0x5c;
             u64 field_0x68;
             undefined4 field_0x74;
@@ -134,5 +146,6 @@ namespace sr2 {
             UnkWidgetBinTree1 m_someBinTree1;
             bool m_addedToMasterUnk0;
             bool m_addedToMasterUnk1;
+            bool m_shouldBeLoaded;
     };
 };

@@ -15,10 +15,8 @@ namespace sr2 {
     void ui2WidgetBase::baseReleaseRef() {
         m_refCount--;
 
-        // uhhhh... It looks like the code is doing this:
-        // if (m_refCount == 0 && this) delete this;
-        //
-        // But I don't think I should do that
+        // uhhhh... Rockstar? Why have you done this
+        if (m_refCount == 0 && this) delete this;
     }
     
     u32 ui2WidgetBase::getRefCount() const {

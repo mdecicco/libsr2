@@ -4,7 +4,7 @@
 namespace sr2 {
     class msgMsgSink;
 
-    enum MSG_TYPE : u16 {
+    enum class MSG_TYPE : u16 {
         UNK120 =                        0x1,
         UNK119 =                        0x2,
         UNK40 =                         0x4,
@@ -54,7 +54,7 @@ namespace sr2 {
         RIGHT_STICK_X_VALUE =           0x807,
         RIGHT_STICK_Y_VALUE =           0x808,
         UNK72 =                         0x809,
-        RESET_GAME =                          0x1001,
+        RESET_GAME =                    0x1001,
         LOAD_GAME =                     0x3801,
         ENTER_GAME =                    0x3802,
         PAUSE_GAME =                    0x3803,

@@ -2,33 +2,30 @@
 #include <libsr2/types.h>
 
 namespace sr2 {
-	enum ImageFormat : u8 {
-
-	};
+	class gfxImage;
 
 	class gfxTexture {
 		public:
+			static gfxTexture* create(u16 width, u16 height, ImageFormat fmt, u32 mipCount);
+			static gfxTexture* create(gfxImage* img, bool p2);
+			static gfxTexture* get(const char* name, i32 unk0, i32 unk1);
+			static void getMovie(gfxTexture** out, const char* name, i32 unk0);
+			static void release(gfxTexture* tex);
+			static gfxTexture* None;
+
+			void addRef();
+			void setTexEnv(u32 env);
+			u32 getTexEnv();
+			void load(gfxImage* src);
+			vec2i getDimensions();
+
+		protected:
 			gfxTexture();
 			~gfxTexture();
 
-			static gfxTexture* get(const char* name, i32 unk0, i32 unk1);
-			static void getMovie(gfxTexture** out, const char* name, i32 unk0);
-			static gfxTexture* None;
-
-			void setTexEnv(u32 env);
-			static void release(gfxTexture* tex);
-
-			u16 width;
-			u16 height;
-			u16 bytesPerRow;
-			// why are there two?
-			ImageFormat type;
-			ImageFormat format;
-			u64 mipmap_bias;
-			char* name;
-			u32 tex_env;
-			u32 ref_count;
-			gfxTexture* next;
-			void* data;
+			u16 m_width;
+			u16 m_height;
+			u32 m_texEnv;
+			u32 m_refCount;
 	};
 };

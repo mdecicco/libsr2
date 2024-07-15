@@ -33,7 +33,7 @@ namespace sr2 {
     bool offroadLevel::load(const char* map, const char* mission, WEATHER_TYPE weather) {
         // iVar3 = FUN_002ed360(5, 0);
         gfxTexture* shadow_fader = gfxTexture::get("shadowfader", 1, 0);
-        if (shadow_fader != gfxTexture::None) shadow_fader->setTexEnv(shadow_fader->tex_env | 0x10001);
+        if (shadow_fader != gfxTexture::None) shadow_fader->setTexEnv(shadow_fader->getTexEnv() | 0x10001);
         // FUN_002ed360(iVar3, 0);
 
         initLODs(map, weather);
@@ -146,8 +146,8 @@ namespace sr2 {
         // delete m_unk0;
         // delete m_unk1;
 
-        if (m_shadow_fader /* && m_shadow_fader != gfxTexture::None*/) {
-            delete m_shadow_fader;
+        if (m_shadow_fader && m_shadow_fader != gfxTexture::None) {
+            gfxTexture::release(m_shadow_fader);
         }
 
         // Utils::SparkArray::Destroy();

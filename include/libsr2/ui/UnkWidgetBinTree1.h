@@ -4,7 +4,7 @@
 
 namespace sr2 {
     class ui2Widget;
-    enum WidgetEventType : u32;
+    enum class WidgetEventType : u32;
 
     class UnkWidgetBinTree1 {
         public:

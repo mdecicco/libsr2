@@ -2,6 +2,7 @@
 #include <libsr2/ui/ui2Base.h>
 
 #include <string.h>
+#include <assert.h>
 
 namespace sr2 {
     ui2Menu::ui2Menu(
@@ -15,6 +16,9 @@ namespace sr2 {
         m_someRowIdx = 0;
         m_someColIdx = 0;
         m_grid = nullptr;
+        field_0x8c = 1;
+
+        init();
     }
 
     ui2Menu::~ui2Menu() {
@@ -49,89 +53,67 @@ namespace sr2 {
         ui2Widget::reset();
     }
 
-    void ui2Menu::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (!field_0x1c) {
-            ui2Widget::onEvent(p1, p2, p3);
+    void ui2Menu::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (!m_isActive) {
+            ui2Widget::onEvent(source, event, data);
             return;
         }
 
         GridCell& someCell = m_grid[m_rowCount * m_someColIdx + m_someRowIdx];
 
-        switch (p2) {
-            case WidgetEventType::UNK16: {
+        switch (event) {
+            case WidgetEventType::AcceptPressed: {
                 field_0x98->col = m_someColIdx;
                 field_0x98->row = m_someRowIdx;
 
                 if (someCell.field_0x14) return;
 
-                ui::BaseRef found = ui2Base::getGlobalMaster()->findWidget(someCell.str.get());
+                ui::NamedRef found = ui2Base::getGlobalMaster()->findWidget(someCell.str.get()).cast<ui2Widget>();
                 if (found) {
-                    void (*unk)(ui::BaseRef&, WidgetEventType, ui::BaseRef&) = nullptr;
-
-                    // ???
-                    // if (someCell.field_0x1a < 0) unk = someCell.field_0x1c;
-                    // else unk = nullptr;
-                    // i32 iVar11 = someCell.field_0x18;
-                    // if (someCell.field_0x1a >= 0) iVar11 = someCell.field_0x18;
-
-                    ui::BaseRef self = this;
-
-                    unk(/* ???, */ self, WidgetEventType::UNK22, found);
+                    ((*found)->*someCell.field_0x18)(this, WidgetEventType::UNK22, field_0x98);
                 }
 
-                ui::BaseRef w;
-                method_0x98(WidgetEventType::UNK22, field_0x98, w);
+                dispatchEvent(WidgetEventType::UNK22, field_0x98);
                 break;
             }
-            case WidgetEventType::UNK17: {
+            case WidgetEventType::BackPressed: {
                 field_0x98->col = m_someColIdx;
                 field_0x98->row = m_someRowIdx;
 
                 if (someCell.field_0x14) return;
 
-                ui::BaseRef found = ui2Base::getGlobalMaster()->findWidget(someCell.str.get());
+                ui::NamedRef found = ui2Base::getGlobalMaster()->findWidget(someCell.str.get()).cast<ui2Widget>();
                 if (found) {
-                    void (*unk)(ui::BaseRef&, WidgetEventType, const ui::BaseRef&) = nullptr;
-
-                    // ???
-                    // if (someCell.field_0x1a < 0) unk = someCell.field_0x1c;
-                    // else unk = nullptr;
-                    // i32 iVar11 = someCell.field_0x18;
-                    // if (someCell.field_0x1a >= 0) iVar11 = someCell.field_0x18;
-
-                    ui::BaseRef self = this;
-
-                    unk(/* ???, */ self, WidgetEventType::UNK23, field_0x98);
+                    ((*found)->*someCell.field_0x18)(this, WidgetEventType::UNK23, field_0x98);
                 }
 
-                ui::BaseRef w;
-                method_0x98(WidgetEventType::UNK23, field_0x98, w);
+                dispatchEvent(WidgetEventType::UNK23, field_0x98);
                 break;
             }
-            case WidgetEventType::UNK18: {
+            case WidgetEventType::UpPressed: {
                 FUN_001f9990(m_someColIdx, FUN_001fad48());
                 return;
             }
-            case WidgetEventType::UNK19: {
+            case WidgetEventType::DownPressed: {
                 FUN_001f9990(m_someColIdx, FUN_001fae08());
                 return;
             }
-            case WidgetEventType::UNK20: {
+            case WidgetEventType::LeftPressed: {
                 FUN_001f9990(FUN_001faed0(), m_someRowIdx);
                 return;
             }
-            case WidgetEventType::UNK21: {
+            case WidgetEventType::RightPressed: {
                 FUN_001f9990(FUN_001faf90(), m_someRowIdx);
                 return;
             }
             default: {
-                ui2Widget::onEvent(p1, p2, p3);
+                ui2Widget::onEvent(source, event, data);
                 return;
             }
         }
     }
 
-    void ui2Menu::FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, u64 p5) {
+    void ui2Menu::FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5) {
         GridCell& someCell = m_grid[m_rowCount * col + row];
         
         someCell.str.set(p1->getName());
@@ -142,7 +124,7 @@ namespace sr2 {
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }
 
-    void ui2Menu::FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, u64 p5) {
+    void ui2Menu::FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5) {
         ui::BaseRef w = ui2Base::getGlobalMaster()->findWidget(p1);
         if (!w) return;
         
@@ -180,7 +162,7 @@ namespace sr2 {
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
             ui::NamedRef w = p3;
-            FUN_001f8218(w, row, col, 1, 0x800080000);
+            FUN_001f8218(w, row, col, 1, &ui2Widget::method_0x38);
             
             row++;
             // p3 = ppuVar2->u ??? (ppuVar2 is a pointer to a variable that is _never_ assigned)
@@ -197,7 +179,7 @@ namespace sr2 {
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
             ui::NamedRef w = p3;
-            FUN_001f8218(w, row, col, 1, 0x800080000);
+            FUN_001f8218(w, row, col, 1, &ui2Widget::method_0x38);
             
             col++;
             // p3 = ppuVar2->u ??? (ppuVar2 is a pointer to a variable that is _never_ assigned)
@@ -213,7 +195,7 @@ namespace sr2 {
         // In its current state this function will loop infinitely if p3 is not null...
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
-            FUN_001f8388(p3, row, col, 1, 0x800080000);
+            FUN_001f8388(p3, row, col, 1, &ui2Widget::method_0x38);
             
             row++;
             // p3 = *ppcVar1 ??? (ppcVar1 is a pointer to a variable that is _never_ assigned)
@@ -229,7 +211,7 @@ namespace sr2 {
         // In its current state this function will loop infinitely if p3 is not null...
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
-            FUN_001f8388(p3, row, col, 1, 0x800080000);
+            FUN_001f8388(p3, row, col, 1, &ui2Widget::method_0x38);
             
             col++;
             // p3 = *ppcVar1 ??? (ppcVar1 is a pointer to a variable that is _never_ assigned)
@@ -247,7 +229,7 @@ namespace sr2 {
 
         someCell.field_0x10 = p3;
 
-        ui::BaseRef w = ui2Base::getGlobalMaster()->findWidget(someCell.str.get());
+        ui::NamedRef w = ui2Base::getGlobalMaster()->findWidget(someCell.str.get()).cast<ui2Widget>();
         if (!w) {
             FUN_001f9990(m_someRowIdx, m_someColIdx);
             return;
@@ -257,18 +239,7 @@ namespace sr2 {
         if (p3) someVal = WidgetEventType::UNK24;
         else someVal = WidgetEventType::UNK25;
 
-        void (*unk)(ui::BaseRef&, WidgetEventType, ui::BaseRef&) = nullptr;
-
-        // ???
-        // if (someCell.field_0x1a < 0) unk = someCell.field_0x1c;
-        // else unk = nullptr;
-        // i32 iVar11 = someCell.field_0x18;
-        // if (someCell.field_0x1a >= 0) iVar11 = someCell.field_0x18;
-
-        ui::BaseRef self = this;
-        ui::BaseRef nullRef;
-
-        unk(/* ???, */ self, WidgetEventType::UNK24, nullRef);
+        ((*w)->*someCell.field_0x18)(this, WidgetEventType::UNK24, nullptr);
         
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }
@@ -437,10 +408,7 @@ namespace sr2 {
 
             if (someCell.field_0x10 != 0 && *someCell.str.get() != '\0') {
                 if (someOtherIdx >= 0) {
-                    if (m_rowCount == 0) {
-                        // todo: assert
-                        exit(-1);
-                    }
+                    assert(m_rowCount != 0);
 
                     *outRow = someOtherIdx % m_rowCount;
                     *outCol = someOtherIdx / m_rowCount;
@@ -453,10 +421,7 @@ namespace sr2 {
 
                     if (someCell.field_0x10 != 0 && *someCell.str.get() != '\0') {
                         if (cellIdx >= 0) {
-                            if (m_rowCount == 0) {
-                                // todo: assert
-                                exit(-1);
-                            }
+                            assert(m_rowCount != 0);
 
                             *outRow = cellIdx % m_rowCount;
                             *outCol = cellIdx / m_rowCount;
@@ -482,10 +447,7 @@ namespace sr2 {
         }
 
         if (m_rowCount * m_colCount <= someIdx) return false;
-        if (m_rowCount == 0) {
-            // todo: assert
-            exit(-1);
-        }
+        assert(m_rowCount != 0);
 
         *outRow = someIdx % m_rowCount;
         *outCol = someIdx / m_rowCount;

@@ -12,7 +12,7 @@ namespace sr2 {
 
             void init();
 
-            virtual void onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3);
+            virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             virtual void method_0xe8(i32 x, i32 y);
             virtual void setPos(const WidgetRef<ui2Position>& p1);
             virtual void setColorU32(u32 color);
@@ -20,7 +20,7 @@ namespace sr2 {
             virtual void setColor(const WidgetRef<ui2Color>& p1);
             virtual void method_0x110(undefined4 p1);
             virtual undefined4 method_0x118();
-            virtual void prepParserAgain(datParser* parser);
+            virtual void configureParser(datParser* parser);
 
         protected:
             vec2i m_pos;

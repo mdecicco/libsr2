@@ -1,5 +1,6 @@
 #include <libsr2/ui/ui2Condition.h>
 #include <libsr2/ui/ui2Base.h>
+#include <libsr2/ui/ui2Variable.h>
 
 namespace sr2 {
     void ui2Condition::Data::FUN_002018f0() {
@@ -12,7 +13,7 @@ namespace sr2 {
         undefined4 p3,
         const WidgetRef<ui2Master>& master
     ) : ui2Widget(name, master, true) {
-        field_0x78.set(name);
+        m_variableName.set(name);
         field_0x88 = p3;
 
         m_someObject = new Data();
@@ -25,9 +26,9 @@ namespace sr2 {
         delete m_someObject;
     }
 
-    void ui2Condition::onEvent(const ui::BaseRef& p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        if (!field_0x1c || p2 != WidgetEventType::UNK42) {
-            ui2Widget::onEvent(p1, p2, p3);
+    void ui2Condition::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (!m_isActive || event != WidgetEventType::UNK42) {
+            ui2Widget::onEvent(source, event, data);
             return;
         }
 
@@ -35,11 +36,11 @@ namespace sr2 {
     }
     
     void ui2Condition::FUN_00200c40(const char* p1) {
-        field_0x78.set(p1);
+        m_variableName.set(p1);
     }
     
     void ui2Condition::FUN_00200c70(const ui::NamedRef& p1) {
-        field_0x78.set(p1->getName());
+        m_variableName.set(p1->getName());
     }
 
     void ui2Condition::FUN_00200cb8(const ui::BaseRef& p1, const ui::NamedRef& p2, undefined4 p3, ui::BaseRef& p4, u64 p5) {
@@ -68,7 +69,7 @@ namespace sr2 {
     }
     
     void ui2Condition::FUN_00200fe8(u64 p1, const ui::BaseRef& p2) {
-
+        // todo
     }
     
     void ui2Condition::FUN_00201378(const ui::BaseRef& p1) {
@@ -81,16 +82,13 @@ namespace sr2 {
     }
 
     void ui2Condition::FUN_002013b0() {
-        ui::BaseRef w = ui2Base::getGlobalMaster()->findWidget(field_0x78.get());
+        WidgetRef<ui2Variable> var = ui2Base::getGlobalMaster()->findWidget(m_variableName.get()).cast<ui2Variable>();
 
-        if (!w) {
+        if (!var) {
             FUN_00200fe8(field_0x88, nullptr);
             return;
         }
 
-        ui::BaseRef u;
-        // FUN_00202628(w, u);
-
-        FUN_00200fe8(field_0x88, u);
+        FUN_00200fe8(field_0x88, var->getEvent());
     }
 };
