@@ -7,5 +7,8 @@ namespace sr2 {
         public:
             ui2EventData();
             virtual ~ui2EventData();
+
+            virtual const char* getTypeName() const;
+            virtual bool isEqualTo(ui2EventData* p1);
     };
 };

@@ -28,6 +28,11 @@ namespace sr2 {
         else {
             strcpy(buf, m_path);
 
+            if (m_ignorePrefix) {
+                dir = nullptr;
+                // if (m_addExtension) dir = ext;
+            }
+
             if (dir && (*dir != '\0')) {
                 iVar1 = strlen(dir);
                 iVar1 = strncmp(filename, dir, iVar1);

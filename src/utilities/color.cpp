@@ -57,8 +57,8 @@ namespace sr2 {
         r = g = b = 0.0f;
     }
 
-    datParserNode* giColorRGB::prepParser(datParser* p) {
-        return p->add(PARSE_TYPE::VEC3F, "v3NormalizedColor", &r, 1, nullptr);
+    void giColorRGB::prepParser(datParser* p) {
+        p->add(PARSE_TYPE::VEC3F, "v3NormalizedColor", &r, 1, nullptr);
     }
 
     const char* giColorRGB::getFileType() {
@@ -74,8 +74,8 @@ namespace sr2 {
         r = g = b = a = 0.0f;
     }
 
-    datParserNode* giColorRGBA::prepParser(datParser* p) {
-        return p->add(PARSE_TYPE::VEC4F, "v4NormalizedColor", &r, 1, nullptr);
+    void giColorRGBA::prepParser(datParser* p) {
+        p->add(PARSE_TYPE::VEC4F, "v4NormalizedColor", &r, 1, nullptr);
     }
 
     const char* giColorRGBA::getFileType() {

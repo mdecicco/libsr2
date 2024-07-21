@@ -49,9 +49,9 @@ namespace sr2 {
         else math::mult(world_transform, *unk_mat_0, vehicle->instance->transform);
     }
 
-    datParserNode* vehAxle::prepParser(datParser* parser) {
+    void vehAxle::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "TorqueCoef", &torque_coefficient, 1, nullptr);
-        return parser->add(PARSE_TYPE::FLOAT, "DampCoef", &damping_coefficient, 1, nullptr);
+        parser->add(PARSE_TYPE::FLOAT, "DampCoef", &damping_coefficient, 1, nullptr);
     }
 
     const char* vehAxle::getFileType() {

@@ -1,6 +1,9 @@
 #pragma once
 #include <libsr2/types.h>
+#include <libsr2/gfx/ui.h>
 #include <unordered_map>
+
+#include <utils/Array.h>
 
 namespace sr2 {
     class Stream;
@@ -16,9 +19,9 @@ namespace sr2 {
         i32 right;
         u32 color;
 
-        undefined4 field_0x1c;
-        undefined4 field_0x20;
-        undefined4 field_0x24;
+        u32 field_0x1c;
+        i32 field_0x20;
+        undefined4 advanceX;
         undefined4 field_0x28;
         undefined4 field_0x2c;
     };
@@ -30,13 +33,11 @@ namespace sr2 {
 
             bool load(Stream* fp);
         
-            undefined4 field_0x0;
-            u8 field_0x4;
-            u8 field_0x5;
-            u8 field_0x6;
-            u8 field_0x7;
-            u8 field_0x8;
-            u8 field_0x9;
+            u32 charCode;
+            vec2ub position;
+            vec2ub size;
+            i8 offsetY;
+            i8 offsetX;
     };
 
     class txtFont {
@@ -45,12 +46,12 @@ namespace sr2 {
             ~txtFont();
 
             virtual void draw(
-                f32 param_1,
-                f32 param_2,
+                f32 posX,
+                f32 posY,
                 i32 param_3,
                 i32 param_4,
                 wchar_t *param_5,
-                const TextDisplayData& param_6,
+                TextDisplayData* data,
                 i32 param_7,
                 i32 **param_8
             ) = 0;
@@ -69,13 +70,20 @@ namespace sr2 {
             txtFontTex(u64 p1);
             ~txtFontTex();
 
+            struct rendered_glyph {
+                ::utils::vec2f vMin, vMax;
+                ::utils::vec2f uvMin, uvMax;
+                gfxTexture* texture;
+                u32 color;
+            };
+
             virtual void draw(
-                f32 param_1,
-                f32 param_2,
+                f32 posX,
+                f32 posY,
                 i32 param_3,
                 i32 param_4,
                 wchar_t *param_5,
-                const TextDisplayData& param_6,
+                TextDisplayData* data,
                 i32 param_7,
                 i32 **param_8
             );
@@ -84,30 +92,36 @@ namespace sr2 {
             void reset(u32 glyphCount, const char* fontName);
             bool load(const char* fontName);
             void setName(const char* fontName);
+            void render();
 
             static txtFontTex* get(const char* fontName);
+            static void renderAll();
         
         protected:
             static std::unordered_map<size_t, txtFontTex*> loadedFonts;
+            utils::Array<rendered_glyph> m_renderedGlyphs;
 
             char* m_name;
             undefined4 m_glyphCount;
             txtFontTexGlyph* m_glyphs;
-            u32 m_someArrCount;
-            undefined4 m_someArr[24];
-            gfxTexture* m_someTexArr[24];
-            gfxTexture* m_someOtherTexArr[24];
+            u32 m_textureCount;
+            i32 m_textureGlyphCounts[24];
+            gfxTexture* m_shadowTextures[24];
+            gfxTexture* m_textures[24];
+            uiRenderer::element* m_elements[24];
+            uiRenderer::element* m_shadowElements[24];
+            u32 m_elementGlyphCounts[24];
             u8 m_glyphIndices[256];
+            u32 m_advanceX;
+            u32 m_advanceY;
+            u32 m_widestGlyphWidth;
+            i32 m_glyphOffsetY;
             
             gfxImage* field_0x70[24];
             gfxImage* field_0x130[24];            
             undefined4 field_0x194;
             undefined4 field_0x198;
-            undefined4 field_0x1f8;
-            undefined4 field_0x1fc;
-            undefined4 field_0x200;
-            undefined4 field_0x204;
-            undefined4 field_0x208;
+            i32 field_0x1fc;
             undefined4 field_0x20c;
             undefined4 field_0x210;
             undefined4 field_0x22c;

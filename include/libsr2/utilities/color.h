@@ -21,7 +21,7 @@ namespace sr2 {
         public:
             giColorRGB();
 
-            virtual datParserNode* prepParser(datParser* p);
+            virtual void prepParser(datParser* p);
             virtual const char* getFileType();
             virtual void updateU32();
 
@@ -32,7 +32,7 @@ namespace sr2 {
         public:
             giColorRGBA();
             
-            virtual datParserNode* prepParser(datParser* p);
+            virtual void prepParser(datParser* p);
             virtual const char* getFileType();
             virtual void updateU32();
 

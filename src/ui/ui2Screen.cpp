@@ -21,9 +21,9 @@ namespace sr2 {
         m_isInitialized = false;
         field_0x84 = 0;
 
-        m_master->method_0xc0(false);
-        addToMasterUnk0(0, 0x800090000);
-        method_0xc0(true);
+        m_master->setShouldLoad(false);
+        makeRenderable(0);
+        setShouldLoad(true);
 
         field_0x48 = 1;
     }

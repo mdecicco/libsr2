@@ -6,6 +6,7 @@
 
 namespace sr2 {
     ui2TranslatedText::ui2TranslatedText(const char* name, const char* text, i32 x, i32 y, i32 p5, const WidgetRef<ui2Master>& master) : ui2Text(name, x, y, p5, master) {
+        m_string = nullptr;
         init(text);
     }
 
@@ -45,7 +46,9 @@ namespace sr2 {
 
     void ui2TranslatedText::draw() {
         ui2Text::draw();
-        if (!m_isActive || !field_0x78 || !m_rawText[0]) return;
+        if (!m_isActive || !m_isVisible || !m_rawText[0]) return;
+
+        m_textData.color = m_color;
 
         m_string->font->draw(
             m_string->field_0xc.x,
@@ -53,7 +56,7 @@ namespace sr2 {
             m_string->field_0x14,
             m_string->field_0x15,
             m_string->text,
-            m_textData,
+            &m_textData,
             0,
             nullptr
         );

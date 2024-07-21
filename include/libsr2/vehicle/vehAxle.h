@@ -12,7 +12,7 @@ namespace sr2 {
 
             void init(vehCarSimBase* veh, const char* modelname, const char* partname, vehWheel* wheel0, vehWheel* wheel1, f32 unk0);
 
-            virtual datParserNode* prepParser(datParser* parser);
+            virtual void prepParser(datParser* parser);
             virtual const char* getFileType();
             virtual void reset();
             virtual void update();

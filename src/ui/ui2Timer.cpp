@@ -80,7 +80,7 @@ namespace sr2 {
 
         if (doStart) startTimer();
 
-        addToMasterUnk0(50000, 0x800090000);
+        makeRenderable(50000);
     }
 
     void ui2Timer::startTimer() {

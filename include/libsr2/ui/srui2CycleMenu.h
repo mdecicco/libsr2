@@ -32,7 +32,7 @@ namespace sr2 {
             vec2i m_pos;
             u32 m_innerWidth;
             i32 m_headingOffset;
-            i32 m_rowCount;
+            i32 m_itemCount;
 
             WidgetRef<ui2Menu> m_menu;
             WidgetRef<ui2Repeater> m_menuRepeater;

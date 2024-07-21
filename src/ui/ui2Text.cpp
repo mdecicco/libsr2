@@ -18,7 +18,7 @@ namespace sr2 {
         m_textData.left = 0;
         m_textData.right = 9999;
         m_textData.field_0x1c = 0;
-        m_textData.field_0x24 = 0;
+        m_textData.advanceX = 0;
         m_textData.field_0x2c = 0;
         m_textData.field_0x28 = 0;
 
@@ -29,7 +29,7 @@ namespace sr2 {
     }
 
     void ui2Text::init(i32 p1) {
-        addToMasterUnk0(p1, 0x800090000);
+        makeRenderable(p1);
         m_textData.flags = m_textData.flags | 8;
     }
 
@@ -39,13 +39,13 @@ namespace sr2 {
 
     void ui2Text::draw() {
         ui2Widget::draw();
-        if (!m_isActive || !field_0x78) return;
+        if (!m_isActive || !m_isVisible) return;
         
         m_textData.pos = m_pos;
         m_textData.top = m_pos.y;
         m_textData.left = m_pos.x;
-        m_textData.right = m_pos.x + m_bounds.x;
-        m_textData.bottom = m_pos.y + m_bounds.y;
+        m_textData.right = m_pos.x + m_bounds.x - 1;
+        m_textData.bottom = m_pos.y + m_bounds.y - 1;
 
         if (m_alignment == 1) m_textData.flags = m_textData.flags & 0xfffffffa | 2;
         else if (m_alignment == 0) m_textData.flags = m_textData.flags & 0xfffffff9 | 1;

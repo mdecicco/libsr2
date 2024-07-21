@@ -8,6 +8,9 @@ namespace sr2 {
             ASCIIStringEventData();
             virtual ~ASCIIStringEventData();
 
+            virtual const char* getTypeName() const;
+            virtual bool isEqualTo(ui2EventData* p1);
+
             const char* data;
     };
 };

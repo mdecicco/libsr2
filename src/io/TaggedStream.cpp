@@ -11,7 +11,7 @@ namespace sr2 {
     }
 
     TaggedStream::~TaggedStream() {
-        if (m_strm) m_strm->close();
+        if (m_strm) delete m_strm;
         m_strm = nullptr;
     }
 
@@ -26,6 +26,8 @@ namespace sr2 {
     }
 
     Stream* TaggedStream::open(Stream* strm) {
+        if (m_strm) delete m_strm;
+
         m_field1_0x4 = nullptr;
         m_strm = strm;
         if (!strm) return nullptr;
@@ -35,7 +37,7 @@ namespace sr2 {
         if ((strm->read(&magic, 4) >> 2 == 1) && magic == 0x31565354) {
             m_readPos = 4;
         } else {
-            strm->close();
+            delete m_strm;
             m_strm = nullptr;
             return nullptr;
         }
@@ -64,7 +66,7 @@ namespace sr2 {
             u16 unk = 0;
             m_strm->write(&unk, 2);
         }
-        m_strm->close();
+        delete m_strm;
         m_strm = nullptr;
         m_readPos = 0;
     }

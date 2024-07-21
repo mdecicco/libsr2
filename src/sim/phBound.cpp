@@ -176,15 +176,14 @@ namespace sr2 {
             tok.getToken(version, 32);
 
             if (strcmp(version, "1.01") == 0) {
-                fp->close();
+                delete fp;
                 phBoundGeometry* bnd = new phBoundGeometry(BOUND_GEOMETRY);
 
                 if (bnd->load(filename, nullptr)) return bnd;
                 delete bnd;
-
                 return nullptr;
             } else if (strcmp(version, "1.1") != 0 && strcmp(version, "1.10") != 0) {
-                fp->close();
+                delete fp;
                 return nullptr;
             }
 
@@ -202,11 +201,12 @@ namespace sr2 {
             else if (stricmp(type, "COMPOSITE") == 0) bnd = new phBoundComposite();
 
             if (!bnd->parse(tok, 0x6e)) {
+                delete fp;
                 delete bnd;
                 return nullptr;
             }
-
-            fp->close();
+            
+            delete fp;
             return bnd;
         }
 

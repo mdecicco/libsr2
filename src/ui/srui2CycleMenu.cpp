@@ -17,7 +17,7 @@ namespace sr2 {
         const char* p8,
         const WidgetRef<ui2Master>& master
     ) : ui2Widget(name, master, true) {
-        m_rowCount = rowCount;
+        m_itemCount = rowCount;
         field_0x7c = rowCount;
 
         m_pos = { x, y };
@@ -33,8 +33,6 @@ namespace sr2 {
     }
 
     void srui2CycleMenu::init(const char* p1, const char* p2, const char* p3, i32 x, i32 y, const char* p6) {
-        ui::BaseRef nullRef;
-
         u32 bufLen = strlen(p1) + 20;
         char* nameBuf0 = new char[bufLen];
         char* nameBuf1 = new char[bufLen];
@@ -52,11 +50,11 @@ namespace sr2 {
         auto parent = getMaster();
 
         snprintf(nameBuf0, bufLen, "%s_menu", p1);
-        m_menu = new ui2Menu(nameBuf0, m_rowCount, 1, parent);
+        m_menu = new ui2Menu(nameBuf0, m_itemCount, 1, parent);
 
         if (p6) {
-            m_menu->addListener(p6, WidgetEventType::UNK37, &ui2Widget::method_0x38);
-            m_menu->addListener(p6, WidgetEventType::UNK26, &ui2Widget::method_0x38);
+            m_menu->addListener(p6, WidgetEventType::UNK37, &ui2Widget::acceptEvent);
+            m_menu->addListener(p6, WidgetEventType::UNK26, &ui2Widget::acceptEvent);
 
             auto var = ui2Base::getGlobalMaster()->findWidget(p6, "ui2Variable").cast<ui2Variable>();
             var->addListener(getName(), WidgetEventType::UNK39, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
@@ -65,7 +63,7 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf0, nullptr);
-        m_menuRepeater->addListener(m_menu, WidgetEventType::UNK12, &ui2Widget::method_0x38);
+        m_menuRepeater->addListener(m_menu, WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
 
         if (p3) {
             snprintf(nameBuf0, bufLen, "%s_Heading_txt", p1);
@@ -79,8 +77,8 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_left_Arrow_tmr", p1);
         m_leftArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_leftArrowTimer->addListener(m_leftArrowImg, WidgetEventType::TimerFinished, &ui2Widget::method_0x38);
-        m_leftArrowImg->method_0xb0(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0xf8);
+        m_leftArrowTimer->addListener(m_leftArrowImg, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_leftArrowImg->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0xf8);
         m_leftArrowImg->setColor(field_0xf8);
         
 
@@ -89,12 +87,12 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_right_Arrow_tmr", p1);
         m_rightArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_rightArrowTimer->addListener(m_rightArrowImg, WidgetEventType::TimerFinished, &ui2Widget::method_0x38);
-        m_rightArrowImg->method_0xb0(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0xf8);
+        m_rightArrowTimer->addListener(m_rightArrowImg, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_rightArrowImg->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0xf8);
         m_rightArrowImg->setColor(field_0xf8);
 
         snprintf(nameBuf0, bufLen, "%s_Menu_Items_tbl", p1);
-        m_menuItemsTbl = new ui2Table(nameBuf0, m_rowCount + 1, 1, 0, 0, nullptr);
+        m_menuItemsTbl = new ui2Table(nameBuf0, m_itemCount + 1, 1, 0, 0, nullptr);
         m_menuItemsTbl->setColSizes(0, -1, -2);
 
         parent = getMaster();
@@ -102,10 +100,10 @@ namespace sr2 {
         m_allTbl = new ui2Table(nameBuf0, 5, 1, x, y, parent);
         m_allTbl->setColSizes(0, -1, -2);
 
-        if (p3) m_allTbl->FUN_001fc6f8(m_headingText, 0, 0, &ui2Widget::method_0x38);
-        m_allTbl->FUN_001fc6f8(m_leftArrowImg, 1, 0, &ui2Widget::method_0x38);
-        m_allTbl->FUN_001fc6f8(m_menuItemsTbl, 2, 0, &ui2Widget::method_0x38);
-        m_allTbl->FUN_001fc6f8(m_rightArrowImg, 3, 0, &ui2Widget::method_0x38);                                                                                    
+        if (p3) m_allTbl->FUN_001fc6f8(m_headingText, 0, 0, &ui2Widget::acceptEvent);
+        m_allTbl->FUN_001fc6f8(m_leftArrowImg, 1, 0, &ui2Widget::acceptEvent);
+        m_allTbl->FUN_001fc6f8(m_menuItemsTbl, 2, 0, &ui2Widget::acceptEvent);
+        m_allTbl->FUN_001fc6f8(m_rightArrowImg, 3, 0, &ui2Widget::acceptEvent);                                                                                    
         m_allTbl->setColSize(m_headingOffset, 0);
         m_allTbl->setColSize(36, 1);
         m_allTbl->setColSize(m_innerWidth, 2);
@@ -119,21 +117,21 @@ namespace sr2 {
         i32 width = m_allTbl->getRowSize(2);
         m_notSelectableText->setBounds(width, 900);
         m_notSelectableText->setAlignment(0);
-        m_menuItemsTbl->FUN_001fc6f8(m_notSelectableText, m_rowCount, 0, &ui2Widget::method_0x38);
-        m_menu->addListener(m_notSelectableText, WidgetEventType::UNK29, &ui2Widget::method_0x38);
-        m_menu->addListener(m_notSelectableText, WidgetEventType::UNK38, &ui2Widget::method_0x38);
-        m_notSelectableText->method_0xb0(WidgetEventType::UNK29, WidgetEventType::UNK7, nullRef);
-        m_notSelectableText->method_0xb0(WidgetEventType::UNK38, WidgetEventType::UNK6, nullRef);
+        m_menuItemsTbl->FUN_001fc6f8(m_notSelectableText, m_itemCount, 0, &ui2Widget::acceptEvent);
+        m_menu->addListener(m_notSelectableText, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
+        m_menu->addListener(m_notSelectableText, WidgetEventType::UNK38, &ui2Widget::acceptEvent);
+        m_notSelectableText->addEventMapper(WidgetEventType::UNK29, WidgetEventType::Hide, nullptr);
+        m_notSelectableText->addEventMapper(WidgetEventType::UNK38, WidgetEventType::Show, nullptr);
 
-        m_someWidgetArr0 = new ui::BaseRef[m_rowCount];
-        m_someWidgetArr1 = new ui::BaseRef[m_rowCount];
-        m_someWidgetArr2 = new ui::BaseRef[m_rowCount];
-        m_someStringArr = new ui2String[m_rowCount];
+        m_someWidgetArr0 = new ui::BaseRef[m_itemCount];
+        m_someWidgetArr1 = new ui::BaseRef[m_itemCount];
+        m_someWidgetArr2 = new ui::BaseRef[m_itemCount];
+        m_someStringArr = new ui2String[m_itemCount];
 
         delete [] nameBuf0;
         delete [] nameBuf1;
 
-        m_menu->addListener(getName(), WidgetEventType::UNK12, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
+        m_menu->addListener(getName(), WidgetEventType::MaybeAll, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
         m_allTbl->addListener(getName(), WidgetEventType::UNK30, (SomeWidgetCallback)&srui2CycleMenu::FUN_001efb30);
     }
 

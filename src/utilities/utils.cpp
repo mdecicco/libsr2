@@ -46,7 +46,7 @@ namespace sr2 {
         if (!fp) return false;
 
         fp->read(&out, sizeof(mat3x4f));
-        fp->close();
+        delete fp;
         
         return true;
     }

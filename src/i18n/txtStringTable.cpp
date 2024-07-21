@@ -151,7 +151,7 @@ namespace sr2 {
         }
 
         if (selectedLangOffset == 0) {
-            fp->close();
+            delete fp;
             return false;
         }
 
@@ -166,7 +166,7 @@ namespace sr2 {
             }
         }
 
-        fp->close();
+        delete fp;
         return stringCount != 0;
     }
 

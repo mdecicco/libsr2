@@ -33,6 +33,10 @@ namespace sr2 {
     u32 gfxImage::getTexEnv() {
         return m_texEnv;
     }
+    
+    gfxImage::Pixel* gfxImage::getPixels() {
+        return m_pixels;
+    }
 
     gfxImage* gfxImage::Create(u16 width, u16 height, ImageFormat fmt, u32 mipCount) {
         gfxImage* img = new gfxImage();
@@ -87,7 +91,10 @@ namespace sr2 {
             TexPixelFmt format;
             u16 mipCount;
             u16 unk;
-            u32 flags;
+            union {
+                unsigned unknown : 31;
+                unsigned is_flipped : 1;
+            } flags;
         };
 
         Stream* fp = datAssetManager::open("texture", filename, "tex", 1, true);
@@ -186,27 +193,37 @@ namespace sr2 {
                 u8* indices = new u8[(hdr.width * hdr.height) / 2];
 
                 gfxImage* dst = ret;
+                    
+                u32 x = 0;
+                u32 y = 0;
+                auto px = [&x, &y, dst, hdr](Pixel& p) {
+                    u32 idx = (y * dst->m_width) + x;
+                    if (hdr.flags.is_flipped) {
+                        idx = (((dst->m_height - y) - 1) * dst->m_width) + x;
+                    }
+
+                    dst->m_pixels[idx] = {
+                        p.b,
+                        p.g,
+                        p.r,
+                        p.a
+                    };
+
+                    x++;
+                    if (x >= dst->m_width) {
+                        x = 0;
+                        y++;
+                    }
+                };
+
                 for (u32 i = 0;i < mipCount && dst;i++) {
                     u32 count = (dst->m_width * dst->m_height) / 2;
                     fp->read(indices, count);
 
                     for (u32 p = 0;p < count;p++) {
                         u8 b = indices[p];
-
-                        Pixel& src0 = palette[b & 0xf];
-                        Pixel& src1 = palette[(b & 0xff) >> 0x4];
-                        dst->m_pixels[(p * 2) + 0] = {
-                            src0.b,
-                            src0.g,
-                            src0.r,
-                            src0.a
-                        };
-                        dst->m_pixels[(p * 2) + 1] = {
-                            src1.b,
-                            src1.g,
-                            src1.r,
-                            src1.a
-                        };
+                        px(palette[b & 0xf]);
+                        px(palette[(b & 0xff) >> 0x4]);
                     }
 
                     dst = dst->m_nextMipMap;
@@ -219,6 +236,8 @@ namespace sr2 {
                 assert(false);
             }
         }
+
+        if (fp) delete fp;
 
         return ret;
     }

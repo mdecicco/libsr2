@@ -245,7 +245,7 @@ namespace sr2 {
         }
     }
 
-    datParserNode* vehEngine::prepParser(datParser* parser) {
+    void vehEngine::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "AngInertia", &angular_inertia, 1, nullptr);                                                                                  
         parser->add(PARSE_TYPE::FLOAT, "MaxHorsePower", &max_horsepower, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "IdleRPM", &idle_rpm, 1, nullptr);
@@ -253,7 +253,7 @@ namespace sr2 {
         parser->add(PARSE_TYPE::FLOAT, "MaxRPM", &max_rpm, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "GCL", &gear_change_duration, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "BoostDuration", &boost_duration, 1, nullptr);
-        return parser->add(PARSE_TYPE::FLOAT, "BoostHP", &boost_horsepower, 1, nullptr);
+        parser->add(PARSE_TYPE::FLOAT, "BoostHP", &boost_horsepower, 1, nullptr);
     }
 
     const char* vehEngine::getFileType() {

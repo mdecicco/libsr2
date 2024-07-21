@@ -47,15 +47,15 @@ namespace sr2 {
     vehCarSimBase::~vehCarSimBase() {
     }
         
-    const char* vehCarSimBase::getDirectory() const {
+    const char* vehCarSimBase::getDirectory() {
         return "tune/vehicle";
     }
 
-    const char* vehCarSimBase::getFileType() const {
+    const char* vehCarSimBase::getFileType() {
         return "vehCarSim";
     }
 
-    datParserNode* vehCarSimBase::prepParser(datParser* parser) {
+    void vehCarSimBase::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::FLOAT, "Mass", &mass, 1, nullptr);    
         parser->add(PARSE_TYPE::VEC3F, "InertiaBox", &inertia_box, 1, nullptr);
         parser->add(PARSE_TYPE::VEC3F, "CenterOfMass", &center_of_mass, 1, nullptr);
@@ -75,9 +75,7 @@ namespace sr2 {
         wheels[2]->prepParser(parser->add_parser("WheelBack", nullptr));
         if (axles[0]) axles[0]->prepParser(parser->add_parser("AxleFront", nullptr));
         if (axles[1]) axles[1]->prepParser(parser->add_parser("AxleBack", nullptr));
-
-        // not real
-        return nullptr;
+        
     }
 
     void vehCarSimBase::reset() {

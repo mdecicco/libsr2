@@ -240,7 +240,7 @@ namespace sr2 {
     }
     
     void UnkWidgetBinTree1::maybeRemove(WidgetEventType p1, const UnkData& unk) {
-        // Code actually comes from FUN_0020a2b8, aka ui2Widget::method_0xb8
+        // Code actually comes from FUN_0020a2b8, aka ui2Widget::removeEventMapper
         Node *pUVar1;
         bool bVar4;
         bool BVar5;

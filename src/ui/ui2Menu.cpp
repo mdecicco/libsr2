@@ -31,14 +31,14 @@ namespace sr2 {
         for (u32 i = 0;i < cellCount;i++) {
             m_grid[i].field_0x10 = 0;
             m_grid[i].field_0x14 = 0;
-            m_grid[i].field_0x20 = 0;
+            m_grid[i].doSubmitEvent = 0;
             m_grid[i].field_0x30 = 0;
         }
 
         field_0x90 = new uiUnknown25();
         field_0x98 = new uiUnknown25();
 
-        addToMasterUnk0(5000, 0x800090000);
+        makeRenderable(5000);
     }
 
     void ui2Menu::reset() {
@@ -91,19 +91,19 @@ namespace sr2 {
                 break;
             }
             case WidgetEventType::UpPressed: {
-                FUN_001f9990(m_someColIdx, FUN_001fad48());
+                FUN_001f9990(m_someRowIdx, FUN_001fad48());
                 return;
             }
             case WidgetEventType::DownPressed: {
-                FUN_001f9990(m_someColIdx, FUN_001fae08());
+                FUN_001f9990(m_someRowIdx, FUN_001fae08());
                 return;
             }
             case WidgetEventType::LeftPressed: {
-                FUN_001f9990(FUN_001faed0(), m_someRowIdx);
+                FUN_001f9990(FUN_001faed0(), m_someColIdx);
                 return;
             }
             case WidgetEventType::RightPressed: {
-                FUN_001f9990(FUN_001faf90(), m_someRowIdx);
+                FUN_001f9990(FUN_001faf90(), m_someColIdx);
                 return;
             }
             default: {
@@ -119,7 +119,7 @@ namespace sr2 {
         someCell.str.set(p1->getName());
         someCell.field_0x10 = p4;
         someCell.field_0x18 = p5;
-        someCell.field_0x20 = 0;
+        someCell.doSubmitEvent = 0;
 
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }
@@ -136,24 +136,24 @@ namespace sr2 {
         someCell.str.set("");
         someCell.field_0x10 = 0;
         someCell.field_0x18 = 0;
-        someCell.field_0x20 = 0;
+        someCell.doSubmitEvent = 0;
 
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }
 
-    void ui2Menu::FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4) {
+    void ui2Menu::FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const WidgetRef<ui2EventData>& p4) {
         GridCell& someCell = m_grid[m_rowCount * col + row];
-        someCell.field_0x20 = 1;
-        someCell.field_0x24 = p3;
-        someCell.field_0x28 = p4;
+        someCell.doSubmitEvent = 1;
+        someCell.someEventType = p3;
+        someCell.someEvent = p4;
         someCell.field_0x30 = 0;
     }
     
-    void ui2Menu::FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4) {
+    void ui2Menu::FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const WidgetRef<ui2EventData>& p4) {
         GridCell& someCell = m_grid[m_rowCount * col + row];
-        someCell.field_0x20 = 1;
-        someCell.field_0x24 = p3;
-        someCell.field_0x28 = p4;
+        someCell.doSubmitEvent = 1;
+        someCell.someEventType = p3;
+        someCell.someEvent = p4;
         someCell.field_0x30 = 1;
     }
     
@@ -162,7 +162,7 @@ namespace sr2 {
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
             ui::NamedRef w = p3;
-            FUN_001f8218(w, row, col, 1, &ui2Widget::method_0x38);
+            FUN_001f8218(w, row, col, 1, &ui2Widget::acceptEvent);
             
             row++;
             // p3 = ppuVar2->u ??? (ppuVar2 is a pointer to a variable that is _never_ assigned)
@@ -179,7 +179,7 @@ namespace sr2 {
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
             ui::NamedRef w = p3;
-            FUN_001f8218(w, row, col, 1, &ui2Widget::method_0x38);
+            FUN_001f8218(w, row, col, 1, &ui2Widget::acceptEvent);
             
             col++;
             // p3 = ppuVar2->u ??? (ppuVar2 is a pointer to a variable that is _never_ assigned)
@@ -195,7 +195,7 @@ namespace sr2 {
         // In its current state this function will loop infinitely if p3 is not null...
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
-            FUN_001f8388(p3, row, col, 1, &ui2Widget::method_0x38);
+            FUN_001f8388(p3, row, col, 1, &ui2Widget::acceptEvent);
             
             row++;
             // p3 = *ppcVar1 ??? (ppcVar1 is a pointer to a variable that is _never_ assigned)
@@ -211,7 +211,7 @@ namespace sr2 {
         // In its current state this function will loop infinitely if p3 is not null...
         // But this function is apparently unused so I'll just ignore it
         while (p3) {
-            FUN_001f8388(p3, row, col, 1, &ui2Widget::method_0x38);
+            FUN_001f8388(p3, row, col, 1, &ui2Widget::acceptEvent);
             
             col++;
             // p3 = *ppcVar1 ??? (ppcVar1 is a pointer to a variable that is _never_ assigned)
@@ -257,18 +257,71 @@ namespace sr2 {
     }
 
     void ui2Menu::FUN_001f9990(i32 row, i32 col) {
-        field_0x90->col = m_someColIdx;
-        field_0x90->row = m_someRowIdx;
+        field_0x90->col = col;
+        field_0x90->row = row;
 
         FUN_001f9a28(field_0x90);
     }
 
-    void ui2Menu::FUN_001f9a28(const ui::BaseRef& p1) {
-        // todo
+    void ui2Menu::FUN_001f9a28(const WidgetRef<uiUnknown25>& p1) {
+        i32 row = p1->row;
+        i32 col = p1->col;
+        FUN_001fb050(&row, &col);
+        if (row == m_someRowIdx && col == m_someColIdx) return;
+        
+        WidgetRef<ui2Base> globalMaster = ui2Base::getGlobalMaster();
+        
+        field_0x90->col = col;
+        field_0x90->row = row;
+
+        GridCell* cell = &m_grid[m_rowCount * m_someColIdx + m_someRowIdx];
+        WidgetRef<ui2Widget> found = globalMaster->findWidget(cell->str.get()).cast<ui2Widget>();
+        if (found) {
+            if (cell->field_0x14) ((*found)->*cell->field_0x18)(this, WidgetEventType::UNK61, nullptr);
+            else ((*found)->*cell->field_0x18)(this, WidgetEventType::UNK54, nullptr);
+        }
+
+        m_someRowIdx = p1->row;
+        m_someColIdx = p1->col;
+
+        cell = &m_grid[m_rowCount * m_someColIdx + m_someRowIdx];
+        found = globalMaster->findWidget(cell->str.get()).cast<ui2Widget>();
+        if (found) {
+            if (!cell->field_0x14) {
+                ((*found)->*cell->field_0x18)(this, WidgetEventType::UNK53, nullptr);
+                if (cell->doSubmitEvent) ((*found)->*cell->field_0x18)(this, cell->someEventType, cell->someEvent);
+            } else ((*found)->*cell->field_0x18)(this, WidgetEventType::UNK62, nullptr);
+        }
+
+        if (cell->field_0x14 == 0) {
+            dispatchEvent(WidgetEventType::UNK29, field_0x90);
+            if (cell->doSubmitEvent) dispatchEvent(cell->someEventType, cell->someEvent);
+        } else dispatchEvent(WidgetEventType::UNK38, field_0x90);
     }
 
-    void ui2Menu::FUN_001fa298(const ui::BaseRef& p1) {
-        // todo
+    void ui2Menu::FUN_001fa298(const WidgetRef<ui2EventData>& p1) {
+        if (m_rowCount < 1 || m_colCount < 1) return;
+
+        for (u32 col = 0;col < m_colCount;col++) {
+            for (u32 row = 0;row < m_rowCount;row++) {
+                GridCell& cell = m_grid[m_rowCount * col + row];
+
+                if (cell.field_0x10 && cell.doSubmitEvent && cell.field_0x30) {
+                    if (cell.someEvent && p1) {
+                        if (cell.someEvent->isEqualTo(*p1)) {
+                            i32 r = row;
+                            i32 c = col;
+                            FUN_001fb050(&r, &c);
+
+                            if (r == row && c == col) {
+                                FUN_001f9990(row, col);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     bool ui2Menu::FUN_001fa3d8(i32* outRow, i32* outCol, ui::BaseRef& outWidget) {
@@ -289,7 +342,56 @@ namespace sr2 {
     }
     
     void ui2Menu::FUN_001fa518() {
-        // todo
+        WidgetRef<ui2Base> globalMaster = ui2Base::getGlobalMaster();
+
+        for (u32 row = 0;row < m_rowCount;row++) {
+            for (u32 col = 0;col < m_colCount;col++) {
+                GridCell& cell = m_grid[m_rowCount * col + row];
+                WidgetRef<ui2Widget> found = globalMaster->findWidget(cell.str.get()).cast<ui2Widget>();
+                if (!found) continue;
+
+                if (row != m_someRowIdx) {
+                    if (cell.field_0x14 == 0) {
+                        ((*found)->*cell.field_0x18)(this, WidgetEventType::UNK54, nullptr);
+                        continue;
+                    } else {
+                        ((*found)->*cell.field_0x18)(this, WidgetEventType::UNK61, nullptr);
+                    }
+
+                    continue;
+                }
+
+                if (col != m_someColIdx) {
+                    if (cell.field_0x14 == 0) {
+                        ((*found)->*cell.field_0x18)(this, WidgetEventType::UNK54, nullptr);
+                        continue;
+                    } else {
+                        ((*found)->*cell.field_0x18)(this, WidgetEventType::UNK61, nullptr);
+                    }
+
+                    continue;
+                }
+
+                if (cell.field_0x14 != 0) {
+                    ((*found)->*cell.field_0x18)(this, WidgetEventType::UNK62, nullptr);
+                    continue;
+                }
+
+                ((*found)->*cell.field_0x18)(this, WidgetEventType::UNK53, nullptr);
+                
+                if (cell.doSubmitEvent == 1) {
+                    ((*found)->*cell.field_0x18)(this, cell.someEventType, cell.someEvent);
+                    dispatchEvent(cell.someEventType, cell.someEvent);
+                }
+            }
+        }
+
+        field_0x90->row = m_someRowIdx;
+        field_0x90->col = m_someColIdx;
+
+        GridCell& cell = m_grid[m_rowCount * m_someColIdx + m_someRowIdx];
+        if (cell.field_0x14 == 0) dispatchEvent(WidgetEventType::UNK29, field_0x90);
+        else dispatchEvent(WidgetEventType::UNK38, field_0x90);
     }
 
     i32 ui2Menu::FUN_001fad48() {

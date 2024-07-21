@@ -243,7 +243,7 @@ namespace sr2 {
         Stream* f = datAssetManager::open(dir, filename, ext, 0, true);
         if (f) {
             load(f, filename);
-            f->close();
+            delete f;
         }
         return f != nullptr;
     }

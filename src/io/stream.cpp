@@ -1,5 +1,6 @@
 #include <libsr2/io/stream.h>
 #include <stdio.h>
+#include <filesystem>
 
 namespace sr2 {
     Stream::Stream(FILE* fp) {
@@ -47,27 +48,8 @@ namespace sr2 {
     }
 
     Stream* Stream::open(const char* path, bool unk0) {
-        /*
-            Stream *pSVar1;
-            long lVar2;
-            code **func;
-    
-            func = (code **)PTR_PTR_FUN_00372e6c;
-            if (param_2 != false) {
-                func = (code **)DefaultOpenMethods;
-            }
-            lVar2 = (**func)(filename);
-            if (lVar2 < 0) {
-                pSVar1 = NULL;
-            }
-            else {
-                pSVar1 = AllocStream(filename,(int)lVar2,(int)func);
-            }
-            return pSVar1;
-        */
-
         FILE* fp = nullptr;
-        fopen_s(&fp, path, "rb");
+        errno_t err = fopen_s(&fp, path, "rb");
         if (fp) return new Stream(fp);
 
         return nullptr;

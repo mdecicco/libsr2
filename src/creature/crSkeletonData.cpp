@@ -39,8 +39,7 @@ namespace sr2 {
             if (boneData->load(tok, &next, &count)) initMirror();
         }
 
-        fp->close();
-
+        delete fp;
         return true;
     }
 

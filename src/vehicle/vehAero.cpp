@@ -26,12 +26,12 @@ namespace sr2 {
         vehicle = veh;
     }
 
-    datParserNode* vehAero::prepParser(datParser* parser) {
+    void vehAero::prepParser(datParser* parser) {
         parser->add(PARSE_TYPE::VEC3F, "AngCDamp", &angular_c_damping, 1, nullptr);
         parser->add(PARSE_TYPE::VEC3F, "AngVelDamp", &angular_velocity_damping, 1, nullptr);
         parser->add(PARSE_TYPE::VEC3F, "AngVel2Damp", &angular_velocity_damping_2, 1, nullptr);
         parser->add(PARSE_TYPE::FLOAT, "Drag", &drag, 1, nullptr);
-        return parser->add(PARSE_TYPE::FLOAT, "Down", &down, 1, nullptr);
+        parser->add(PARSE_TYPE::FLOAT, "Down", &down, 1, nullptr);
     }
 
     const char* vehAero::getFileType() {

@@ -11,9 +11,9 @@ namespace sr2 {
                 undefined4 field_0x10;
                 undefined4 field_0x14;
                 SomeWidgetCallback field_0x18;
-                undefined4 field_0x20;
-                WidgetEventType field_0x24;
-                ui::BaseRef field_0x28;
+                undefined4 doSubmitEvent;
+                WidgetEventType someEventType;
+                WidgetRef<ui2EventData> someEvent;
                 undefined4 field_0x30;
             };
 
@@ -28,8 +28,8 @@ namespace sr2 {
             void FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5);
             void FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5);
             void FUN_001f84d8(i32 row, i32 col);
-            void FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4);
-            void FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const ui::BaseRef& p4);
+            void FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const WidgetRef<ui2EventData>& p4);
+            void FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const WidgetRef<ui2EventData>& p4);
             void FUN_001f87d8(i32 row, i32 col, ui2Widget* p3);
             void FUN_001f88c8(i32 row, i32 col, ui2Widget* p3);
             void FUN_001f89b8(i32 row, i32 col, const char* p3);
@@ -39,11 +39,11 @@ namespace sr2 {
             void FUN_001f8f08(i32 row, i32 col, i32 p3); // todo
             undefined4 FUN_001f9968(i32 row, i32 col);
             void FUN_001f9990(i32 row, i32 col);
-            void FUN_001f9a28(const ui::BaseRef& p1); // todo
-            void FUN_001fa298(const ui::BaseRef& p1); // todo
+            void FUN_001f9a28(const WidgetRef<uiUnknown25>& p1);
+            void FUN_001fa298(const WidgetRef<ui2EventData>& p1);
             bool FUN_001fa3d8(i32* outRow, i32* outCol, ui::BaseRef& outWidget);
             void FUN_001fa510(undefined4 p1);
-            void FUN_001fa518(); // todo
+            void FUN_001fa518();
             i32 FUN_001fad48();
             i32 FUN_001fae08();
             i32 FUN_001faed0();

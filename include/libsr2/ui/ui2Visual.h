@@ -18,16 +18,15 @@ namespace sr2 {
             virtual void setColorU32(u32 color);
             virtual void setColorRGBA(u8 r, u8 g, u8 b, u8 a);
             virtual void setColor(const WidgetRef<ui2Color>& p1);
-            virtual void method_0x110(undefined4 p1);
+            virtual void setVisibility(bool isVisible);
             virtual undefined4 method_0x118();
             virtual void configureParser(datParser* parser);
 
         protected:
             vec2i m_pos;
+            bool m_isVisible;
+            u32 m_color;
             WidgetRef<ui2Color> m_unk0;
             WidgetRef<ui2Position> m_unk1;
-
-            undefined4 field_0x78;
-            undefined4 m_color;
     };
 };

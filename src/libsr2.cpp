@@ -4,6 +4,7 @@
 #include <libsr2/utilities/timer.h>
 #include <libsr2/utilities/utils.h>
 #include <libsr2/utilities/msgMsgSource.h>
+#include <libsr2/utilities/txtFontTex.h>
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/states/GameState.h>
 #include <libsr2/managers/Aud3DObjectManager.h>
@@ -15,8 +16,11 @@
 #include <libsr2/io/ioPad.h>
 #include <libsr2/libsr2.h>
 #include <libsr2/globals.h>
+#include <libsr2/gfx/ui.h>
 
 #include <utils/Window.h>
+#include <utils/Singleton.hpp>
+
 #include <render/utils/SimpleDebugDraw.h>
 #include <render/utils/ImGui.h>
 #include <render/vulkan/CommandBuffer.h>
@@ -101,9 +105,14 @@ namespace sr2 {
         if (!initRendering(m_window)) throw std::exception("Failed to initialize renderer");
         if (!initDebugDrawing()) throw std::exception("Failed to initialize debug drawer");
         if (!initImGui()) throw std::exception("Failed to initialize ImGui");
+
+        utils::Singleton<uiRenderer>::Create();
+        if (!utils::Singleton<uiRenderer>::Get()->init(this)) throw std::exception("Failed to initialize ui renderer");
     }
 
     GameEngine::~GameEngine() {
+        utils::Singleton<uiRenderer>::Destroy();
+
         delete fsm;
         delete g_Archives;
 
@@ -141,7 +150,6 @@ namespace sr2 {
             m_currentFrame->getSwapChain(),
             m_currentFrame->getFramebuffer()
         );
-
         
         getImGui()->begin();
 
@@ -159,7 +167,6 @@ namespace sr2 {
             // std::string tm = format("CPU=%5.2fms VU/GS=%5.2fms FRAME=%5.2fms", gfx::g_HostTime, gfx::g_DrawTime, gfx::g_FrameTime);
             // gfx::DrawFont(0x18, 0x18, tm.c_str(), 0x80ffffff);
         }
-
         
         auto dd = getDebugDraw();
         auto cb = m_currentFrame->getCommandBuffer();
@@ -173,12 +180,12 @@ namespace sr2 {
                 m_currentFrame->getFramebuffer()
             );
             dd->draw(cb);
-            getImGui()->end(m_currentFrame);
-            cb->endRenderPass();
-        } else {
-            getImGui()->end(m_currentFrame);
-            cb->endRenderPass();
         }
+        
+        getImGui()->end(m_currentFrame);
+        txtFontTex::renderAll();
+        uiRenderer::draw(m_currentFrame);
+        cb->endRenderPass();
 
         m_currentFrame->end();
         releaseFrame(m_currentFrame);

@@ -29,7 +29,7 @@ namespace sr2 {
             while (tok.checkToken("mtl", false)) {
                 phMaterialMgr::get()->addMaterial(tok);
             }
-            mtl->close();
+            delete mtl;
         }
 
         TaggedStream tsv;
@@ -425,7 +425,7 @@ namespace sr2 {
         u32 magic = 0;
         fp->read(&magic, 4);
         if (magic != 0x24682468) {
-            fp->close();
+            delete fp;
             return;
         }
 
@@ -433,7 +433,7 @@ namespace sr2 {
         fp->read(&w, 4);
         fp->read(&h, 4);
         if (w != width || h != height) {
-            fp->close();
+            delete fp;
             return;
         }
 
@@ -445,7 +445,7 @@ namespace sr2 {
             // Game::lvlProgress::updateTask(0, f32((i * 100) / h));
         }
 
-        fp->close();
+        delete fp;
 
         // Again... Don't ask me
         for (u32 i = 0;i < h;i++) {
@@ -616,7 +616,7 @@ namespace sr2 {
         }
         */
 
-        fp->close();
+        delete fp;
         // Game::lvlProgress::popSubTask();
     }
 
@@ -669,6 +669,8 @@ namespace sr2 {
                 fog_color = r | g << 8 | b << 16 | a << 24;
             }
         }
+
+        delete fp;
     }
 
     void orTerrainGrid::initLODs(const char* map, u32 lod_version, u32 lod_idx) {
@@ -713,7 +715,7 @@ namespace sr2 {
             else if (strncmp(buf, "lorez8", 64) == 0) LODDist[7] = tok.readFloat();
         }
 
-        fp->close();
+        delete fp;
 
         // ...
         // Omitting ineffectual code that just sets 'filename' based on 'whoknows' and lod_idx

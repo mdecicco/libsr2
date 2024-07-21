@@ -1,6 +1,12 @@
 #pragma once
 #include <libsr2/types.h>
 
+namespace render {
+    namespace vulkan {
+        class Texture;
+    };
+};
+
 namespace sr2 {
 	class gfxImage;
 
@@ -18,6 +24,7 @@ namespace sr2 {
 			u32 getTexEnv();
 			void load(gfxImage* src);
 			vec2i getDimensions();
+			render::vulkan::Texture* getTex();
 
 		protected:
 			gfxTexture();
@@ -27,5 +34,6 @@ namespace sr2 {
 			u16 m_height;
 			u32 m_texEnv;
 			u32 m_refCount;
+			render::vulkan::Texture* m_texture;
 	};
 };

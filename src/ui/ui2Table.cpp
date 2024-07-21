@@ -1,5 +1,6 @@
 #include <libsr2/ui/ui2Table.h>
 #include <libsr2/ui/ui2Base.h>
+#include <libsr2/ui/uiUnknown25.h>
 #include <libsr2/io/datParser.h>
 #include <libsr2/globals.h>
 
@@ -24,7 +25,7 @@ namespace sr2 {
         m_colInfo = nullptr;
         m_rowInfo = nullptr;
 
-        field_0x8c = false;
+        m_needsRecalculation = false;
         field_0xa0.x = 0;
         field_0xa0.y = 0;
         field_0xa8 = 0;
@@ -69,9 +70,9 @@ namespace sr2 {
         field_0xcc = new ui2Position();
         field_0xcc->pos = { 0, 0 };
 
-        addToMasterUnk0(10000, 0x80090000);
+        makeRenderable(10000);
         field_0x48 = 1;
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
     void ui2Table::draw() {
@@ -129,7 +130,8 @@ namespace sr2 {
         }
         
         if (event == WidgetEventType::UNK29) {
-            // FUN_001fd0d8(?, ?)
+            WidgetRef<uiUnknown25> unk = data.cast<uiUnknown25>();
+            FUN_001fd0d8(unk->row, unk->col);
             return;
         }
         
@@ -191,7 +193,7 @@ namespace sr2 {
 
         dispatchEvent(WidgetEventType::UNK11, p1);
 
-        field_0x8c = true;
+        m_needsRecalculation = true;
         FUN_001fd138();
     }
     
@@ -220,7 +222,7 @@ namespace sr2 {
         for (ui2Widget* w : args) {
             if (!w) return;
             
-            FUN_001fc6f8(w, col, row, &ui2Widget::method_0x38);
+            FUN_001fc6f8(w, col, row, &ui2Widget::acceptEvent);
             
             col++;
             if (col >= m_colCount) {
@@ -234,7 +236,7 @@ namespace sr2 {
         for (ui2Widget* w : args) {
             if (!w) return;
             
-            FUN_001fc6f8(w, col, row, &ui2Widget::method_0x38);
+            FUN_001fc6f8(w, col, row, &ui2Widget::acceptEvent);
             
             row++;
             if (row >= m_rowCount) {
@@ -248,7 +250,7 @@ namespace sr2 {
         for (const char* w : args) {
             if (!w) return;
             
-            FUN_001fc818(w, col, row, &ui2Widget::method_0x38);
+            FUN_001fc818(w, col, row, &ui2Widget::acceptEvent);
             
             col++;
             if (col >= m_colCount) {
@@ -262,7 +264,7 @@ namespace sr2 {
         for (const char* w : args) {
             if (!w) return;
             
-            FUN_001fc818(w, col, row, &ui2Widget::method_0x38);
+            FUN_001fc818(w, col, row, &ui2Widget::acceptEvent);
             
             row++;
             if (row >= m_rowCount) {
@@ -283,7 +285,7 @@ namespace sr2 {
             m_colInfo[i].size = size;
         }
 
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
     void ui2Table::setColSize(i32 size, i32 col) {
@@ -305,7 +307,7 @@ namespace sr2 {
             m_rowInfo[i].size = size;
         }
 
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
     void ui2Table::setRowSize(i32 size, i32 row) {
@@ -345,7 +347,7 @@ namespace sr2 {
 
     void ui2Table::setBounds(i32 width, i32 height) {
         m_bounds = { width, height };
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
     void ui2Table::setBoundsFromPos(i32 x, i32 y) {
@@ -355,18 +357,18 @@ namespace sr2 {
     void ui2Table::FUN_001fd0a8(i32 p1, i32 p2, i32 p3, i32 p4) {
         field_0xac = { p1, p2 };
         field_0xb4 = { p3, p4 };
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
     void ui2Table::FUN_001fd0c8(u32 p1) {
         field_0xa8 = p1;
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
 
     void ui2Table::FUN_001fd0d8(u32 col, u32 row) {
         m_someRowIdx = row;
         m_someColIdx = col;
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
     void ui2Table::FUN_001fd0f0(u32* outCol, u32* outRow) {
@@ -374,23 +376,23 @@ namespace sr2 {
         *outCol = m_someColIdx;
     }
     
-    void ui2Table::FUN_001fd108(undefined4 p1, undefined4 p2) {
+    void ui2Table::FUN_001fd108(i32 p1, i32 p2) {
         field_0xa0.x = p1;
         field_0xa0.y = p2;
-        field_0x8c = true;
+        m_needsRecalculation = true;
     }
     
-    void ui2Table::FUN_001fd120(undefined4* p1, undefined4* p2) {
+    void ui2Table::FUN_001fd120(i32* p1, i32* p2) {
         *p1 = field_0xa0.x;
         *p2 = field_0xa0.y;
     }
 
     bool ui2Table::FUN_001fd138() {
-        // if (field_0x8c) {
+        if (m_needsRecalculation) {
             recalculateOffsets();
             FUN_001fd690();
             return true;
-        // }
+        }
 
         return false;
     }
@@ -428,21 +430,21 @@ namespace sr2 {
         }
 
         if (field_0xa8) {
-            field_0x8c = false;
+            m_needsRecalculation = false;
             return;
         }
 
-        i32 someColOffsetX = m_colInfo[m_someRowIdx].offset;
-        i32 someColSizeX = m_colInfo[m_someRowIdx].size;
+        i32 someColOffsetX = m_colInfo[m_someColIdx].offset;
+        i32 someColSizeX = m_colInfo[m_someColIdx].size;
         if (someColOffsetX + field_0xa0.x < 0) field_0xa0.x = -someColOffsetX;
         else if (someColSizeX + field_0xa0.x > m_bounds.x) field_0xa0.x = m_bounds.x - someColSizeX;
 
-        i32 someRowOffsetY = m_rowInfo[m_someColIdx].offset;
-        i32 someRowSizeY = m_rowInfo[m_someColIdx].size;
+        i32 someRowOffsetY = m_rowInfo[m_someRowIdx].offset;
+        i32 someRowSizeY = m_rowInfo[m_someRowIdx].size;
         if (someRowOffsetY + field_0xa0.y < 0) field_0xa0.y = -someRowOffsetY;
         else if (someRowSizeY + field_0xa0.y > m_bounds.y) field_0xa0.y = m_bounds.y - someRowSizeY;
         
-        field_0x8c = false;
+        m_needsRecalculation = false;
     }
 
     void ui2Table::FUN_001fd690() {
@@ -453,12 +455,12 @@ namespace sr2 {
 
         for (u32 c = 0;c < m_colCount;c++) {
             for (u32 r = 0;r < m_rowCount;r++) {
+                Cell& cell = m_cells[m_rowCount * c + r];
                 vec2i offset = {
                     m_pos.x + field_0xa0.x + m_colInfo[c].offset,
                     m_pos.y + field_0xa0.y + m_rowInfo[r].offset
                 };
 
-                Cell& cell = m_cells[m_rowCount * c + r];
                 field_0xcc->pos = {
                     offset.x + cell.offset.x,
                     offset.y + cell.offset.y
@@ -479,12 +481,12 @@ namespace sr2 {
                     continue;
                 }
                 
-                if (m_pos.x + m_bounds.x + field_0xb4.x < offset.x + m_colInfo[r].size) {
+                if (m_pos.x + m_bounds.x + field_0xb4.x < offset.x + m_rowInfo[r].size) {
                     ((*w)->*cell.callback)(this, WidgetEventType::UNK31, nullptr);
                     continue;
                 }
 
-                if (offset.y + m_rowInfo[c].size <= m_pos.y + m_bounds.y + field_0xb4.y) {
+                if (offset.y + m_colInfo[c].size <= m_pos.y + m_bounds.y + field_0xb4.y) {
                     ((*w)->*cell.callback)(this, WidgetEventType::UNK32, nullptr);
                     continue;
                 }
@@ -497,7 +499,7 @@ namespace sr2 {
     }
 
     bool ui2Table::FUN_001fdd88() {
-        field_0x8c = true;
+        m_needsRecalculation = true;
         return FUN_001fd138();
     }
 };

@@ -117,7 +117,7 @@ namespace sr2 {
         m_rowCount = 0;
         do {
             if (!fgets(buf, m_bufSz, fp->getRaw())) {
-                fp->close();
+                delete fp;
                 delete [] buf;
                 return true;
             }
@@ -187,6 +187,8 @@ namespace sr2 {
                 continue;
             }
         } while (true);
+
+        delete fp;
     }
 
     void parCsvFile::kill() {

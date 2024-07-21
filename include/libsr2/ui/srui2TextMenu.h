@@ -39,7 +39,7 @@ namespace sr2 {
             virtual void method_0x58();
             virtual void configureParser(datParser* parser);
 
-            void initMenuItem(const char* name, i32 index, i32 p3, i32 p4);
+            void initMenuItem(const char* name, i32 index, const char* p3, i32 p4);
             void setMenuItemText(u32 index, const char* text);
             void setMenuItemTextWide(u32 index, const wchar_t* text);
             void setMenuItemActive(i32 index, bool active);
@@ -57,7 +57,7 @@ namespace sr2 {
             void FUN_001e6988();
 
         protected:
-            u32 m_colCount;
+            u32 m_itemCount;
             vec2i m_pos;
             vec2i m_textSize;
             vec2i m_textOffset;
@@ -66,6 +66,7 @@ namespace sr2 {
             bool m_showTextBackdrop;
             bool* m_textIsDynamic;
             u32* m_lineSpacing;
+            ui2String* m_someStrings;
             WidgetRef<ui2Text>* m_texts;
             WidgetRef<ui2TranslatedText>* m_descs;
             WidgetRef<ui2Image>* m_cursorImgs;
@@ -87,16 +88,14 @@ namespace sr2 {
             WidgetRef<ui2Image> m_descImg;
             WidgetRef<ui2Image> m_upArrowImg;
             WidgetRef<ui2Image> m_downArrowImg;
-            WidgetRef<ui2Color> m_arrowActiveColor;
+            WidgetRef<ui2Color> m_activeColor;
+            WidgetRef<ui2Color> m_inactiveColor;
 
             ui::NamedRef field_0xa8;
             ui::NamedRef field_0xb0;
-            WidgetRef<ui2Color> field_0xec;
             
-            undefined4 field_0x48;
             undefined4 field_0x7c;
             undefined4 field_0xb8;
-            undefined4 field_0xbc;
             ui2String field_0x124;
             ui2String field_0x134;
             undefined4 field_0x144;

@@ -16,6 +16,7 @@ namespace sr2 {
             vec2i getDimensions();
             ImageFormat getFormat();
             u32 getTexEnv();
+            Pixel* getPixels();
 
             static gfxImage* Create(u16 width, u16 height, ImageFormat fmt, u32 mipCount);
             static gfxImage* LoadTEX(const char* filename, bool p2);

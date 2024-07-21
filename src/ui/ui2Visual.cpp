@@ -1,11 +1,13 @@
 #include <libsr2/ui/ui2Visual.h>
 #include <libsr2/io/datParser.h>
 
+#include <libsr2/ui/ui2TranslatedText.h>
+
 #include <stdio.h>
 
 namespace sr2 {
     ui2Visual::ui2Visual(const char* name, i32 x, i32 y, const WidgetRef<ui2Master>& master) : ui2Widget(name, master, true) {
-        field_0x78 = 1;
+        m_isVisible = true;
         m_pos = { x, y };
         m_color = 0x80ffffff;
 
@@ -38,12 +40,12 @@ namespace sr2 {
                 setColor(data.cast<ui2Color>());
                 return;
             }
-            case WidgetEventType::UNK6: {
-                method_0x110(true);
+            case WidgetEventType::Show: {
+                setVisibility(true);
                 return;
             }
-            case WidgetEventType::UNK7: {
-                method_0x110(false);
+            case WidgetEventType::Hide: {
+                setVisibility(false);
                 return;
             }
             default: {
@@ -87,16 +89,16 @@ namespace sr2 {
         dispatchEvent(WidgetEventType::UNK13, p1);
     }
 
-    void ui2Visual::method_0x110(undefined4 p1) {
-        if (field_0x78 == p1) return;
-        field_0x78 = p1;
+    void ui2Visual::setVisibility(bool p1) {
+        if (m_isVisible == p1) return;
+        m_isVisible = p1;
 
         if (p1) dispatchEvent(WidgetEventType::UNK15, nullptr);
         else dispatchEvent(WidgetEventType::UNK14, nullptr);
     }
     
     undefined4 ui2Visual::method_0x118() {
-        return field_0x78;
+        return m_isVisible;
     }
     
     void ui2Visual::configureParser(datParser* parser) {

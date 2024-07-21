@@ -19,7 +19,7 @@ namespace sr2 {
                 i32 offset;
             };
 
-            ui2Table(const char* name, u32 rowCount, u32 colCount, i32 x, i32 y, const WidgetRef<ui2Master>& master);
+            ui2Table(const char* name, u32 colCount, u32 rowCount, i32 x, i32 y, const WidgetRef<ui2Master>& master);
             virtual ~ui2Table();
 
             void init(u32 rowCount, u32 colCount);
@@ -53,8 +53,8 @@ namespace sr2 {
             void FUN_001fd0c8(u32 p1);
             void FUN_001fd0d8(u32 col, u32 row);
             void FUN_001fd0f0(u32* outCol, u32* outRow);
-            void FUN_001fd108(undefined4 p1, undefined4 p2);
-            void FUN_001fd120(undefined4* p1, undefined4* p2);
+            void FUN_001fd108(i32 p1, i32 p2);
+            void FUN_001fd120(i32* p1, i32* p2);
             bool FUN_001fd138();
             void FUN_001fd178(u32 col, u32 row);
             void FUN_001fd1d0(u32 col, u32 row);
@@ -73,7 +73,7 @@ namespace sr2 {
             u32 m_someRowIdx;
             u32 m_someColIdx;
 
-            bool field_0x8c;
+            bool m_needsRecalculation;
             vec2i field_0xa0;
             undefined4 field_0xa8;
             vec2i field_0xac;

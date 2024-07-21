@@ -30,27 +30,27 @@ namespace sr2 {
 
         i32 magic = -1;
         if (!fp->read(&magic, 4)) {
-            fp->close();
+            delete fp;
             return false;
         }
 
         if (magic && magic != 0x706d63) {
-            fp->close();
+            delete fp;
             return false;
         }
 
         if (!fp->read(&frameCount, 4)) {
-            fp->close();
+            delete fp;
             return false;
         }
 
         if (!fp->read(&channelCount, 4)) {
-            fp->close();
+            delete fp;
             return false;
         }
 
         if (!fp->read(&unk2, 4)) {
-            fp->close();
+            delete fp;
             return false;
         }
 
@@ -65,7 +65,7 @@ namespace sr2 {
             // in this code path being executed... so I'll ignore it for
             // now
             delete [] frames;
-            fp->close();
+            delete fp;
             abort();
         } else {
             for (u32 i = 0;i < frameCount;i++) {
@@ -77,7 +77,7 @@ namespace sr2 {
                 }
             }
 
-            fp->close();
+            delete fp;
             unk6 = 0;
             duration = 30.0f / f32(frameCount);
         }

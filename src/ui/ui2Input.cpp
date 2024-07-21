@@ -29,7 +29,7 @@ namespace sr2 {
             m_pressedAmount[i] = 0.0f;
         }
 
-        addToMasterUnk0(100000, 0x800090000);
+        makeRenderable(100000);
     }
 
     ui2Input::~ui2Input() {

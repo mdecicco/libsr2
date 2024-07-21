@@ -3,6 +3,8 @@
 #include <libsr2/ui/ui2Base.h>
 #include <libsr2/ui/ui2EventData.h>
 
+#include <utils/Array.hpp>
+
 #include <string.h>
 #include <stdio.h>
 
@@ -10,7 +12,7 @@ namespace sr2 {
     ui2Widget::ui2Widget(const char* name, const WidgetRef<ui2Master>& master, bool doAssignMaster) {
         field_0x18 = false;
         m_isActive = true;
-        m_addedToMasterUnk0 = false;
+        m_isRenderable = false;
         field_0x24 = 0;
         field_0x28 = 0;
         field_0x38 = 0;
@@ -20,8 +22,6 @@ namespace sr2 {
         m_shouldBeLoaded = false;
         field_0x5c = nullptr;
 
-        // memset(&field_0x68, 0, 8);
-        field_0x68 = 0;
         m_addedToMasterUnk1 = false;
         field_0x74 = 0;
 
@@ -48,7 +48,7 @@ namespace sr2 {
         if (!field_0x74) {
             if (m_refCount == field_0x24 + 1) {
                 field_0x74 = 1;
-                removeFromMasterUnk0();
+                stopRendering();
                 removeFromMasterUnk1();
             }
         }
@@ -62,8 +62,7 @@ namespace sr2 {
     void ui2Widget::reset() {
         addRef();
 
-        m_someBinTree0.reset();
-        removeFromMasterUnk0();
+        stopRendering();
         removeFromMasterUnk1();
 
         field_0x38 = 1;
@@ -74,56 +73,30 @@ namespace sr2 {
     }
     
     void ui2Widget::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
-        if (event == WidgetEventType::UNK2) {
-            setActive(false);
-            return;
-        }
-        if (event > WidgetEventType::UNK2) return;
-        if (event != WidgetEventType::UNK0) {
-            if (event != WidgetEventType::UNK1) return;
-            method_0xa8(1);
-            return;
-        }
-
-        setActive(1);
-    }
-
-    void ui2Widget::method_0x38(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
-        auto root = m_someBinTree1.getRoot();
-
-        if (!field_0x38) {
-            UnkWidgetBinTree1::UnkData d;
-            d.a = p2;
-            auto found = m_someBinTree1.FUN_0020b7b0(d);
-            bool someCond = false;
-
-            while (true) {
-                if (found == root || found->someSortingValue != p2) break;
-
-                onEvent(p1, found->field_0x14, p3);
-
-                auto n = found->right;
-                if (!n) {
-                    n = found->parent;
-                    while (found == n->right) {
-                        found = n;
-                        n = n->parent;
-                    }
-
-                    if (found->right != n) found = n;
-                } else {
-                    auto n1 = n->left;
-                    while (found = n, n1) {
-                        n = n->left;
-                        n1 = n->left;
-                    }
-                }
-
-                someCond = true;
+        if (event != WidgetEventType::UNK2) {
+            if (event > WidgetEventType::UNK2) return;
+            if (event != WidgetEventType::UNK0) {
+                if (event == WidgetEventType::UNK1) method_0xa8(true);
+                return;
             }
 
-            if (!someCond) onEvent(p1, p2, p3);
+            setActive(true);
+        } else setActive(false);
+    }
+
+    void ui2Widget::acceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (field_0x38) return;
+
+        bool didDispatch = false;
+
+        for (u32 i = 0;i < m_mappers.size();i++) {
+            if (m_mappers[i].incoming == event) {
+                onEvent(source, m_mappers[i].outgoing, m_mappers[i].event);
+                didDispatch = true;
+            }
         }
+
+        if (!didDispatch) onEvent(source, event, data);
     }
 
     void ui2Widget::method_0x48() {
@@ -133,7 +106,7 @@ namespace sr2 {
     }
 
     void ui2Widget::addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback) {
-        addListener(listener->getName(), event, callback);
+        m_listeners.push({ event, listener->getName(), callback });
     }
     
     void ui2Widget::addListener(const char* listenerName, WidgetEventType event, SomeWidgetCallback callback) {
@@ -143,12 +116,7 @@ namespace sr2 {
             addListener(listenerName, WidgetEventType::Activate, callback);
             addListener(listenerName, WidgetEventType::Deactivate, callback);
         } else if (event != WidgetEventType::UNK35) {
-            UnkWidgetBinTree0::UnkData d;
-            d.callback = nullptr;
-            d.event = event;
-            UnkWidgetBinTree0::Node* found = m_someBinTree0.FUN_0020b6e8(d);
-            found->unk.str.set(listenerName);
-            found->unk.callback = callback;
+            m_listeners.push({ event, listenerName, callback });
             return;
         }
 
@@ -163,8 +131,11 @@ namespace sr2 {
     }
 
     void ui2Widget::removeListener(const char* listenerName, WidgetEventType event) {
-        // todo
-        // 0x00208b60
+        for (i32 i = m_listeners.size() - 1;i >= 0;i--) {
+            if (m_listeners[i].type == event && m_listeners[i].widgetName == listenerName) {
+                m_listeners.remove(i);
+            }
+        }
     }
 
     void ui2Widget::removeAllListeners(const ui::NamedRef& listener) {
@@ -172,81 +143,41 @@ namespace sr2 {
     }
 
     void ui2Widget::removeAllListeners(const char* listenerName) {
-        // todo
-        // 0x00209278
+        for (i32 i = m_listeners.size() - 1;i >= 0;i--) {
+            if (m_listeners[i].widgetName == listenerName) {
+                m_listeners.remove(i);
+            }
+        }
+    }
+
+    void ui2Widget::addEventMapper(WidgetEventType incoming, WidgetEventType outgoing, const WidgetRef<ui2EventData>& event) {
+        m_mappers.push({
+            incoming,
+            outgoing,
+            event
+        });
+    }
+
+    void ui2Widget::removeEventMapper(WidgetEventType incoming, WidgetEventType outgoing) {
+        for (i32 i = m_mappers.size() - 1;i >= 0;i--) {
+            if (m_mappers[i].incoming == incoming && m_mappers[i].outgoing == outgoing) {
+                m_mappers.remove(i);
+            }
+        }
     }
 
     void ui2Widget::dispatchEvent(WidgetEventType event, const WidgetRef<ui2EventData>& data, const ui::NamedRef& source) {
         if (!m_isActive || field_0x38) return;
 
         WidgetRef<ui2Base> master = ui2Base::getGlobalMaster();
-        UnkWidgetBinTree0::Node* someNode = nullptr;
-        auto baseRoot = m_someBinTree0.getRoot();
 
-        someNode = m_someBinTree0.FUN_0020b748(event);
-
-        // Interesting note:
-        // Both the top level while loops in this function are nearly identical
-        while (true) {
-            bool doBreak = false;
-
-            while (true) {
-                if (someNode == baseRoot || someNode->unk.event != event) {
-                    baseRoot = m_someBinTree0.FUN_0020b748(WidgetEventType::UNK12);
-                    someNode = baseRoot;
-                    doBreak = true;
-                    break;
-                }
-
-                ui::NamedRef found = master->findWidget(someNode->unk.str.get()).cast<ui2Widget>();
+        for (u32 i = 0;i < m_listeners.size();i++) {
+            if (m_listeners[i].type == event || m_listeners[i].type == WidgetEventType::MaybeAll) {
+                ui::NamedRef found = master->findWidget(m_listeners[i].widgetName.c_str()).cast<ui2Widget>();
                 if (found) {
-                    ((*found)->*someNode->unk.callback)(!source ? this : source, event, data);
+                    ((*found)->*m_listeners[i].callback)(!source ? this : source, event, data);
                 }
-                
-                auto n = someNode->right;
-                if (!n) break;
-
-                while (n->left) n = n->left;
-                someNode = n;
             }
-
-            if (doBreak) break;
-
-            auto n = someNode->parent;
-            while (someNode == n->right) {
-                someNode = n;
-                n = n->parent;
-            }
-            if (someNode->right != n) someNode = n;
-        }
-
-        while (true) {
-            bool doBreak = false;
-            while (true) {
-                if (someNode == baseRoot || someNode->unk.event != WidgetEventType::UNK12) {
-                    return;
-                }
-
-                ui::NamedRef found = master->findWidget(someNode->unk.str.get()).cast<ui2Widget>();
-                if (found) {
-                    ((*found)->*someNode->unk.callback)(!source ? this : source, event, data);
-                }
-
-                auto n = someNode->right;
-                if (!n) break;
-
-                while (n->left) n = n->left;
-                someNode = n;
-            }
-
-            if (doBreak) break;
-
-            auto n = someNode->parent;
-            while (someNode == n->right) {
-                someNode = n;
-                n = n->parent;
-            }
-            if (someNode->right != n) someNode = n;
         }
     }
 
@@ -264,39 +195,7 @@ namespace sr2 {
         field_0x40 = p1;
     }
 
-    void ui2Widget::method_0xb0(WidgetEventType p1, WidgetEventType p2, const ui::BaseRef& p3) {
-        ui2WidgetBase* w = *p3;
-        UnkWidgetBinTree1::UnkData d;
-        d.a = p1;
-        d.b = p2;
-        d.widget = w;
-
-        if (w) {
-            w->addRef();
-            w->addRef();
-            w->addRef();
-        }
-
-        m_someBinTree1.FUN_0020bc00(d);
-        if (d.widget) w->baseReleaseRef();
-
-        if (w) {
-            w->baseReleaseRef();
-            w->baseReleaseRef();
-        }
-    }
-
-    void ui2Widget::method_0xb8(WidgetEventType p1, WidgetEventType p2) {
-        UnkWidgetBinTree1::UnkData search;
-        search.a = p1;
-
-        // Code that was actually in this function moved into `maybeRemove` function below
-        // Definitely wasn't inlined... I think... But it modifies protected properties and
-        // doesn't touch `this` so it probably belongs there
-        m_someBinTree1.maybeRemove(p2, search);
-    }
-
-    void ui2Widget::method_0xc0(bool p1) {
+    void ui2Widget::setShouldLoad(bool p1) {
         m_shouldBeLoaded = p1;
         if (p1) setName(m_widgetName->get());
     }
@@ -324,21 +223,20 @@ namespace sr2 {
         return strcmp(getType(), type) == 0;
     }
     
-    const char* ui2Widget::getFileType() const {
+    const char* ui2Widget::getFileType() {
         return "";
     }
 
-    const char* ui2Widget::getDirectory() const {
+    const char* ui2Widget::getDirectory() {
         return ui2Base::getGlobalMaster()->getDirectory();
     }
 
-    datParserNode* ui2Widget::prepParser(datParser* parser) {
-        // return field_0xc->prepParser(parser);
-        return nullptr;
+    void ui2Widget::prepParser(datParser* parser) {
+        return configureParser(parser);
     }
 
     void ui2Widget::afterLoad() {
-        // field_0xc->afterLoad();
+        method_0x58();
     }
 
     ui2String* ui2Widget::generateName() {
@@ -369,30 +267,26 @@ namespace sr2 {
         return m_isActive;
     }
 
-    void ui2Widget::addToMasterUnk0(i32 p1, u64 p2) {
-        if (m_addedToMasterUnk0) field_0x24--;
+    void ui2Widget::makeRenderable(i32 priority) {
+        if (m_isRenderable) field_0x24--;
 
-        getMaster()->insertToUnk0(this, p1, p2);
+        getMaster()->addRenderable(this, priority);
 
-        m_addedToMasterUnk0 = true;
-        field_0x68 = p2;
+        m_isRenderable = true;
         field_0x24++;
     }
 
-    void ui2Widget::removeFromMasterUnk0() {
-        if (!m_addedToMasterUnk0) return;
-        m_addedToMasterUnk0 = false;
+    void ui2Widget::stopRendering() {
+        if (!m_isRenderable) return;
+        m_isRenderable = false;
         field_0x24--;
 
-        getMaster()->deleteFromUnk0(this);
-
-        field_0x68 = 0;
-        // memset(&field_0x68, 0, 8);
+        getMaster()->removeRenderable(this);
     }
     
-    void ui2Widget::addToMasterUnk0IfNecessary(i32 p1) {
-        if (!m_addedToMasterUnk0) return;
-        addToMasterUnk0(p1, field_0x68);
+    void ui2Widget::setRenderPriority(i32 priority) {
+        if (!m_isRenderable) return;
+        makeRenderable(priority);
     }
 
     void ui2Widget::addToMasterUnk1() {
@@ -412,12 +306,35 @@ namespace sr2 {
     }
     
     void ui2Widget::FUN_0020ac08(const ui::NamedRef& p1, u64 p2) {
+        // I assume?
         if (p2 & 1) {
-            // m_someBinTree0.FUN_0020be20(p1 + 0x10);
+            for (u32 i = 0;i < p1->m_listeners.size();i++) {
+                bool found = false;
+                for (u32 j = 0;j < m_listeners.size();j++) {
+                    if (m_listeners[j].type != p1->m_listeners[i].type) continue;
+                    if (m_listeners[j].callback != p1->m_listeners[i].callback) continue;
+                    if (m_listeners[j].widgetName != p1->m_listeners[i].widgetName) continue;
+                    found = true;
+                    break;
+                }
+
+                if (!found) m_listeners.push(p1->m_listeners[i]);
+            }
         }
 
         if (p2 & 2) {
-            // m_someBinTree1.FUN_0020c0d8(p1 + 0x2c);
+            for (u32 i = 0;i < p1->m_mappers.size();i++) {
+                bool found = false;
+                for (u32 j = 0;j < m_mappers.size();j++) {
+                    if (m_mappers[j].event != p1->m_mappers[i].event) continue;
+                    if (m_mappers[j].incoming != p1->m_mappers[i].incoming) continue;
+                    if (m_mappers[j].outgoing != p1->m_mappers[i].outgoing) continue;
+                    found = true;
+                    break;
+                }
+
+                if (!found) m_mappers.push(p1->m_mappers[i]);
+            }
         }
     }
     

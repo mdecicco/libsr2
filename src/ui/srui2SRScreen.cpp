@@ -38,15 +38,15 @@ namespace sr2 {
     void srui2SRScreen::FUN_001f0fb8(const WidgetRef<ui2Repeater>& p1, WidgetEventType p2, const char* p3, undefined4 p4) {
         if (!*p3) return;
 
-        p1->method_0xb0(p2, WidgetEventType::UNK2, nullptr);
-        p1->addListener(this, WidgetEventType::UNK2, &ui2Widget::method_0x38);
+        p1->addEventMapper(p2, WidgetEventType::UNK2, nullptr);
+        p1->addListener(this, WidgetEventType::UNK2, &ui2Widget::acceptEvent);
 
         if (p4 == 0) {
-            p1->method_0xb0(p2, WidgetEventType::UNK1, nullptr);
-            p1->addListener(p3, WidgetEventType::UNK1, &ui2Widget::method_0x38);
+            p1->addEventMapper(p2, WidgetEventType::UNK1, nullptr);
+            p1->addListener(p3, WidgetEventType::UNK1, &ui2Widget::acceptEvent);
         } else {
-            p1->method_0xb0(p2, WidgetEventType::UNK28, nullptr);
-            p1->addListener(p3, WidgetEventType::UNK28, &ui2Widget::method_0x38);
+            p1->addEventMapper(p2, WidgetEventType::UNK28, nullptr);
+            p1->addListener(p3, WidgetEventType::UNK28, &ui2Widget::acceptEvent);
         }
     }
 };

@@ -45,8 +45,8 @@ namespace sr2 {
         snprintf(textName, 100, "%s_Heading_txt", m_widgetName->get());
         m_headingText = new ui2TranslatedText(textName, "", 97, 80, -1, nullptr);
         m_headingText->setColorU32(0x80969696);
-        m_input->addListener(WidgetsInstance->navok_l_snd, WidgetEventType::AcceptPressed, &ui2Widget::method_0x38);
-        m_input->addListener(WidgetsInstance->navok_r_snd, WidgetEventType::AcceptPressed, &ui2Widget::method_0x38);
+        m_input->addListener(WidgetsInstance->navok_l_snd, WidgetEventType::AcceptPressed, &ui2Widget::acceptEvent);
+        m_input->addListener(WidgetsInstance->navok_r_snd, WidgetEventType::AcceptPressed, &ui2Widget::acceptEvent);
     }
 
     void srfeUnknownScreen1::deinitScreen() {
@@ -66,7 +66,7 @@ namespace sr2 {
     }
 
     void srfeUnknownScreen1::method_0x108() {
-        m_headingText->method_0x110(1);
+        m_headingText->setVisibility(1);
         WidgetsInstance->bluebar_l_snd->FUN_00207eb8();
         WidgetsInstance->bluebar_r_snd->FUN_00207eb8();
     }
@@ -99,17 +99,17 @@ namespace sr2 {
         w->master = new ui2Master("background_Master", ui2Base::getMaster(), true);
         gm->pushMaster(w->master);
 
-        w->master->addToMasterUnk0IfNecessary(0x13a6);
+        w->master->setRenderPriority(5030);
 
         w->bg_movie = new ui2Movie("basicLayout1_bg_movie", "uipan.m2v", 0, 0, 0, 5, nullptr, nullptr);         
         // w->bg_movie->FUN_001f3328(0);
         // w->bg_movie->FUN_001f3350(0);
 
         w->movie_score_snd = new ui2Sound("background_movie_score_snd", 0x3d, nullptr);
-        w->movie_score_snd->method_0xb0(WidgetEventType::UNK55, WidgetEventType::UNK33, nullptr);
-        w->movie_score_snd->method_0xb0(WidgetEventType::UNK56, WidgetEventType::UNK33, nullptr);
-        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK55, &ui2Widget::method_0x38);
-        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK56, &ui2Widget::method_0x38);
+        w->movie_score_snd->addEventMapper(WidgetEventType::UNK55, WidgetEventType::UNK33, nullptr);
+        w->movie_score_snd->addEventMapper(WidgetEventType::UNK56, WidgetEventType::UNK33, nullptr);
+        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK55, &ui2Widget::acceptEvent);
+        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK56, &ui2Widget::acceptEvent);
 
         w->bluebar_l_snd = new ui2Sound("background_bluebar_l_snd", 0x33, nullptr);
         w->bluebar_l_snd->FUN_00208068(-1.0f);
@@ -118,11 +118,11 @@ namespace sr2 {
 
         w->navok_l_snd = new ui2Sound("background_navok_l_snd", 0x3b, nullptr);
         w->navok_l_snd->FUN_00208068(-1.0f);
-        w->navok_l_snd->method_0xb0(WidgetEventType::AcceptPressed, WidgetEventType::UNK33, nullptr);
+        w->navok_l_snd->addEventMapper(WidgetEventType::AcceptPressed, WidgetEventType::UNK33, nullptr);
 
         w->navok_r_snd = new ui2Sound("background_navok_r_snd", 0x3c, nullptr);
         w->navok_r_snd->FUN_00208068(1.0f);
-        w->navok_r_snd->method_0xb0(WidgetEventType::AcceptPressed, WidgetEventType::UNK33, nullptr);
+        w->navok_r_snd->addEventMapper(WidgetEventType::AcceptPressed, WidgetEventType::UNK33, nullptr);
 
         w->showbuttons_l_snd = new ui2Sound("background_showbuttons_l_snd", 0x2b, nullptr);
         w->showbuttons_l_snd->FUN_00208068(-1.0f);

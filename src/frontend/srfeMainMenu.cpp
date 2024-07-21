@@ -36,8 +36,8 @@ namespace sr2 {
         m_timer = new ui2Timer("MainMenu_InactivityTimer", 30.0f, false, true, nullptr);
         m_timer->FUN_002005f0(1);
 
-        m_input->addListener(m_timer, WidgetEventType::UNK59, &ui2Widget::method_0x38);
-        m_input->addListener(m_textMenu, WidgetEventType::UNK59, &ui2Widget::method_0x38);
+        m_input->addListener(m_timer, WidgetEventType::UNK59, &ui2Widget::acceptEvent);
+        m_input->addListener(m_textMenu, WidgetEventType::UNK59, &ui2Widget::acceptEvent);
         m_timer->addListener(this, WidgetEventType::TimerFinished, (SomeWidgetCallback)&srfeMainMenu::FUN_00136070);
     }
 

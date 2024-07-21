@@ -7,24 +7,6 @@
 namespace sr2 {
     class ui2Master : public ui2Widget {
         public:
-            struct Unk0 {
-                Unk0* next;
-                Unk0* last;
-                i32 field_0x8;
-                undefined8 field_0xc;
-                ui::NamedRef field_0x14;
-
-                static void destroy(Unk0** listPtr);
-            };
-
-            struct Unk1 {
-                Unk1* next;
-                Unk1* last;
-                ui::NamedRef field_0x8;
-
-                static void destroy(Unk1** listPtr);
-                static void removeAll(Unk1** listPtr, const ui::NamedRef& widget);
-            };
 
             ui2Master(const char* name, const WidgetRef<ui2Master>& master, bool doAssignMaster);
             virtual ~ui2Master();
@@ -41,15 +23,18 @@ namespace sr2 {
             virtual void method_0xe8();
             virtual void method_0xf0();
 
-            void insertToUnk0(const ui::NamedRef& p1, i32 p2, u64 p3);
-            void deleteFromUnk0(const ui::NamedRef& p1);
+            void addRenderable(const ui::NamedRef& p1, i32 priority);
+            void removeRenderable(const ui::NamedRef& p1);
             undefined4 insertToUnk1(const ui::NamedRef& p1);
             i32 deleteFromUnk1(const ui::NamedRef& p1);
         
         protected:
-            // Unk0* m_unk0;
-            // Unk1* m_unk1;
-            utils::Array<Unk0> m_testUnk0;
-            utils::Array<Unk1> m_testUnk1;
+            struct Renderable {
+                i32 priority;
+                ui::NamedRef element;
+            };
+
+            utils::Array<Renderable> m_renderables;
+            utils::Array<ui::NamedRef> m_testUnk1;
     };
 };

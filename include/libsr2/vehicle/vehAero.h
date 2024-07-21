@@ -10,7 +10,7 @@ namespace sr2 {
             ~vehAero();
 
             // parFileIO
-            virtual datParserNode* prepParser(datParser* parser);
+            virtual void prepParser(datParser* parser);
             virtual const char* getFileType();
 
             // own

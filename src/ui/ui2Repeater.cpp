@@ -7,7 +7,7 @@ namespace sr2 {
         field_0x78 = 1;
         field_0x7c = 1;
 
-        addToMasterUnk0(5000, 0x800090000);
+        makeRenderable(5000);
     }
 
     ui2Repeater::~ui2Repeater() {

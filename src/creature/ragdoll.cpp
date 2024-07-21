@@ -333,7 +333,7 @@ namespace sr2 {
             }
         }
 
-        fp->close();
+        delete fp;
         strcpy(filename, _filename);
 
         return true;

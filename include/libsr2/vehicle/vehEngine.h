@@ -23,7 +23,7 @@ namespace sr2 {
             void stopBoosting();
             void update();
 
-            virtual datParserNode* prepParser(datParser* parser);
+            virtual void prepParser(datParser* parser);
             virtual const char* getFileType();
 
             vehDrivetrain* drivetrains;

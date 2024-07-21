@@ -5,11 +5,13 @@
 #include <libsr2/ui/UnkWidgetBinTree1.h>
 #include <libsr2/io/parFileIO.h>
 
+#include <utils/String.h>
+
 namespace sr2 {
     class ui2String;
 
     enum class WidgetEventType : u32 {
-        UNK12 = 0x80000001,
+        MaybeAll = 0x80000001,
         UNK36 = 0x8000000a,
         UNK58 = 0x8000000b,
         UNK35 = 0x8000000c,
@@ -20,8 +22,8 @@ namespace sr2 {
         SetPosition  = 0xa00003e8,
         SetColor     = 0xa00003f2,
         UNK5  = 0xa00003f4,
-        UNK6  = 0xa00003fc,
-        UNK7  = 0xa00003fd,
+        Show  = 0xa00003fc,
+        Hide  = 0xa00003fd,
         UNK8  = 0xa00007d0,
         StartTimer = 0xa0000fa0,
         SetTimerDuration = 0xa0000fb4,
@@ -45,7 +47,9 @@ namespace sr2 {
         UNK13 = 0xc00003f2,
         UNK14 = 0xc00003fc,
         UNK15 = 0xc00003fd,
-        UNK57 = 0xc00007da,
+        AnimationStarted = 0xc00007d0,
+        AnimationEnded = 0xc00007da,
+        AnimationFrame = 0xc00007e4,
         AcceptPressed = 0xc0000bb8,
         BackPressed = 0xc0000bb9,
         UpPressed = 0xc0000bba,
@@ -68,6 +72,8 @@ namespace sr2 {
         UNK24 = 0xc0001b8a,
         UNK25 = 0xc0001b8b,
         UNK38 = 0xc0001bbc,
+        UNK62 = 0xc0001bda,
+        UNK61 = 0xc0001be4,
         UNK39 = 0xc0002328,
         UNK40 = 0xc0002332,
         UNK45 = 0xc00023f0,
@@ -86,7 +92,7 @@ namespace sr2 {
             virtual void releaseRef();
             virtual void reset();
             virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
-            virtual void method_0x38(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3);
+            virtual void acceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             virtual void method_0x48();
             virtual void method_0x58();
             virtual void addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback);
@@ -95,12 +101,12 @@ namespace sr2 {
             virtual void removeListener(const char* listenerName, WidgetEventType event);
             virtual void removeAllListeners(const ui::NamedRef& listener);
             virtual void removeAllListeners(const char* listenerName);
+            virtual void addEventMapper(WidgetEventType incoming, WidgetEventType outgoing, const WidgetRef<ui2EventData>& event);
+            virtual void removeEventMapper(WidgetEventType incoming, WidgetEventType outgoing);
             virtual void dispatchEvent(WidgetEventType event, const WidgetRef<ui2EventData>& data = nullptr, const ui::NamedRef& source = nullptr);
             virtual void setActive(bool p1);
             virtual void method_0xa8(i32 p1);
-            virtual void method_0xb0(WidgetEventType p1, WidgetEventType p2, const ui::BaseRef& p3);
-            virtual void method_0xb8(WidgetEventType p1, WidgetEventType p2);
-            virtual void method_0xc0(bool p1);
+            virtual void setShouldLoad(bool p1);
             virtual void method_0xc8(u32 p1);
             virtual void configureParser(datParser* parser);
             virtual void draw();
@@ -110,17 +116,17 @@ namespace sr2 {
             virtual bool isA(const char* type) const;
 
             // parFileIO
-            virtual const char* getFileType() const;
-            virtual const char* getDirectory() const;
-            virtual datParserNode* prepParser(datParser* parser);
+            virtual const char* getFileType();
+            virtual const char* getDirectory();
+            virtual void prepParser(datParser* parser);
             virtual void afterLoad();
 
             ui2String* generateName();
             WidgetRef<ui2Master> getMaster();
             bool isActive();
-            void addToMasterUnk0(i32 p1, u64 p2);
-            void removeFromMasterUnk0();
-            void addToMasterUnk0IfNecessary(i32 p1);
+            void makeRenderable(i32 priority);
+            void stopRendering();
+            void setRenderPriority(i32 priority);
             void addToMasterUnk1();
             void removeFromMasterUnk1();
             void FUN_0020ac08(const ui::NamedRef& p1, u64 p2);
@@ -136,16 +142,26 @@ namespace sr2 {
             undefined4 field_0x44;
             undefined4 field_0x48;
             ui2Widget* field_0x5c;
-            u64 field_0x68;
             undefined4 field_0x74;
         
         protected:
+            struct EventListener {
+                WidgetEventType type;
+                utils::String widgetName;
+                SomeWidgetCallback callback;
+            };
+            struct EventMapper {
+                WidgetEventType incoming;
+                WidgetEventType outgoing;
+                WidgetRef<ui2EventData> event;
+            };
+
             ui2String* m_widgetName;
             WidgetRef<ui2Master> m_master;
-            UnkWidgetBinTree0 m_someBinTree0;
-            UnkWidgetBinTree1 m_someBinTree1;
-            bool m_addedToMasterUnk0;
+            bool m_isRenderable;
             bool m_addedToMasterUnk1;
             bool m_shouldBeLoaded;
+            utils::Array<EventListener> m_listeners;
+            utils::Array<EventMapper> m_mappers;
     };
 };
