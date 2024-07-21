@@ -73,15 +73,21 @@ namespace sr2 {
     }
     
     void ui2Widget::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
-        if (event != WidgetEventType::UNK2) {
-            if (event > WidgetEventType::UNK2) return;
-            if (event != WidgetEventType::UNK0) {
-                if (event == WidgetEventType::UNK1) method_0xa8(true);
-                return;
+        switch (event) {
+            case WidgetEventType::Activate: {
+                setActive(true);
+                break;
             }
-
-            setActive(true);
-        } else setActive(false);
+            case WidgetEventType::UNK1: {
+                method_0xa8(true);
+                break;
+            }
+            case WidgetEventType::Deactivate: {
+                setActive(false);
+                break;
+            }
+            default: break;
+        }
     }
 
     void ui2Widget::acceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
@@ -113,8 +119,8 @@ namespace sr2 {
         if (event == WidgetEventType::UNK36 || event == WidgetEventType::UNK58) {
             // above condition used to be `p2 + 0x7ffffff6 < 2`
             // this is the same thing (I think...) but it makes more sense
-            addListener(listenerName, WidgetEventType::Activate, callback);
-            addListener(listenerName, WidgetEventType::Deactivate, callback);
+            addListener(listenerName, WidgetEventType::Activated, callback);
+            addListener(listenerName, WidgetEventType::Deactivated, callback);
         } else if (event != WidgetEventType::UNK35) {
             m_listeners.push({ event, listenerName, callback });
             return;
@@ -122,8 +128,8 @@ namespace sr2 {
 
         if (event != WidgetEventType::UNK36 && event != WidgetEventType::UNK35) return;
         
-        addListener(listenerName, WidgetEventType::UNK0, callback);
-        addListener(listenerName, WidgetEventType::UNK2, callback);
+        addListener(listenerName, WidgetEventType::Activate, callback);
+        addListener(listenerName, WidgetEventType::Deactivate, callback);
     }
 
     void ui2Widget::removeListener(const ui::NamedRef& listener, WidgetEventType event) {
@@ -184,8 +190,8 @@ namespace sr2 {
     void ui2Widget::setActive(bool p1) {
         if (m_isActive != p1) {
             m_isActive = p1;
-            if (p1 == 1) dispatchEvent(WidgetEventType::Activate, nullptr);
-            else dispatchEvent(WidgetEventType::Deactivate, nullptr);
+            if (p1 == 1) dispatchEvent(WidgetEventType::Activated, nullptr);
+            else dispatchEvent(WidgetEventType::Deactivated, nullptr);
         }
 
         if (!m_isActive) field_0x40 = 0;
@@ -207,8 +213,10 @@ namespace sr2 {
     }
 
     void ui2Widget::draw() {
-        if (field_0x40 > 0) field_0x40--;
-        if (field_0x40 == 0) setActive(true);
+        if (field_0x40 > 0) {
+            field_0x40--;
+            if (field_0x40 == 0) setActive(true);
+        }
     }
 
     const char* ui2Widget::getName() const {

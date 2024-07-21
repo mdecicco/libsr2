@@ -17,14 +17,14 @@ namespace sr2 {
         bool someCond = false;
 
         if (!m_isActive) {
-            if (event == WidgetEventType::UNK0) {
+            if (event == WidgetEventType::Activate) {
                 ui2Widget::onEvent(source, event, data);
             }
 
             someCond = m_isActive;
             
             if (!m_isActive) {
-                if (!field_0x7c || event != WidgetEventType::UNK2) {
+                if (!field_0x7c || event != WidgetEventType::Deactivate) {
                     ui2Widget::onEvent(source, event, data);
                 }
                 return;
@@ -34,7 +34,7 @@ namespace sr2 {
         if (field_0x78 == 1) dispatchEvent(event, data, source);
         else dispatchEvent(event, data);
             
-        if (!someCond && !field_0x7c || event != WidgetEventType::UNK2) {
+        if (!someCond && !field_0x7c || event != WidgetEventType::Deactivate) {
             ui2Widget::onEvent(source, event, data);
         }
     }
