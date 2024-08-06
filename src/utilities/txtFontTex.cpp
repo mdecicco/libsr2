@@ -391,12 +391,12 @@ namespace sr2 {
         Stream* fp = Stream::open(buf, true);
         if (!fp) {
             char buf1[256] = { 0 };
-            datAssetManager::full_path(buf1, 256, "fonts", fontName, "fonttex");
+            datAssetManager::fullPath(buf1, 256, "fonts", fontName, "fonttex");
             fp = Stream::open(buf1, true);
 
             if (!fp) {
                 char buf2[512] = { 0 };
-                strncpy(buf2, datAssetManager::get_path(), 512);
+                strncpy(buf2, datAssetManager::getPath(), 512);
                 strncat(buf2, buf1, 512);
 
                 fp = Stream::open(buf2, true);
@@ -442,7 +442,7 @@ namespace sr2 {
         for (u32 i = 0;i < m_textureCount;i++) {
             char texNameBuf[256] = { 0 };
             if (!prevIgnorePrefix) {
-                snprintf(texNameBuf, 256, "%sfonts/%s_%02d", datAssetManager::get_path(), fontName, i);
+                snprintf(texNameBuf, 256, "%sfonts/%s_%02d", datAssetManager::getPath(), fontName, i);
             } else {
                 snprintf(texNameBuf, 256, "%s_%02d", fontName, i);
             }
@@ -450,7 +450,7 @@ namespace sr2 {
             m_textures[i] = gfxTexture::get(texNameBuf, 1, 0);
             if (!m_textures[i]) {
                 char texNameBuf1[512] = { 0 };
-                strncpy(texNameBuf1, datAssetManager::get_path(), 512);
+                strncpy(texNameBuf1, datAssetManager::getPath(), 512);
                 strncat(texNameBuf1, texNameBuf, 512);
                 
                 m_textures[i] = gfxTexture::get(texNameBuf1, 1, 0);

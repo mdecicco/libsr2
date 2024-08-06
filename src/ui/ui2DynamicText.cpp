@@ -9,4 +9,11 @@ namespace sr2 {
 
     void ui2DynamicText::setFont(const char* fontName) {
     }
+    
+    void ui2DynamicText::method_0x148(const char* text) {
+    }
+
+    void ui2DynamicText::method_0x170(const char* fontName) {
+        setFont(fontName);
+    }
 };

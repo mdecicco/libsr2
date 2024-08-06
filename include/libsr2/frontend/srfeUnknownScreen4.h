@@ -69,7 +69,7 @@ namespace sr2 {
             virtual bool method_0x130();
             virtual bool method_0x138();
 
-            void FUN_0015cbf8(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3);
+            void interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
         
         protected:
             static u32 ActiveCount;

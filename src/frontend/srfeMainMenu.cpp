@@ -1,4 +1,5 @@
 #include <libsr2/frontend/srfeMainMenu.h>
+#include <libsr2/frontend/srfeTitlescreen.h>
 
 #include <assert.h>
 
@@ -36,15 +37,18 @@ namespace sr2 {
         m_timer = new ui2Timer("MainMenu_InactivityTimer", 30.0f, false, true, nullptr);
         m_timer->FUN_002005f0(1);
 
-        m_input->addListener(m_timer, WidgetEventType::UNK59, &ui2Widget::acceptEvent);
-        m_input->addListener(m_textMenu, WidgetEventType::UNK59, &ui2Widget::acceptEvent);
-        m_timer->addListener(this, WidgetEventType::TimerFinished, (SomeWidgetCallback)&srfeMainMenu::FUN_00136070);
+        m_input->addListener(m_timer, WidgetEventType::AnyInput);
+        m_input->addListener(m_textMenu, WidgetEventType::AnyInput);
+        m_timer->addListener(this, WidgetEventType::TimerFinished, (WidgetEventCallback)&srfeMainMenu::interceptEvent);
     }
 
-    void srfeMainMenu::FUN_00136070(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
-        assert(p2 == WidgetEventType::TimerFinished);
+    void srfeMainMenu::method_0x110() {
+        srfeUnknownScreen4::method_0x110();
+        m_textMenu->FUN_001e6000();
+    }
 
+    void srfeMainMenu::interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
         setActive(false);
-        // MaybeActivateTitleScreen();
+        srfeTitlescreen::Activate();
     }
 };

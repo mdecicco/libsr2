@@ -56,16 +56,16 @@ namespace sr2 {
         m_menu = new ui2Menu(nameBuf0, m_buttonCount, 1, master);
 
         if (p5) {
-            m_menu->addListener(p5, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
-            m_menu->addListener(p5, WidgetEventType::UNK26, &ui2Widget::acceptEvent);
+            m_menu->addListener(p5, WidgetEventType::UNK29);
+            m_menu->addListener(p5, WidgetEventType::SetValueString);
             auto var = ui2Base::getGlobalMaster()->findWidget(p5, "ui2Variable").cast<ui2Widget>();
-            var->addListener(getName(), WidgetEventType::UNK39, (SomeWidgetCallback)&srui2ButtonMenu::FUN_001ebac8);
-            var->addListener(getName(), WidgetEventType::UNK40, (SomeWidgetCallback)&srui2ButtonMenu::FUN_001ebac8);
+            var->addListener(getName(), WidgetEventType::ValueChangedInteger, (WidgetEventCallback)&srui2ButtonMenu::interceptEvent);
+            var->addListener(getName(), WidgetEventType::ValueChangedString, (WidgetEventCallback)&srui2ButtonMenu::interceptEvent);
         }
         
         snprintf(nameBuf0, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf0, nullptr);
-        m_menuRepeater->addListener(m_menu, WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
+        m_menuRepeater->addListener(m_menu, WidgetEventType::MaybeAll);
 
         if (field_0x168) {
             snprintf(nameBuf0, bufLen, "%s_Cursor_img", p1);
@@ -75,13 +75,13 @@ namespace sr2 {
             
             snprintf(nameBuf0, bufLen, "%s_Cursor_tmr", p1);
             m_cursorTimer = new ui2Timer(nameBuf0, 1.4f, 1, 1, nullptr);
-            m_cursorTimer->addListener(m_menu, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+            m_cursorTimer->addListener(m_menu, WidgetEventType::TimerFinished);
 
             snprintf(nameBuf0, bufLen, "%s_Cursor_l_snd", p1);
             m_cursorLSound = new ui2Sound(nameBuf0, 49, nullptr);
             m_cursorLSound->FUN_00208068(-1.0f);
             m_cursorLSound->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK33, nullptr);
-            m_cursorTimer->addListener(m_cursorLSound, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+            m_cursorTimer->addListener(m_cursorLSound, WidgetEventType::TimerFinished);
             m_cursorLSound->FUN_00207fc8();
             m_cursorLSound->FUN_00207fe0(0.45f);
 
@@ -89,7 +89,7 @@ namespace sr2 {
             m_cursorRSound = new ui2Sound(nameBuf0, 50, nullptr);
             m_cursorRSound->FUN_00208068(1.0f);
             m_cursorRSound->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK33, nullptr);
-            m_cursorTimer->addListener(m_cursorRSound, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+            m_cursorTimer->addListener(m_cursorRSound, WidgetEventType::TimerFinished);
             m_cursorRSound->FUN_00207fc8();
             m_cursorRSound->FUN_00207fe0(0.45f);
 
@@ -105,7 +105,7 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_left_Arrow_tmr", p1);
         m_leftArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_leftArrowTimer->addListener(m_leftArrowImg, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_leftArrowTimer->addListener(m_leftArrowImg, WidgetEventType::TimerFinished);
         m_leftArrowImg->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0x130);
         m_leftArrowImg->setColor(field_0x130);
         m_leftArrowImg->field_0x48 = 0;
@@ -115,7 +115,7 @@ namespace sr2 {
 
         snprintf(nameBuf0, bufLen, "%s_right_Arrow_tmr", p1);
         m_rightArrowTimer = new ui2Timer(nameBuf0, 0.2f, 0, 0, nullptr);
-        m_rightArrowTimer->addListener(m_rightArrowImg, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_rightArrowTimer->addListener(m_rightArrowImg, WidgetEventType::TimerFinished);
         m_rightArrowImg->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::SetColor, field_0x130);
         m_rightArrowImg->setColor(field_0x130);
         m_rightArrowImg->field_0x48 = 0;
@@ -136,7 +136,7 @@ namespace sr2 {
         m_menuItemsTbl->setRowSize(0, 0);
         m_menuItemsTbl->setRowSize(29, 1);
         m_menuItemsTbl->setRowSize(0, 2);
-        m_menu->addListener(m_menuItemsTbl, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
+        m_menu->addListener(m_menuItemsTbl, WidgetEventType::UNK29);
 
         if (field_0x158 == 0) {
             m_menuItemsTbl->setColSizes(80, -1, -2);
@@ -174,10 +174,11 @@ namespace sr2 {
         delete [] nameBuf0;
         delete [] nameBuf1;
 
-        m_menuItemsTbl->addListener(getName(), WidgetEventType::UNK30, (SomeWidgetCallback)&srui2ButtonMenu::FUN_001ebac8);
-        m_menu->addListener(getName(), WidgetEventType::MaybeAll, (SomeWidgetCallback)&srui2ButtonMenu::FUN_001ebac8);
+        m_menuItemsTbl->addListener(getName(), WidgetEventType::UNK30);
+        m_menu->addListener(getName(), WidgetEventType::MaybeAll);
     }
 
-    void srui2ButtonMenu::FUN_001ebac8(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
+    void srui2ButtonMenu::interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        // todo (function is at 001ebac8)
     }
 };

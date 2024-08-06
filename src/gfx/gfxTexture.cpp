@@ -34,9 +34,19 @@ namespace sr2 {
     gfxTexture* gfxTexture::None = nullptr;
     gfxTexture::gfxTexture() {
         m_refCount = 1;
+        m_texture = nullptr;
+        m_width = m_height = 0;
+        m_texEnv = 0;
     }
 
     gfxTexture::~gfxTexture() {
+    }
+    
+    gfxTexture* gfxTexture::create(u16 width, u16 height, ImageFormat fmt) {
+        gfxTexture* ret = new gfxTexture();
+        ret->m_width = width;
+        ret->m_height = height;
+        return ret;
     }
 
     gfxTexture* gfxTexture::create(u16 width, u16 height, ImageFormat fmt, u32 mipCount) {
@@ -184,6 +194,11 @@ namespace sr2 {
 
     vec2i gfxTexture::getDimensions() {
         return { m_width, m_height };
+    }
+    
+    void gfxTexture::setTex(render::vulkan::Texture* tex) {
+        if (m_texture) delete m_texture;
+        m_texture = tex;
     }
 
     render::vulkan::Texture* gfxTexture::getTex() {

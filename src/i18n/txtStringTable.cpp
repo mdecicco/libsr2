@@ -117,7 +117,7 @@ namespace sr2 {
         Stream* fp = Stream::open(p1, true);
         if (!fp) {
             char buf[100];
-            datAssetManager::full_path(buf, 100, "fonts", p1, "strtbl");
+            datAssetManager::fullPath(buf, 100, "fonts", p1, "strtbl");
             fp = Stream::open(buf, true);
             if (!fp) return false;
         }

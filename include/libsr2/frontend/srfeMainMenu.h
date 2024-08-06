@@ -11,7 +11,8 @@ namespace sr2 {
             ~srfeMainMenu();
 
             virtual void initScreen();
-            void FUN_00136070(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3);
+            virtual void method_0x110();
+            void interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
         
         protected:
             WidgetRef<ui2Timer> m_timer;

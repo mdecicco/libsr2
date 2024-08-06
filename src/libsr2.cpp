@@ -7,6 +7,7 @@
 #include <libsr2/utilities/txtFontTex.h>
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/states/GameState.h>
+#include <libsr2/managers/srAudMgr.h>
 #include <libsr2/managers/Aud3DObjectManager.h>
 #include <libsr2/managers/datTimeManager.h>
 #include <libsr2/gfx/gfx.h>
@@ -63,22 +64,8 @@ namespace sr2 {
 
     void GameEngine::Execute() {
         bool do_continue = true;
-        // windows doesn't like sleeping for less time than this
-        // otherwise I'd set it to 60 FPS
-        f32 target = 1.0f / 20.0f;
         while (do_continue) {
-            auto begin = std::chrono::high_resolution_clock::now();
-
             do_continue = GameEngine::instance->Update();
-
-            auto end = std::chrono::high_resolution_clock::now();
-
-            // this time stuff isn't in the game, it's just to
-            // not use 100% CPU while doing nothing.
-            f32 seconds = std::chrono::duration<sr2::f32>(end - begin).count();
-            if (seconds < target) {
-                std::this_thread::sleep_for(std::chrono::duration<sr2::f32>(target - seconds));
-            }
         }
     }
 
@@ -99,7 +86,7 @@ namespace sr2 {
         should_exit = false;
         m_currentFrame = nullptr;
 
-        m_window = new utils::Window("Smuggler's Run 2", 640 * debug_ui_scale, 480 * debug_ui_scale);
+        m_window = new utils::Window("Smuggler's Run 2", u32(gfx::pipeline::fWidth * debug_ui_scale), u32(gfx::pipeline::fHeight * debug_ui_scale));
         m_window->subscribe(&ioKeyboard::gKeyboard);
         if (!m_window->setOpen(true)) throw std::exception("Failed to open window");
         if (!initRendering(m_window)) throw std::exception("Failed to initialize renderer");
@@ -108,9 +95,11 @@ namespace sr2 {
 
         utils::Singleton<uiRenderer>::Create();
         if (!utils::Singleton<uiRenderer>::Get()->init(this)) throw std::exception("Failed to initialize ui renderer");
+        utils::Singleton<srAudMgr>::Create(0xc, 1);
     }
 
     GameEngine::~GameEngine() {
+        utils::Singleton<srAudMgr>::Destroy();
         utils::Singleton<uiRenderer>::Destroy();
 
         delete fsm;
@@ -199,6 +188,7 @@ namespace sr2 {
 
     bool GameEngine::Update() {
         if (!m_window->isOpen()) return false;
+
         m_window->pollEvents();
 
         BeginFrame(just_update);
@@ -213,6 +203,7 @@ namespace sr2 {
             msgMsgSource::dispatch();
             state->Update();
         } else {
+
             state->PreUpdate();
             state->Input();
             msgMsgSource::dispatch();

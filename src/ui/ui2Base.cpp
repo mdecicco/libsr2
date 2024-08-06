@@ -19,6 +19,9 @@ namespace sr2 {
         field_0x16c = 0;
         field_0x170 = 0;
         field_0x174 = 0;
+        m_someStrings[0] = nullptr;
+        m_someStrings[1] = nullptr;
+        m_someStrings[2] = nullptr;
 
         m_widgets.init();
 
@@ -234,7 +237,7 @@ namespace sr2 {
         return globalMaster->m_gameplayText;
     }
     
-    ui2String* ui2Base::getSomeStrings() {
+    ui2String** ui2Base::getSomeStrings() {
         return globalMaster->m_someStrings;
     }
 

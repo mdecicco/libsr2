@@ -28,22 +28,25 @@ namespace sr2 {
             return;
         }
 
-        if (event == WidgetEventType::UNK26) {
-            if (!data) return;
-            setStringData(data.cast<ASCIIStringEventData>());
-        } else {
-            if (event < WidgetEventType::UNK43) {
-                if (event == WidgetEventType::UNK37) {
-                    if (!data) return;
-                    setIntegerData(data.cast<IntegerEventData>());
-                    return;
-                } else if (event == WidgetEventType::UNK44) {
-                    maybeClearValue();
-                    return;
-                }
+        switch (event) {
+            case WidgetEventType::SetValueString: {
+                setStringData(data.cast<ASCIIStringEventData>());
+                break;
             }
-
-            ui2Widget::onEvent(source, event, data);
+            case WidgetEventType::SetValueInteger: {
+                if (!data) return;
+                setIntegerData(data.cast<IntegerEventData>());
+                break;
+            }
+            case WidgetEventType::ClearValue: {
+                if (!data) return;
+                maybeClearValue();
+                break;
+            }
+            default: {
+                ui2Widget::onEvent(source, event, data);
+                break;
+            }
         }
     }
 
@@ -58,7 +61,7 @@ namespace sr2 {
         m_type = VariableType::Integer;
         m_integerData = data->data;
 
-        dispatchEvent(WidgetEventType::UNK39, data);
+        dispatchEvent(WidgetEventType::ValueChangedInteger, data);
     }
     
     void ui2Variable::setStringData(const char* data) {
@@ -73,14 +76,14 @@ namespace sr2 {
         m_stringData.set(v);
         m_type = VariableType::String;
 
-        dispatchEvent(WidgetEventType::UNK40, data);
+        dispatchEvent(WidgetEventType::ValueChangedString, data);
     }
 
     void ui2Variable::maybeClearValue() {
         if (m_type == VariableType::Unknown) return;
         m_type = VariableType::Unknown;
 
-        dispatchEvent(WidgetEventType::UNK45, nullptr);
+        dispatchEvent(WidgetEventType::ValueCleared, nullptr);
     }
 
     VariableType ui2Variable::getType() {

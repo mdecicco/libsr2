@@ -6,4 +6,10 @@ namespace sr2 {
 
     srfeUIIntroMovie::~srfeUIIntroMovie() {
     }
+
+    void srfeUIIntroMovie::initScreen() {
+        srfeMovieBase::initScreen();
+        m_movie->setFilename("uiintro.imf");
+        setNextScreenName("MainMenu");
+    }
 };

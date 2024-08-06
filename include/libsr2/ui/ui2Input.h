@@ -8,7 +8,7 @@ namespace sr2 {
             ui2Input(const char* name, const WidgetRef<ui2Master>& master);
             virtual ~ui2Input();
 
-            virtual void addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback);
+            virtual void addListener(const ui::NamedRef& listener, WidgetEventType event, WidgetEventCallback acceptOverride = nullptr);
             virtual void removeListener(const ui::NamedRef& listener, WidgetEventType event);
             virtual void draw();
 

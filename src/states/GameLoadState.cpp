@@ -141,7 +141,7 @@ namespace sr2 {
 
                 std::string wheel_ptx = format("ptx_wheel_%s", map_name);
                 if (datAssetManager::exists("texture", wheel_ptx.c_str(), "tex")) {
-                    // Vehicle::vehWheelPtx::MaybeDefaultLevelPtxTexName = duplicate_string(wheel_ptx.c_str());
+                    // Vehicle::vehWheelPtx::MaybeDefaultLevelPtxTexName = duplicateString(wheel_ptx.c_str());
                 }
 
                 // FUN_00247e60(lvl->getShadowAlpha());

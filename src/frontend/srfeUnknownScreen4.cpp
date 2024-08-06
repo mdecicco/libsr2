@@ -19,7 +19,7 @@ namespace sr2 {
 
     void srfeUnknownScreen4::setActive(bool p1) {
         bool wasActive = m_isActive;
-        ui2Screen::setActive(p1);
+        srfeUnknownScreen1::setActive(p1);
 
         if (wasActive != p1) {
             if (p1) {
@@ -41,7 +41,7 @@ namespace sr2 {
 
         if (!WidgetsInstance) initWidgets();
 
-        WidgetsInstance->show_ui_timer->addListener(this, WidgetEventType::TimerFinished, (SomeWidgetCallback)&srfeUnknownScreen4::FUN_0015cbf8);
+        WidgetsInstance->show_ui_timer->addListener(this, WidgetEventType::TimerFinished, (WidgetEventCallback)&srfeUnknownScreen4::interceptEvent);
     }
 
     void srfeUnknownScreen4::deinitScreen() {
@@ -136,7 +136,7 @@ namespace sr2 {
         return true;
     }
 
-    void srfeUnknownScreen4::FUN_0015cbf8(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
+    void srfeUnknownScreen4::interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
         if (!m_isActive) return;
         method_0x110();
     }
@@ -186,17 +186,17 @@ namespace sr2 {
         w->bluebars_timer_10 = new ui2Timer("basicLayout1_bluebars_timer_10", 0.45f, 0, 1, nullptr);
         w->bluebars_timer_11 = new ui2Timer("basicLayout1_bluebars_timer_11", 0.50f, 0, 1, nullptr);
 
-        w->bluebars_timer_01->addListener(w->bluebars_01, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_02->addListener(w->bluebars_02, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_03->addListener(w->bluebars_03, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_04->addListener(w->bluebars_04, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_05->addListener(w->bluebars_05, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_06->addListener(w->bluebars_06, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_07->addListener(w->bluebars_07, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_08->addListener(w->bluebars_08, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_09->addListener(w->bluebars_09, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_10->addListener(w->bluebars_10, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->bluebars_timer_11->addListener(w->bluebars_11, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->bluebars_timer_01->addListener(w->bluebars_01, WidgetEventType::TimerFinished);
+        w->bluebars_timer_02->addListener(w->bluebars_02, WidgetEventType::TimerFinished);
+        w->bluebars_timer_03->addListener(w->bluebars_03, WidgetEventType::TimerFinished);
+        w->bluebars_timer_04->addListener(w->bluebars_04, WidgetEventType::TimerFinished);
+        w->bluebars_timer_05->addListener(w->bluebars_05, WidgetEventType::TimerFinished);
+        w->bluebars_timer_06->addListener(w->bluebars_06, WidgetEventType::TimerFinished);
+        w->bluebars_timer_07->addListener(w->bluebars_07, WidgetEventType::TimerFinished);
+        w->bluebars_timer_08->addListener(w->bluebars_08, WidgetEventType::TimerFinished);
+        w->bluebars_timer_09->addListener(w->bluebars_09, WidgetEventType::TimerFinished);
+        w->bluebars_timer_10->addListener(w->bluebars_10, WidgetEventType::TimerFinished);
+        w->bluebars_timer_11->addListener(w->bluebars_11, WidgetEventType::TimerFinished);
         w->bluebars_01->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
 
         w->bluebars_02->FUN_0020ac08(w->bluebars_01, 2);
@@ -230,11 +230,11 @@ namespace sr2 {
         w->select_button_timer = new ui2Timer("basicLayout1_select_button_timer", 0.6f, 0, 0, nullptr);
         w->back_button_timer = new ui2Timer("basicLayout1_back_button_timer", 0.45f, 0, 0, nullptr);
 
-        w->select_button_timer->addListener(w->select_button, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->select_button_timer->addListener(w->select_text, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->select_button_timer->addListener(w->select_button, WidgetEventType::TimerFinished);
+        w->select_button_timer->addListener(w->select_text, WidgetEventType::TimerFinished);
 
-        w->back_button_timer->addListener(w->back_button, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->back_button_timer->addListener(w->back_text, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->back_button_timer->addListener(w->back_button, WidgetEventType::TimerFinished);
+        w->back_button_timer->addListener(w->back_text, WidgetEventType::TimerFinished);
 
         w->select_button->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
         w->back_button->FUN_0020ac08(w->select_button, 2);
@@ -262,45 +262,45 @@ namespace sr2 {
         w->side_anim_loop_bottom->setFrameRate(15.0f);
 
         // show and start the loop animation when this one ends
-        w->side_anim_begin_top->addListener(w->side_anim_loop_top, WidgetEventType::AnimationEnded, &ui2Widget::acceptEvent);
+        w->side_anim_begin_top->addListener(w->side_anim_loop_top, WidgetEventType::AnimationEnded);
         w->side_anim_loop_top->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::UNK8, nullptr);
         w->side_anim_loop_top->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::Show, nullptr);
 
         // hide this animation when it ends
-        w->side_anim_begin_top->addListener(w->side_anim_begin_top, WidgetEventType::AnimationEnded, &ui2Widget::acceptEvent);
+        w->side_anim_begin_top->addListener(w->side_anim_begin_top, WidgetEventType::AnimationEnded);
         w->side_anim_begin_top->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::Hide, nullptr);
 
 
         // show and start the loop animation when this one ends
-        w->side_anim_begin_middle->addListener(w->side_anim_loop_middle, WidgetEventType::AnimationEnded, &ui2Widget::acceptEvent);
+        w->side_anim_begin_middle->addListener(w->side_anim_loop_middle, WidgetEventType::AnimationEnded);
         w->side_anim_loop_middle->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::UNK8, nullptr);
         w->side_anim_loop_middle->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::Show, nullptr);
 
         // hide this animation when it ends
-        w->side_anim_begin_middle->addListener(w->side_anim_begin_middle, WidgetEventType::AnimationEnded, &ui2Widget::acceptEvent);
+        w->side_anim_begin_middle->addListener(w->side_anim_begin_middle, WidgetEventType::AnimationEnded);
         w->side_anim_begin_middle->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::Hide, nullptr);
 
 
         // show and start the loop animation when this one ends
-        w->side_anim_begin_bottom->addListener(w->side_anim_loop_bottom, WidgetEventType::AnimationEnded, &ui2Widget::acceptEvent);
+        w->side_anim_begin_bottom->addListener(w->side_anim_loop_bottom, WidgetEventType::AnimationEnded);
         w->side_anim_loop_bottom->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::UNK8, nullptr);
         w->side_anim_loop_bottom->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::Show, nullptr);
         
         // hide this animation when it ends
-        w->side_anim_begin_bottom->addListener(w->side_anim_begin_bottom, WidgetEventType::AnimationEnded, &ui2Widget::acceptEvent);
+        w->side_anim_begin_bottom->addListener(w->side_anim_begin_bottom, WidgetEventType::AnimationEnded);
         w->side_anim_begin_bottom->addEventMapper(WidgetEventType::AnimationEnded, WidgetEventType::Hide, nullptr);
 
 
 
-        w->side_anim_begin_top_timer->addListener(w->side_anim_begin_top, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->side_anim_begin_top_timer->addListener(w->side_anim_begin_top, WidgetEventType::TimerFinished);
         w->side_anim_begin_top->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
         w->side_anim_begin_top->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK8, nullptr);
 
-        w->side_anim_begin_middle_timer->addListener(w->side_anim_begin_middle, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->side_anim_begin_middle_timer->addListener(w->side_anim_begin_middle, WidgetEventType::TimerFinished);
         w->side_anim_begin_middle->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
         w->side_anim_begin_middle->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK8, nullptr);
 
-        w->side_anim_begin_bottom_timer->addListener(w->side_anim_begin_bottom, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->side_anim_begin_bottom_timer->addListener(w->side_anim_begin_bottom, WidgetEventType::TimerFinished);
         w->side_anim_begin_bottom->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
         w->side_anim_begin_bottom->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK8, nullptr);
 
@@ -309,18 +309,18 @@ namespace sr2 {
         w->side_anim_l_snd->FUN_002080b8(2);
         w->side_anim_l_snd->FUN_00207fe0(0.5f);
         w->side_anim_l_snd->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK33, nullptr);
-        w->side_anim_begin_top_timer->addListener(w->side_anim_l_snd, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->side_anim_begin_middle_timer->addListener(w->side_anim_l_snd, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->side_anim_begin_bottom_timer->addListener(w->side_anim_l_snd, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->side_anim_begin_top_timer->addListener(w->side_anim_l_snd, WidgetEventType::TimerFinished);
+        w->side_anim_begin_middle_timer->addListener(w->side_anim_l_snd, WidgetEventType::TimerFinished);
+        w->side_anim_begin_bottom_timer->addListener(w->side_anim_l_snd, WidgetEventType::TimerFinished);
 
         w->side_anim_r_snd = new ui2Sound("basicLayout1_side_anim_r_snd", 0x2e, nullptr);
         w->side_anim_r_snd->FUN_00208068(1.0f);
         w->side_anim_r_snd->FUN_002080b8(2);
         w->side_anim_r_snd->FUN_00207fe0(0.5f);
         w->side_anim_r_snd->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK33, nullptr);
-        w->side_anim_begin_top_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->side_anim_begin_middle_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
-        w->side_anim_begin_bottom_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->side_anim_begin_top_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished);
+        w->side_anim_begin_middle_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished);
+        w->side_anim_begin_bottom_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished);
 
         w->clock_top = new srui2Clock("basicLayout1_clock_top", 0x1db, 0x5c, 0, nullptr);
         // todo:
@@ -330,7 +330,7 @@ namespace sr2 {
         // if (w->clock_top->FUN_001e26c8()) w->clock_top->FUN_001e2630(0xd, 0x39, 0, 0);
 
         w->clock_top_timer = new ui2Timer("basicLayout1_clock_top_timer", 0.15, 0, 1, nullptr);
-        w->clock_top_timer->addListener(w->clock_top, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        w->clock_top_timer->addListener(w->clock_top, WidgetEventType::TimerFinished);
         w->clock_top->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
 
         w->show_ui_timer = new ui2Timer("basicLayout1_show_ui_timer", 0.75, 0, 1, nullptr);

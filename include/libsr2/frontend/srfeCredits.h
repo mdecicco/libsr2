@@ -8,6 +8,7 @@ namespace sr2 {
             srfeCredits(const char* name, const WidgetRef<ui2Master>& master);
             ~srfeCredits();
 
+            void FUN_0011c260();
             void FUN_0011c270();
         
         protected:

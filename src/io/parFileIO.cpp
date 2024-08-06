@@ -47,6 +47,6 @@ namespace sr2 {
 
     void parFileIO::setName(const char* name) {
         if (m_name) delete [] m_name;
-        m_name = duplicate_string(name);
+        m_name = duplicateString(name);
     }
 };

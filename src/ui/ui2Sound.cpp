@@ -1,27 +1,19 @@
 #include <libsr2/ui/ui2Sound.h>
 #include <libsr2/managers/Aud3DObjectManager.h>
-#include <libsr2/audio/SomeAudioThing6.h>
-#include <libsr2/audio/GlobalAudioThing.h>
+#include <libsr2/audio/audSound.h>
+#include <libsr2/managers/audManager.h>
 
 #include <string.h>
 
 namespace sr2 {
-    // todo: default values?
-    i32 ui2Sound::DAT_00362ea0 = 0;
-    i32 ui2Sound::DAT_00362eac = 0;
-    i32 ui2Sound::DAT_00362eb4 = 0;
-    i32 ui2Sound::DAT_00362eb8[4] = { 0 };
-    i32 ui2Sound::DAT_00362ec8[4] = { 0 };
-    i32 ui2Sound::DAT_00362ed8[4] = { 0 };
-
     ui2Sound::ui2Sound(const char* name, i32 p2, const WidgetRef<ui2Master>& master) : ui2Widget(name, master, true) {
-        field_0x78 = nullptr;
-        field_0x7c = -1;
-        field_0x80 = -1;
-        field_0x84 = 1.0f;
+        m_sound = nullptr;
+        m_sfxIndex = -1;
+        m_lastSfxIndex = -1;
+        m_volume = 1.0f;
         field_0x88 = 0;
 
-        FUN_00207da0(p2);
+        init(p2);
     }
 
     ui2Sound::~ui2Sound() {
@@ -40,14 +32,14 @@ namespace sr2 {
             case WidgetEventType::UNK33: {
                 if (!Aud3DObjectManager::isAlive()) return;
                 if (field_0x88) return;
-                if (field_0x80 > 0) {
-                    SomeAudioThing6* unk = GlobalAudioThing::getSomeAudioThing6WithOffset(field_0x80);
-                    if (unk && unk->hasSomeFlag0() && unk->FUN_00328968()) {
+                if (m_lastSfxIndex > 0) {
+                    audSound* unk = audManager::getOffsetSFX(m_lastSfxIndex);
+                    if (unk && unk->hasFlag(2) && unk->FUN_00328968()) {
                         return;
                     }
                 }
 
-                if (!field_0x78 || !field_0x78->hasSomeFlag0() || !field_0x78->FUN_00328968()) {
+                if (!m_sound || !m_sound->hasFlag(2) || !m_sound->FUN_00328968()) {
                     FUN_00207eb8();
                 }
                 break;
@@ -74,49 +66,49 @@ namespace sr2 {
 
     bool ui2Sound::isA(const char* type) const {
         if (strcmp("ui2Sound", type) == 0) return true;
-        return strcmp(getType(), type) == 0;
+        return ui2Widget::isA(type);
     }
 
-    void ui2Sound::FUN_00207da0(i32 p1) {
-        if (!Aud3DObjectManager::isAlive() || !DAT_00362ea0) return;
-        if (p1 < 0 || DAT_00362eac < 0) return;
+    void ui2Sound::init(i32 p1) {
+        if (!Aud3DObjectManager::isAlive() || !audManager::SomeManager) return;
+        if (p1 < 0 || audManager::DAT_00362eac < 0) return;
         
-        field_0x80 = field_0x7c;
-        field_0x7c = p1;
-        field_0x78 = GlobalAudioThing::getSomeAudioThing6WithOffset(p1);
+        m_lastSfxIndex = m_sfxIndex;
+        m_sfxIndex = p1;
+        m_sound = audManager::getOffsetSFX(p1);
 
-        if (field_0x78) {
-            FUN_00207fe0(field_0x84);
+        if (m_sound) {
+            FUN_00207fe0(m_volume);
         }
     }
 
     void ui2Sound::FUN_00207e20(const char* search) {
-        if (!Aud3DObjectManager::isAlive() || !DAT_00362ea0) return;
-        if (!search || DAT_00362eac < 0) return;
+        if (!Aud3DObjectManager::isAlive() || !audManager::SomeManager) return;
+        if (!search || audManager::DAT_00362eac < 0) return;
 
-        field_0x80 = field_0x7c;
-        field_0x7c = GlobalAudioThing::FUN_0032fcb0(search);
-        field_0x78 = GlobalAudioThing::getSomeAudioThing6WithOffset(field_0x7c);
+        m_lastSfxIndex = m_sfxIndex;
+        m_sfxIndex = AudioManager::findSoundIndex(search);
+        m_sound = audManager::getOffsetSFX(m_sfxIndex);
 
-        if (field_0x78) {
-            FUN_00207fe0(field_0x84);
+        if (m_sound) {
+            FUN_00207fe0(m_volume);
         }
     }
 
     void ui2Sound::FUN_00207eb8() {
-        if (!Aud3DObjectManager::isAlive() || !field_0x78 || field_0x88) return;
-        FUN_00207fe8(field_0x84);
+        if (!Aud3DObjectManager::isAlive() || !m_sound || field_0x88) return;
+        setVolume(m_volume);
 
-        if (!field_0x78->FUN_00328968() || !field_0x78->hasSomeFlag0() || DAT_00362eb4 >= 4) return;
+        if (!m_sound->FUN_00328968() || !m_sound->play() || !m_sound->hasFlag(2) || audManager::DAT_00362eb4 >= 4) return;
 
-        DAT_00362ec8[DAT_00362eb4] = 0;
-        DAT_00362eb8[DAT_00362eb4] = field_0x7c;
-        DAT_00362eb4++;
+        audManager::DAT_00362ec8[audManager::DAT_00362eb4] = 0;
+        audManager::DAT_00362eb8[audManager::DAT_00362eb4] = m_sfxIndex;
+        audManager::DAT_00362eb4++;
     }
 
     void ui2Sound::FUN_00207f78() {
-        if (!Aud3DObjectManager::isAlive() || !field_0x78 || field_0x88) return;
-        field_0x78->FUN_003287d0();
+        if (!Aud3DObjectManager::isAlive() || !m_sound || field_0x88) return;
+        m_sound->FUN_003287d0();
     }
 
     void ui2Sound::FUN_00207fc8() {
@@ -128,35 +120,35 @@ namespace sr2 {
     }
 
     void ui2Sound::FUN_00207fe0(f32 p1) {
-        field_0x84 = p1;
+        m_volume = p1;
     }
 
-    void ui2Sound::FUN_00207fe8(f32 p1) {
-        if (!Aud3DObjectManager::isAlive() || !field_0x78 || !DAT_00362ea0) return;
+    void ui2Sound::setVolume(f32 p1) {
+        if (!Aud3DObjectManager::isAlive() || !m_sound || !audManager::SomeManager) return;
 
-        GlobalAudioThing::Unk0& unk = GlobalAudioThing::get()->m_unk0[field_0x78->field_0x2c - 1];
-        field_0x78->FUN_00329078(p1 * unk.field_0xc);
+        audManager::AudioTypeCtrl* unk = audManager::get()->getAudioTypeCtrl(m_sound->getTypeIndex());
+        m_sound->setVolume(p1 * unk->volume);
     }
 
     void ui2Sound::FUN_00208068(f32 p1) {
-        if (!Aud3DObjectManager::isAlive() || !field_0x78) return;
+        if (!Aud3DObjectManager::isAlive() || !m_sound) return;
 
-        field_0x78->FUN_00328da8(p1);
+        m_sound->FUN_00328da8(p1);
     }
     
     void ui2Sound::FUN_002080b8(undefined4 p1) {
-        if (!Aud3DObjectManager::isAlive() || !field_0x78) return;
+        if (!Aud3DObjectManager::isAlive() || !m_sound) return;
 
-        field_0x78->FUN_00329708(p1);
+        m_sound->FUN_00329708(p1);
     }
 
     bool ui2Sound::FUN_00208108() {
-        if (!Aud3DObjectManager::isAlive() || !field_0x78 || DAT_00362eb4 <= 0) return false;
+        if (!Aud3DObjectManager::isAlive() || !m_sound || audManager::DAT_00362eb4 <= 0) return false;
 
-        for (u32 i = 0;i < DAT_00362eb4;i++) {
-            if (DAT_00362eb8[i] != field_0x7c) continue;
-            if (DAT_00362ed8[i] != 1) return false;
-            if (!field_0x78->FUN_00328968()) return false;
+        for (u32 i = 0;i < audManager::DAT_00362eb4;i++) {
+            if (audManager::DAT_00362eb8[i] != m_sfxIndex) continue;
+            if (audManager::DAT_00362ed8[i] != 1) return false;
+            if (!m_sound->FUN_00328968()) return false;
             return true;
         }
 

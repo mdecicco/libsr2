@@ -50,7 +50,7 @@ namespace sr2 {
             void FUN_001e5e58();
             void FUN_001e6000();
             void FUN_001e6298(i32 p1);
-            void FUN_001e6318(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3);
+            void interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             void FUN_001e6440(i32 offsetX, i32 offsetY, i32 width, i32 height);
             void FUN_001e6530();
             void FUN_001e6948();

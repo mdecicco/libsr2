@@ -111,25 +111,25 @@ namespace sr2 {
     void ui2Widget::method_0x58() {
     }
 
-    void ui2Widget::addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback) {
-        m_listeners.push({ event, listener->getName(), callback });
+    void ui2Widget::addListener(const ui::NamedRef& listener, WidgetEventType event, WidgetEventCallback acceptOverride) {
+        m_listeners.push({ event, listener->getName(), acceptOverride ? acceptOverride : &ui2Widget::acceptEvent });
     }
     
-    void ui2Widget::addListener(const char* listenerName, WidgetEventType event, SomeWidgetCallback callback) {
+    void ui2Widget::addListener(const char* listenerName, WidgetEventType event, WidgetEventCallback acceptOverride) {
         if (event == WidgetEventType::UNK36 || event == WidgetEventType::UNK58) {
             // above condition used to be `p2 + 0x7ffffff6 < 2`
             // this is the same thing (I think...) but it makes more sense
-            addListener(listenerName, WidgetEventType::Activated, callback);
-            addListener(listenerName, WidgetEventType::Deactivated, callback);
+            addListener(listenerName, WidgetEventType::Activated);
+            addListener(listenerName, WidgetEventType::Deactivated);
         } else if (event != WidgetEventType::UNK35) {
-            m_listeners.push({ event, listenerName, callback });
+            m_listeners.push({ event, listenerName, acceptOverride ? acceptOverride : &ui2Widget::acceptEvent });
             return;
         }
 
         if (event != WidgetEventType::UNK36 && event != WidgetEventType::UNK35) return;
         
-        addListener(listenerName, WidgetEventType::Activate, callback);
-        addListener(listenerName, WidgetEventType::Deactivate, callback);
+        addListener(listenerName, WidgetEventType::Activate);
+        addListener(listenerName, WidgetEventType::Deactivate);
     }
 
     void ui2Widget::removeListener(const ui::NamedRef& listener, WidgetEventType event) {
@@ -181,7 +181,7 @@ namespace sr2 {
             if (m_listeners[i].type == event || m_listeners[i].type == WidgetEventType::MaybeAll) {
                 ui::NamedRef found = master->findWidget(m_listeners[i].widgetName.c_str()).cast<ui2Widget>();
                 if (found) {
-                    ((*found)->*m_listeners[i].callback)(!source ? this : source, event, data);
+                    ((*found)->*(m_listeners[i].acceptCallback))(!source ? this : source, event, data);
                 }
             }
         }
@@ -320,7 +320,7 @@ namespace sr2 {
                 bool found = false;
                 for (u32 j = 0;j < m_listeners.size();j++) {
                     if (m_listeners[j].type != p1->m_listeners[i].type) continue;
-                    if (m_listeners[j].callback != p1->m_listeners[i].callback) continue;
+                    if (m_listeners[j].acceptCallback != p1->m_listeners[i].acceptCallback) continue;
                     if (m_listeners[j].widgetName != p1->m_listeners[i].widgetName) continue;
                     found = true;
                     break;

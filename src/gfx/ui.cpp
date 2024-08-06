@@ -1,5 +1,6 @@
 #include <libsr2/gfx/ui.h>
 #include <libsr2/gfx/gfxTexture.h>
+#include <libsr2/gfx/gfx.h>
 #include <libsr2/libsr2.h>
 #include <libsr2/globals.h>
 
@@ -102,8 +103,8 @@ namespace sr2 {
         m_globalUniforms = eng->allocateUniformObject(&m_ufmt);
         if (!m_globalUniforms) return false;
         
-        f32 screenWidth = 640 * debug_ui_scale;
-        f32 screenHeight = 480 * debug_ui_scale;
+        f32 screenWidth = gfx::pipeline::iWidth * debug_ui_scale;
+        f32 screenHeight = gfx::pipeline::iHeight * debug_ui_scale;
 
         render::vulkan::CommandBuffer* cb = eng->getFrameManager()->getCommandPool()->createBuffer(true);
         if (!cb->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)) {
@@ -176,8 +177,8 @@ namespace sr2 {
     }
 
     void uiRenderer::draw(render::core::FrameContext* frame) {
-        f32 screenWidth = 640 * debug_ui_scale;
-        f32 screenHeight = 480 * debug_ui_scale;
+        f32 screenWidth = gfx::pipeline::fWidth * debug_ui_scale;
+        f32 screenHeight = gfx::pipeline::fHeight * debug_ui_scale;
 
         GameEngine* eng = GameEngine::Instance();
         uiRenderer* self = ::utils::Singleton<uiRenderer>::Get();

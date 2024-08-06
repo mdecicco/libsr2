@@ -100,7 +100,7 @@ namespace sr2 {
 
     bool ui2Screen::isA(const char* type) const {
         if (strcmp("ui2Screen", type) == 0) return true;
-        return strcmp(getType(), type) == 0;
+        return ui2Widget::isA(type);
     }
 
     void ui2Screen::init() {

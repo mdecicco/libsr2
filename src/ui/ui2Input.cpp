@@ -35,21 +35,21 @@ namespace sr2 {
     ui2Input::~ui2Input() {
     }
 
-    void ui2Input::addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback) {
-        if (event == WidgetEventType::UNK59) {
-            ui2Widget::addListener(listener, WidgetEventType::AcceptPressed, callback);
-            ui2Widget::addListener(listener, WidgetEventType::BackPressed, callback);
-            ui2Widget::addListener(listener, WidgetEventType::UpPressed, callback);
-            ui2Widget::addListener(listener, WidgetEventType::DownPressed, callback);
-            ui2Widget::addListener(listener, WidgetEventType::LeftPressed, callback);
-            ui2Widget::addListener(listener, WidgetEventType::RightPressed, callback);
+    void ui2Input::addListener(const ui::NamedRef& listener, WidgetEventType event, WidgetEventCallback acceptOverride) {
+        if (event == WidgetEventType::AnyInput) {
+            ui2Widget::addListener(listener, WidgetEventType::AcceptPressed, acceptOverride);
+            ui2Widget::addListener(listener, WidgetEventType::BackPressed, acceptOverride);
+            ui2Widget::addListener(listener, WidgetEventType::UpPressed, acceptOverride);
+            ui2Widget::addListener(listener, WidgetEventType::DownPressed, acceptOverride);
+            ui2Widget::addListener(listener, WidgetEventType::LeftPressed, acceptOverride);
+            ui2Widget::addListener(listener, WidgetEventType::RightPressed, acceptOverride);
         } else {
-            ui2Widget::addListener(listener, event, callback);
+            ui2Widget::addListener(listener, event, acceptOverride);
         }
     }
 
     void ui2Input::removeListener(const ui::NamedRef& listener, WidgetEventType event) {
-        if (event == WidgetEventType::UNK59) {
+        if (event == WidgetEventType::AnyInput) {
             ui2Widget::removeListener(listener, WidgetEventType::AcceptPressed);
             ui2Widget::removeListener(listener, WidgetEventType::BackPressed);
             ui2Widget::removeListener(listener, WidgetEventType::UpPressed);

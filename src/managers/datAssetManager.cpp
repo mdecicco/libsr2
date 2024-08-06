@@ -8,7 +8,13 @@ namespace sr2 {
 
     Stream* datAssetManager::open(const char* dir, const char* filename, const char* ext, i32 unk0, bool unk1) {
         char path[128];
-        full_path(path, 128, dir, filename, ext);
+        fullPath(path, 128, dir, filename, ext);
+        return Stream::open(path, unk1);
+    }
+
+    Stream* datAssetManager::open(const char* filename, const char* ext, i32 unk0, bool unk1) {
+        char path[128];
+        fullPath(path, 128, filename, ext);
         return Stream::open(path, unk1);
     }
 
@@ -18,7 +24,7 @@ namespace sr2 {
         return s != nullptr;
     }
 
-    void datAssetManager::full_path(char* buf, u32 bufSz, const char* dir, const char* filename, const char* ext) { 
+    void datAssetManager::fullPath(char* buf, u32 bufSz, const char* dir, const char* filename, const char* ext) { 
         int iVar1;
         const char *pcVar2 = nullptr;
 
@@ -53,7 +59,7 @@ namespace sr2 {
             pcVar2 = strrchr(filename, '.');
             if (pcVar2) {
                 pcVar2 = strrchr(filename, '.');
-                iVar1 = strcmp(pcVar2 + 1, ext);
+                iVar1 = stricmp(pcVar2 + 1, ext);
                 if (iVar1 == 0) {
                     return;
                 }
@@ -63,11 +69,36 @@ namespace sr2 {
         }
     }
 
-    char* datAssetManager::get_path() {
+    void datAssetManager::fullPath(char* buf, u32 bufSz, const char* filename, const char* ext) { 
+        int iVar1;
+        const char *pcVar2 = nullptr;
+
+        if (((*filename == '\\') || (*filename == '/')) || (filename[1] == ':')) {
+            *buf = '\0';
+        } else {
+            strncpy(buf, datAssetManager::m_path, bufSz);
+            // if (m_addExtension && ext && *ext) {
+            //     strncat(buf, ext, bufSz);
+            //     strncat(buf, "/", bufSz);
+            // }
+        }
+
+        strncat(buf, filename, bufSz);
+        pcVar2 = strrchr(filename, 0x2e);
+        if (pcVar2) {
+            pcVar2 = strrchr(filename, 0x2e);
+            if (strcmp(pcVar2 + 1, ext) == 0) return;
+        }
+
+        strncat(buf, ".", bufSz);
+        strncat(buf, ext, bufSz);
+    }
+
+    char* datAssetManager::getPath() {
         return m_path;
     }
 
-    char* datAssetManager::set_path(const char* path) {
+    char* datAssetManager::setPath(const char* path) {
         char cVar1;
         char *pcVar2;
         int iVar3;

@@ -10,7 +10,7 @@ namespace sr2 {
                 ui2String str;
                 undefined4 field_0x10;
                 undefined4 field_0x14;
-                SomeWidgetCallback field_0x18;
+                WidgetEventCallback field_0x18;
                 undefined4 doSubmitEvent;
                 WidgetEventType someEventType;
                 WidgetRef<ui2EventData> someEvent;
@@ -25,8 +25,8 @@ namespace sr2 {
             virtual void reset();
             virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
 
-            void FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5);
-            void FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5);
+            void FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, WidgetEventCallback p5);
+            void FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, WidgetEventCallback p5);
             void FUN_001f84d8(i32 row, i32 col);
             void FUN_001f85c0(i32 row, i32 col, WidgetEventType p3, const WidgetRef<ui2EventData>& p4);
             void FUN_001f86c8(i32 row, i32 col, WidgetEventType p3, const WidgetRef<ui2EventData>& p4);

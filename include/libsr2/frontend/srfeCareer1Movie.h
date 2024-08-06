@@ -7,5 +7,7 @@ namespace sr2 {
         public:
             srfeCareer1Movie(const char* name, const WidgetRef<ui2Master>& master);
             ~srfeCareer1Movie();
+
+            virtual void initScreen();
     };
 };

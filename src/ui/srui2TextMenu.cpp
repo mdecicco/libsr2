@@ -3,6 +3,7 @@
 #include <libsr2/ui/ui2Variable.h>
 #include <libsr2/ui/ui2DynamicText.h>
 #include <libsr2/io/datParser.h>
+#include <libsr2/gfx/gfx.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -60,18 +61,18 @@ namespace sr2 {
 
         snprintf(nameBuf, bufLen, "%s_Menu_rep", p1);
         m_menuRepeater = new ui2Repeater(nameBuf, nullptr);
-        m_menuRepeater->addListener(*m_menu, WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
+        m_menuRepeater->addListener(*m_menu, WidgetEventType::MaybeAll);
 
         snprintf(nameBuf, bufLen, "%s_Cursor_tmr", p1);
         m_cursorTimer = new ui2Timer(nameBuf, 1.4f, true, true, nullptr);
         m_cursorTimer->addEventMapper(WidgetEventType::UNK29, WidgetEventType::StartTimer, nullptr);
-        m_menu->addListener(*m_cursorTimer, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
+        m_menu->addListener(*m_cursorTimer, WidgetEventType::UNK29);
 
         snprintf(nameBuf, bufLen, "%s_Cursor_l_snd", p1);
         m_cursorLSound = new ui2Sound(nameBuf, 0x31, nullptr);
         m_cursorLSound->FUN_00208068(-1.0f);
         m_cursorLSound->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK33, nullptr);
-        m_cursorTimer->addListener(*m_cursorLSound, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_cursorTimer->addListener(*m_cursorLSound, WidgetEventType::TimerFinished);
         m_cursorLSound->FUN_00207fc8();
         m_cursorLSound->FUN_00207fe0(0.45f);
 
@@ -79,14 +80,14 @@ namespace sr2 {
         m_cursorRSound = new ui2Sound(nameBuf, 0x32, nullptr);
         m_cursorRSound->FUN_00208068(1.0f);
         m_cursorRSound->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK33, nullptr);
-        m_cursorTimer->addListener(*m_cursorRSound, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_cursorTimer->addListener(*m_cursorRSound, WidgetEventType::TimerFinished);
         m_cursorLSound->FUN_00207fc8();
         m_cursorLSound->FUN_00207fe0(0.45f);
 
         if (p4) {
-            m_menu->addListener(p4, WidgetEventType::UNK26, &ui2Widget::acceptEvent);
+            m_menu->addListener(p4, WidgetEventType::SetValueString);
             auto var = ui2Base::getGlobalMaster()->findWidget(p4, "ui2Variable").cast<ui2Variable>();
-            var->addListener(var->getName(), WidgetEventType::UNK40, (SomeWidgetCallback)&srui2TextMenu::FUN_001e6318);
+            var->addListener(var->getName(), WidgetEventType::ValueChangedString, (WidgetEventCallback)&srui2TextMenu::interceptEvent);
         }
 
         snprintf(nameBuf, bufLen, "%s_Menu_Items_tbl", p1);
@@ -96,7 +97,7 @@ namespace sr2 {
         m_menuItemsTbl->setColSizes(30, -1, -2);
         m_menuItemsTbl->setColSize(64, 0);
         m_menuItemsTbl->setColSize(120, 1);
-        m_menu->addListener(*m_menuItemsTbl, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
+        m_menu->addListener(*m_menuItemsTbl, WidgetEventType::UNK29);
 
         if (field_0x144) {
             snprintf(nameBuf, bufLen, "%s_Desc_rep", p1);
@@ -119,7 +120,7 @@ namespace sr2 {
 
         snprintf(nameBuf, bufLen, "%s_up_Arrow_tmr", p1);
         m_upArrowTimer = new ui2Timer(nameBuf, 0.2f, false, false, nullptr);
-        m_upArrowTimer->addListener(*m_upArrowImg, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_upArrowTimer->addListener(*m_upArrowImg, WidgetEventType::TimerFinished);
         m_upArrowImg->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::SetColor, m_inactiveColor);
         m_upArrowImg->setColor(m_inactiveColor);
         m_upArrowImg->field_0x48 = 0;
@@ -130,7 +131,7 @@ namespace sr2 {
 
         snprintf(nameBuf, bufLen, "%s_down_Arrow_tmr", p1);
         m_downArrowTimer = new ui2Timer(nameBuf, 0.2f, false, false, nullptr);
-        m_downArrowTimer->addListener(*m_downArrowImg, WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_downArrowTimer->addListener(*m_downArrowImg, WidgetEventType::TimerFinished);
         m_downArrowImg->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::SetColor, m_inactiveColor);
         m_downArrowImg->setColor(m_inactiveColor);
         m_downArrowImg->field_0x48 = 0;
@@ -140,14 +141,14 @@ namespace sr2 {
         m_selectLSound = new ui2Sound(nameBuf, 62, nullptr);
         m_selectLSound->FUN_00208068(-1.0f);
         m_selectLSound->addEventMapper(WidgetEventType::UNK29, WidgetEventType::UNK33, nullptr);
-        m_menu->addListener(m_selectLSound, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
+        m_menu->addListener(m_selectLSound, WidgetEventType::UNK29);
         m_selectLSound->FUN_00207fc8();
 
         snprintf(nameBuf, bufLen, "%s_Select_r_snd", p1);
         m_selectRSound = new ui2Sound(nameBuf, 63, nullptr);
         m_selectRSound->FUN_00208068(1.0f);
         m_selectRSound->addEventMapper(WidgetEventType::UNK29, WidgetEventType::UNK33, nullptr);
-        m_menu->addListener(m_selectRSound, WidgetEventType::UNK29, &ui2Widget::acceptEvent);
+        m_menu->addListener(m_selectRSound, WidgetEventType::UNK29);
         m_selectRSound->FUN_00207fc8();
 
         snprintf(nameBuf, bufLen, "%s_all_tbl", p1);
@@ -181,7 +182,7 @@ namespace sr2 {
 
         delete [] nameBuf;
 
-        addListener(getName(), WidgetEventType::MaybeAll, (SomeWidgetCallback)&srui2TextMenu::FUN_001e6318);
+        m_menu->addListener(getName(), WidgetEventType::MaybeAll, (WidgetEventCallback)&srui2TextMenu::interceptEvent);
     }
 
     void srui2TextMenu::reset() {
@@ -303,7 +304,7 @@ namespace sr2 {
         m_cursorImgs[index]->FUN_001f5db0(2);
         m_cursorImgs[index]->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::UNK8, nullptr);
         m_cursorImgs[index]->field_0x48 = 0;
-        m_cursorTimer->addListener(m_cursorImgs[index], WidgetEventType::TimerFinished, &ui2Widget::acceptEvent);
+        m_cursorTimer->addListener(m_cursorImgs[index], WidgetEventType::TimerFinished);
 
         snprintf(str0, unkStrLen, "%s_%s_Main_rep", field_0x124.get(), name);
         m_mainRepeaters[index] = new ui2Repeater(str0, getMaster());
@@ -327,15 +328,15 @@ namespace sr2 {
         if (field_0x144) {
             m_descs[index]->addEventMapper(WidgetEventType::UNK53, WidgetEventType::Show, nullptr);
             m_descs[index]->addEventMapper(WidgetEventType::UNK54, WidgetEventType::Hide, nullptr);
-            m_descRepeater->addListener(m_descs[index], WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
+            m_descRepeater->addListener(m_descs[index], WidgetEventType::MaybeAll);
         }
 
-        m_mainRepeaters[index]->addListener(m_cursorImgs[index], WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
-        m_mainRepeaters[index]->addListener(m_texts[index], WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
-        m_mainRepeaters[index]->addListener(m_userRepeaters[index], WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
+        m_mainRepeaters[index]->addListener(m_cursorImgs[index], WidgetEventType::MaybeAll);
+        m_mainRepeaters[index]->addListener(m_texts[index], WidgetEventType::MaybeAll);
+        m_mainRepeaters[index]->addListener(m_userRepeaters[index], WidgetEventType::MaybeAll);
 
         if (field_0x144) {
-            m_mainRepeaters[index]->addListener(m_descs[index], WidgetEventType::MaybeAll, &ui2Widget::acceptEvent);
+            m_mainRepeaters[index]->addListener(m_descs[index], WidgetEventType::MaybeAll);
         }
 
         m_menu->FUN_001f8218(m_mainRepeaters[index], 0, index, 1, &ui2Widget::acceptEvent);
@@ -345,7 +346,7 @@ namespace sr2 {
             WidgetRef<ASCIIStringEventData> event = new ASCIIStringEventData();
             event->data = m_someStrings[index].get();
 
-            m_menu->FUN_001f86c8(index, 0, WidgetEventType::UNK26, event);
+            m_menu->FUN_001f86c8(index, 0, WidgetEventType::SetValueString, event);
         }
 
         m_allTbl->FUN_001fdd88();
@@ -383,7 +384,7 @@ namespace sr2 {
         field_0x7c = index;
 
         u32 rowSz = m_menuItemsTbl->getRowSize(0);
-        m_menuItemsTbl->setBounds(640, index * rowSz);
+        m_menuItemsTbl->setBounds(gfx::pipeline::iWidth, index * rowSz);
 
         if (index < m_itemCount && field_0x14c == 1) {
             m_upArrowImg->setVisibility(1);
@@ -465,15 +466,15 @@ namespace sr2 {
         }
     }
 
-    void srui2TextMenu::FUN_001e6318(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3) {
-        if (p2 != WidgetEventType::UNK39 && p2 != WidgetEventType::UNK40) {
-            assert((p1 == m_menu));
-            dispatchEvent(p2, p3);
+    void srui2TextMenu::interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
+        if (event != WidgetEventType::ValueChangedInteger && event != WidgetEventType::ValueChangedString) {
+            assert(source == m_menu);
+            dispatchEvent(event, data);
             return;
         }
 
-        if (p3) m_menu->FUN_001fa298(p3);
-        dispatchEvent(p2, p3);
+        if (data) m_menu->FUN_001fa298(data);
+        dispatchEvent(event, data);
     }
     
     void srui2TextMenu::FUN_001e6440(i32 offsetX, i32 offsetY, i32 width, i32 height) {

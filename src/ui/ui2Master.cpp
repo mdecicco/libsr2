@@ -26,7 +26,9 @@ namespace sr2 {
     }
 
     void ui2Master::method_0x48() {
-        for (auto n : m_testUnk1) n->method_0x48();
+        for (u32 i = 0;i < m_testUnk1.size();i++) {
+            m_testUnk1[i]->method_0x48();
+        }
     }
 
     bool ui2Master::loadWidget() {
@@ -63,7 +65,7 @@ namespace sr2 {
 
     bool ui2Master::isA(const char* type) const {
         if (strcmp("ui2Master", type) == 0) return true;
-        return strcmp(getType(), type) == 0;
+        return ui2Widget::isA(type);
     }
 
     void ui2Master::method_0xe8() {

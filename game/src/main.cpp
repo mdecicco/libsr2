@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 
     try {
         datArgParser::Init(argc, argv);
+        // datArgParser::AddReplace("nofmv", "1");
 
         LoadArchives();
 

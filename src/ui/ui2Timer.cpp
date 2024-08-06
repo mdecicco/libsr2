@@ -26,11 +26,12 @@ namespace sr2 {
             }
             case WidgetEventType::SetTimerDuration: {
                 if (data) setDuration(data.cast<FloatEventData>());
-
-                if (field_0x88 == 1 && (u32(event) & 0x40000000)) startTimer();
-
                 ui2Widget::onEvent(source, event, data);
                 break;
+            }
+            default: {
+                if (field_0x88 == 1 && (u32(event) & 0x40000000)) startTimer();
+                ui2Widget::onEvent(source, event, data);
             }
         }
     }

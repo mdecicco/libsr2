@@ -73,7 +73,7 @@ namespace sr2 {
 
                     if (n == n1) curCh = *n1;
                     else {
-                        n = duplicate_string(n);
+                        n = duplicateString(n);
                         m_colNames[m_colCount++] = n;
                         curCh = *n1;
                     }
@@ -162,7 +162,7 @@ namespace sr2 {
 
                         if (n == n1) curCh = *n1;
                         else {
-                            n = duplicate_string(n);
+                            n = duplicateString(n);
                             bVar1 = true;
                             m_cells[m_rowCount * m_colCount + rowIdx] = n;
                             rowIdx += 1;

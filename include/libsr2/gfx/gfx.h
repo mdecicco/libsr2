@@ -24,6 +24,10 @@ namespace sr2 {
             extern f32 Fade;
             extern f32 FadeStart;
             extern f32 FadeEnd;
+            extern f32 fWidth;
+            extern f32 fHeight;
+            extern i32 iWidth;
+            extern i32 iHeight;
 
             // 0x002e3f20
             void ForceSetViewport(gfxViewport* viewport);

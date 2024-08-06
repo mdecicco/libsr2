@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="IMF grammar" start="id:4" author="miguel" fileextension="imf">
+        <description>Grammar for IMF files</description>
+        <structure name="IMF file" id="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="header" id="14">
+                <string name="magic" id="7" type="fixed-length" length="4">
+                    <fixedvalues>
+                        <fixedvalue name="" value="IMF1"/>
+                    </fixedvalues>
+                </string>
+                <number name="unk2_count" id="8" type="integer" length="4"/>
+                <number name="block_count" id="9" type="integer" length="4"/>
+                <number name="unk1" id="10" type="integer" length="4"/>
+                <structure name="unk2" id="12">
+                    <number name="unk2" id="11" repeatmin="2032" repeatmax="2032" type="integer" length="1"/>
+                </structure>
+            </structure>
+            <structure name="data" id="18">
+                <structure name="block" id="16" length="2048" repeatmax="-1"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

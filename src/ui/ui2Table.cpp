@@ -197,7 +197,7 @@ namespace sr2 {
         FUN_001fd138();
     }
     
-    void ui2Table::FUN_001fc6f8(const ui::NamedRef& p1, u32 col, u32 row, SomeWidgetCallback p4) {
+    void ui2Table::FUN_001fc6f8(const ui::NamedRef& p1, u32 col, u32 row, WidgetEventCallback p4) {
         Cell& cell = m_cells[m_rowCount * col + row];
         cell.value.set(p1->getName());
         cell.callback = p4;
@@ -205,7 +205,7 @@ namespace sr2 {
         FUN_001fd178(col, row);
     }
 
-    void ui2Table::FUN_001fc818(const char* p1, u32 col, u32 row, SomeWidgetCallback p4) {
+    void ui2Table::FUN_001fc818(const char* p1, u32 col, u32 row, WidgetEventCallback p4) {
         ui::NamedRef w = ui2Base::getGlobalMaster()->findWidget(p1).cast<ui2Widget>();
         if (!w) return;
 

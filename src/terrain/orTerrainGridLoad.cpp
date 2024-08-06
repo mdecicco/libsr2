@@ -490,13 +490,13 @@ namespace sr2 {
                 if (lod_version) {
                     texPath = format(
                         "%stexture/%s_VL_%d/%s_VL_%d_%d",
-                        datAssetManager::get_path(),
+                        datAssetManager::getPath(),
                         map, lod_version, map, y, x
                     );
                 } else {
                     texPath = format(
                         "%stexture/%s_VL/%s_VL_%d_%d",
-                        datAssetManager::get_path(),
+                        datAssetManager::getPath(),
                         map, map, y, x
                     );
                 }
@@ -505,7 +505,7 @@ namespace sr2 {
                 if (tex == gfxTexture::None && lod_version) {
                     texPath = format(
                         "%stexture/%s_VL/%s_VL_%d_%d",
-                        datAssetManager::get_path(),
+                        datAssetManager::getPath(),
                         map, map, y, x
                     );
                     tex = gfxTexture::get(texPath.c_str(), 1, 1);

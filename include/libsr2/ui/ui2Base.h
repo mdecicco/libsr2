@@ -41,7 +41,7 @@ namespace sr2 {
             static WidgetRef<ui2Base> getGlobalMaster();
             static WidgetRef<ui2Master> getMaster();
             static txtStringTable& getGameplayText();
-            static ui2String* getSomeStrings();
+            static ui2String** getSomeStrings();
 
             static void FUN_001f2ae0();
             static void FUN_002f7e88();
@@ -56,7 +56,7 @@ namespace sr2 {
 
             WidgetRef<ui2Master> m_master;
             ui2String m_languageDirs[10];
-            ui2String m_someStrings[3];
+            ui2String* m_someStrings[3];
             txtStringTable m_gameplayText;
             LANGUAGE m_currentLang;
             u32 m_stringFlags;

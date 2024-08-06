@@ -15,7 +15,7 @@ namespace sr2 {
         UNK36 = 0x8000000a,
         UNK58 = 0x8000000b,
         UNK35 = 0x8000000c,
-        UNK59 = 0x80000c1c,
+        AnyInput = 0x80000c1c,
         Activate  = 0xa0000064,
         UNK1  = 0xa0000065,
         Deactivate  = 0xa0000069,
@@ -31,11 +31,12 @@ namespace sr2 {
         UNK46 = 0xa0001770,
         UNK27 = 0xa0001f4a,
         UNK28 = 0xa0001f54,
-        UNK37 = 0xa0002328,
-        UNK26 = 0xa0002332,
+        SetValueInteger = 0xa0002328,
+        SetValueString = 0xa0002332,
         UNK43 = 0xa0002333,
-        UNK44 = 0xa00023f0,
+        ClearValue = 0xa00023f0,
         UNK42 = 0xa0002710,
+        UNK65 = 0xa0002ee0,
         UNK48 = 0xa00032c8,
         UNK33 = 0xa00032c9,
         UNK49 = 0xa00032ca,
@@ -74,14 +75,16 @@ namespace sr2 {
         UNK38 = 0xc0001bbc,
         UNK62 = 0xc0001bda,
         UNK61 = 0xc0001be4,
-        UNK39 = 0xc0002328,
-        UNK40 = 0xc0002332,
-        UNK45 = 0xc00023f0,
+        ValueChangedInteger = 0xc0002328,
+        ValueChangedString = 0xc0002332,
+        ValueCleared = 0xc00023f0,
         UNK30 = 0xc0002af8,
         UNK31 = 0xc0002b02,
         UNK32 = 0xc0002b0c,
         UNK55 = 0xc0002ee0,
-        UNK56 = 0xc0002ef4
+        UNK63 = 0xc0002eea,
+        UNK56 = 0xc0002ef4,
+        UNK64 = 0xc0002efe
     };
 
     class ui2Widget : public ui2WidgetBase, public parFileIO {
@@ -95,8 +98,8 @@ namespace sr2 {
             virtual void acceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
             virtual void method_0x48();
             virtual void method_0x58();
-            virtual void addListener(const ui::NamedRef& listener, WidgetEventType event, SomeWidgetCallback callback);
-            virtual void addListener(const char* listenerName, WidgetEventType event, SomeWidgetCallback callback);
+            virtual void addListener(const ui::NamedRef& listener, WidgetEventType event, WidgetEventCallback acceptOverride = nullptr);
+            virtual void addListener(const char* listenerName, WidgetEventType event, WidgetEventCallback acceptOverride = nullptr);
             virtual void removeListener(const ui::NamedRef& listener, WidgetEventType event);
             virtual void removeListener(const char* listenerName, WidgetEventType event);
             virtual void removeAllListeners(const ui::NamedRef& listener);
@@ -148,7 +151,7 @@ namespace sr2 {
             struct EventListener {
                 WidgetEventType type;
                 utils::String widgetName;
-                SomeWidgetCallback callback;
+                WidgetEventCallback acceptCallback;
             };
             struct EventMapper {
                 WidgetEventType incoming;

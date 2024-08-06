@@ -14,7 +14,7 @@ namespace sr2 {
         return buf;
     }
 
-    char* duplicate_string(const char* str) {
+    char* duplicateString(const char* str) {
         if (!str) return nullptr;
 
         size_t len = strlen(str);

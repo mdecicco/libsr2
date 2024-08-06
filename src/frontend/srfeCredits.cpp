@@ -7,8 +7,13 @@ namespace sr2 {
     srfeCredits::~srfeCredits() {
     }
 
+    void srfeCredits::FUN_0011c260() {
+        field_0xcc = 0;
+        field_0xd0 = 1;
+    }
+
     void srfeCredits::FUN_0011c270() {
-        field_0xd0 = 0;
         field_0xcc = 1;
+        field_0xd0 = 0;
     }
 };

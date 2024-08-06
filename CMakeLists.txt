@@ -52,6 +52,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 add_subdirectory(deps)
 add_subdirectory(game)
 
+file(GLOB _src "deps/libmpeg2/src/*.c")
+list(APPEND all_sources ${_src})
+unset(_src)
+
 add_library(libsr2 ${all_sources})
 
 target_include_directories(libsr2 PUBLIC src)
@@ -59,6 +63,7 @@ target_include_directories(libsr2 PUBLIC include)
 target_include_directories(libsr2 PUBLIC "deps/zlib/include")
 target_include_directories(libsr2 PUBLIC "deps/renderer/include")
 target_include_directories(libsr2 PUBLIC "deps/renderer/deps/utils/include")
+target_include_directories(libsr2 PUBLIC "deps/libmpeg2/src")
 target_include_directories(libsr2 PUBLIC "C:\\Program Files (x86)\\OpenAL 1.1 SDK\\include")
 
 target_link_directories(libsr2 PUBLIC "C:\\Program Files (x86)\\OpenAL 1.1 SDK\\libs\\Win64")

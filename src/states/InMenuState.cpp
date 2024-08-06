@@ -1,13 +1,14 @@
 #include <libsr2/states/InMenuState.h>
-#include <libsr2/libsr2.h>
 #include <libsr2/states/gameFSM.h>
 #include <libsr2/ui/srui2Bitmap.h>
 #include <libsr2/gfx/gfx.h>
 #include <libsr2/managers/datAssetManager.h>
+#include <libsr2/managers/Aud3DObjectManager.h>
+#include <libsr2/managers/audManager.h>
 #include <libsr2/utilities/datArgParser.h>
 #include <libsr2/utilities/msgMsgSource.h>
-#include <libsr2/managers/Aud3DObjectManager.h>
 #include <libsr2/globals.h>
+#include <libsr2/libsr2.h>
 
 #include <libsr2/frontend/srfeMainMenu.h>
 #include <libsr2/frontend/srfeBombTag.h>
@@ -327,14 +328,14 @@ namespace sr2 {
         m_frontendBase->getLangInfo(&lang, &strFlags);
         m_frontendBase->loadStrings("frontend.strtbl", lang, 0xffffffff);
 
-        // FUN_001f29f0(GFX::Pipeline::iWidth,GFX::Pipeline::iHeight);
+        ui2Movie::FUN_001f29f0(gfx::pipeline::iWidth, gfx::pipeline::iHeight);
 
         m_frontendBase->setDirectory("tune/ui/NTSC");
         char vidPath[32] = { 0 };
-        snprintf(vidPath, 32, "%svid/NTSC/", datAssetManager::get_path());
+        snprintf(vidPath, 32, "%svid/NTSC/", datAssetManager::getPath());
         // FUN_001f3408(local_120);
         // FUN_001f3440(local_120);
-        // FUN_002072a8("aud/fedata", lang != LANGUAGE::German ? 1 : 2);
+        audManager::loadSoundBanks("aud/fedata", lang != LANGUAGE::German ? 1 : 2);
 
         // srui2VehicleDisplay::Initialize();
 
@@ -640,7 +641,7 @@ namespace sr2 {
         gfx::pipeline::Clear(3, 0x80000000, 1.0f, 0);
         
         ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(640 * debug_ui_scale, 480 * debug_ui_scale));
+        ImGui::SetNextWindowSize(ImVec2(gfx::pipeline::fWidth * debug_ui_scale, gfx::pipeline::fHeight * debug_ui_scale));
         ImGui::Begin("#m", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
         m_frontendBase->draw();
         ImGui::End();

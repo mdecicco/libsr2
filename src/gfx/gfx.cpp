@@ -29,6 +29,10 @@ namespace sr2 {
             f32 Fade = 0.0f;
             f32 FadeStart = 0.0f;
             f32 FadeEnd = 0.0f;
+            f32 fWidth = 640.0f;
+            f32 fHeight = 448.0f;
+            i32 iWidth = 640;
+            i32 iHeight = 448;
 
             void ForceSetViewport(gfxViewport* vp) {
                 if (Viewport) {

@@ -45,8 +45,8 @@ namespace sr2 {
         snprintf(textName, 100, "%s_Heading_txt", m_widgetName->get());
         m_headingText = new ui2TranslatedText(textName, "", 97, 80, -1, nullptr);
         m_headingText->setColorU32(0x80969696);
-        m_input->addListener(WidgetsInstance->navok_l_snd, WidgetEventType::AcceptPressed, &ui2Widget::acceptEvent);
-        m_input->addListener(WidgetsInstance->navok_r_snd, WidgetEventType::AcceptPressed, &ui2Widget::acceptEvent);
+        m_input->addListener(WidgetsInstance->navok_l_snd, WidgetEventType::AcceptPressed);
+        m_input->addListener(WidgetsInstance->navok_r_snd, WidgetEventType::AcceptPressed);
     }
 
     void srfeUnknownScreen1::deinitScreen() {
@@ -58,7 +58,7 @@ namespace sr2 {
         InitializedCount--;
 
         if (InitializedCount == 0) {
-            // if (WidgetsInstance->bg_movie) WidgetsInstance->bg_movie->FUN_001f3210();
+            if (WidgetsInstance->bg_movie) WidgetsInstance->bg_movie->FUN_001f3210();
             delete WidgetsInstance;
             WidgetsInstance = nullptr;
             m_headingText = nullptr;
@@ -102,14 +102,14 @@ namespace sr2 {
         w->master->setRenderPriority(5030);
 
         w->bg_movie = new ui2Movie("basicLayout1_bg_movie", "uipan.m2v", 0, 0, 0, 5, nullptr, nullptr);         
-        // w->bg_movie->FUN_001f3328(0);
-        // w->bg_movie->FUN_001f3350(0);
+        w->bg_movie->FUN_001f3328(0);
+        w->bg_movie->FUN_001f3350(0);
 
         w->movie_score_snd = new ui2Sound("background_movie_score_snd", 0x3d, nullptr);
         w->movie_score_snd->addEventMapper(WidgetEventType::UNK55, WidgetEventType::UNK33, nullptr);
         w->movie_score_snd->addEventMapper(WidgetEventType::UNK56, WidgetEventType::UNK33, nullptr);
-        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK55, &ui2Widget::acceptEvent);
-        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK56, &ui2Widget::acceptEvent);
+        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK55);
+        w->bg_movie->addListener(w->movie_score_snd, WidgetEventType::UNK56);
 
         w->bluebar_l_snd = new ui2Sound("background_bluebar_l_snd", 0x33, nullptr);
         w->bluebar_l_snd->FUN_00208068(-1.0f);

@@ -113,7 +113,7 @@ namespace sr2 {
         }
     }
 
-    void ui2Menu::FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5) {
+    void ui2Menu::FUN_001f8218(const ui::NamedRef& p1, i32 row, i32 col, undefined4 p4, WidgetEventCallback p5) {
         GridCell& someCell = m_grid[m_rowCount * col + row];
         
         someCell.str.set(p1->getName());
@@ -124,7 +124,7 @@ namespace sr2 {
         FUN_001f9990(m_someRowIdx, m_someColIdx);
     }
 
-    void ui2Menu::FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, SomeWidgetCallback p5) {
+    void ui2Menu::FUN_001f8388(const char* p1, i32 row, i32 col, undefined4 p4, WidgetEventCallback p5) {
         ui::BaseRef w = ui2Base::getGlobalMaster()->findWidget(p1);
         if (!w) return;
         

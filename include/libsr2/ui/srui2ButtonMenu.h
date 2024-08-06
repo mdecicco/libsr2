@@ -28,7 +28,7 @@ namespace sr2 {
             virtual ~srui2ButtonMenu();
 
             void init(const char* p1, const char* p2, i32 x, i32 y, const char* p5);
-            void FUN_001ebac8(const ui::NamedRef& p1, WidgetEventType p2, const WidgetRef<ui2EventData>& p3);
+            void interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
         
         protected:
             vec2i m_pos;

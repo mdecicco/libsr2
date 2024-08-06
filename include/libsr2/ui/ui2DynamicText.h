@@ -10,6 +10,8 @@ namespace sr2 {
             ~ui2DynamicText();
 
             virtual void setFont(const char* fontName);
+            virtual void method_0x148(const char* text);
+            virtual void method_0x170(const char* fontName);
 
         protected:
             txtFontTex* m_font;

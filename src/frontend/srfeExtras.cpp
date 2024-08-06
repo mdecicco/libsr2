@@ -23,8 +23,8 @@ namespace sr2 {
         FUN_001f0fb8(m_menu->getUserRepeater(2), WidgetEventType::UNK22, "ConceptArt", 1);
         FUN_001f0fb8(m_menu->getUserRepeater(3), WidgetEventType::UNK22, "BonusMissions", 1);
 
-        m_input->addListener(m_menu, WidgetEventType::UNK59, &ui2Widget::acceptEvent);
-        m_input->addListener(m_repeater0, WidgetEventType::BackPressed, &ui2Widget::acceptEvent);
+        m_input->addListener(m_menu, WidgetEventType::AnyInput);
+        m_input->addListener(m_repeater0, WidgetEventType::BackPressed);
 
         FUN_001f0fb8(m_repeater0, WidgetEventType::BackPressed, "MainMenu", 0);
     }

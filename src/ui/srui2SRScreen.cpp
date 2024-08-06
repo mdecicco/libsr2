@@ -31,22 +31,22 @@ namespace sr2 {
     }
 
     bool srui2SRScreen::isA(const char* type) const {
-        if (strcmp("srui2SRScreen", type) == 0 || strcmp("ui2Screen", type) == 0) return true;
-        return strcmp(getType(), type) == 0;
+        if (strcmp("srui2SRScreen", type) == 0) return true;
+        return ui2Screen::isA(type);
     }
     
     void srui2SRScreen::FUN_001f0fb8(const WidgetRef<ui2Repeater>& p1, WidgetEventType p2, const char* p3, undefined4 p4) {
         if (!*p3) return;
 
         p1->addEventMapper(p2, WidgetEventType::Deactivate, nullptr);
-        p1->addListener(this, WidgetEventType::Deactivate, &ui2Widget::acceptEvent);
+        p1->addListener(this, WidgetEventType::Deactivate);
 
         if (p4 == 0) {
             p1->addEventMapper(p2, WidgetEventType::UNK1, nullptr);
-            p1->addListener(p3, WidgetEventType::UNK1, &ui2Widget::acceptEvent);
+            p1->addListener(p3, WidgetEventType::UNK1);
         } else {
             p1->addEventMapper(p2, WidgetEventType::UNK28, nullptr);
-            p1->addListener(p3, WidgetEventType::UNK28, &ui2Widget::acceptEvent);
+            p1->addListener(p3, WidgetEventType::UNK28);
         }
     }
 };

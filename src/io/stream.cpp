@@ -5,6 +5,9 @@
 namespace sr2 {
     Stream::Stream(FILE* fp) {
         m_fp = fp;
+        fseek(m_fp, 0, SEEK_END);
+        m_size = (u32)ftell(m_fp);
+        fseek(m_fp, 0, SEEK_SET);
     }
 
     Stream::~Stream() {
@@ -31,6 +34,10 @@ namespace sr2 {
 
     i32 Stream::write(void* src, u32 sz) {
         return fwrite(src, sz, 1, m_fp) * sz;
+    }
+
+    u32 Stream::getSize() {
+        return m_size;
     }
 
     char Stream::getCh() {

@@ -7,7 +7,7 @@ namespace sr2 {
     enum class WidgetEventType : u32;
     class ui2Widget;
     class ui2EventData;
-    typedef void (ui2Widget::*SomeWidgetCallback)(const WidgetRef<ui2Widget>&, WidgetEventType, const WidgetRef<ui2EventData>&);
+    typedef void (ui2Widget::*WidgetEventCallback)(const WidgetRef<ui2Widget>&, WidgetEventType, const WidgetRef<ui2EventData>&);
     
     class UnkWidgetBinTree0 {
         public:
@@ -16,7 +16,7 @@ namespace sr2 {
 
                 // This was incredibly difficult to figure out
                 // bask in my reverse engineering prowess
-                SomeWidgetCallback callback;
+                WidgetEventCallback callback;
 
                 ui2String str;
             };
