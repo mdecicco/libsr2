@@ -3,7 +3,7 @@
 #include <libsr2/ui/ui2Base.h>
 
 namespace sr2 {
-    srfeExtras::srfeExtras(const char* name, const WidgetRef<ui2Master>& master) : srfeUnknownScreen4(name, master) {
+    srfeExtras::srfeExtras(const char* name, const WidgetRef<ui2Master>& master) : srfeBasicLayout1(name, master) {
     }
 
     srfeExtras::~srfeExtras() {
@@ -11,7 +11,7 @@ namespace sr2 {
     }
 
     void srfeExtras::initScreen() {
-        srfeUnknownScreen4::initScreen();
+        srfeBasicLayout1::initScreen();
         m_menu = new srui2TextMenu("Extras_txtmenu", 4, "Extras", -10, 0x96, nullptr, 1, nullptr);
         m_menu->initMenuItem("Credits", 0, 0, 0);
         m_menu->initMenuItem("Theater", 1, 0, 0);
@@ -30,7 +30,7 @@ namespace sr2 {
     }
 
     void srfeExtras::deinitScreen() {
-        srfeUnknownScreen4::deinitScreen();
+        srfeBasicLayout1::deinitScreen();
         m_menu.release();
     }
 
@@ -40,7 +40,7 @@ namespace sr2 {
     }
 
     void srfeExtras::method_0x110() {
-        srfeUnknownScreen4::method_0x110();
+        srfeBasicLayout1::method_0x110();
         m_menu->setMenuItemActive(3, true);
         m_menu->FUN_001e6000();
 
@@ -51,7 +51,7 @@ namespace sr2 {
     }
 
     void srfeExtras::method_0x128() {
-        srfeUnknownScreen4::method_0x128();
+        srfeBasicLayout1::method_0x128();
         m_menu->FUN_001e5e58();
     }
 };

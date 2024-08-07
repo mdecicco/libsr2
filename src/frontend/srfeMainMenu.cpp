@@ -4,14 +4,14 @@
 #include <assert.h>
 
 namespace sr2 {
-    srfeMainMenu::srfeMainMenu(const char* name, const WidgetRef<ui2Master>& master) : srfeUnknownScreen4(name, master) {
+    srfeMainMenu::srfeMainMenu(const char* name, const WidgetRef<ui2Master>& master) : srfeBasicLayout1(name, master) {
     }
 
     srfeMainMenu::~srfeMainMenu() {
     }
 
     void srfeMainMenu::initScreen() {
-        srfeUnknownScreen4::initScreen();
+        srfeBasicLayout1::initScreen();
 
         m_headingText->setTextName("MainMenu_Heading");
         
@@ -43,7 +43,7 @@ namespace sr2 {
     }
 
     void srfeMainMenu::method_0x110() {
-        srfeUnknownScreen4::method_0x110();
+        srfeBasicLayout1::method_0x110();
         m_textMenu->FUN_001e6000();
     }
 

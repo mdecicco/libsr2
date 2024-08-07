@@ -4,6 +4,7 @@
 #include <libsr2/utilities/datArgParser.h>
 #include <libsr2/utilities/utils.h>
 #include <libsr2/managers/datAssetManager.h>
+#include <libsr2/managers/audManager.h>
 #include <libsr2/io/stream.h>
 #include <libsr2/ui/ui2Base.h>
 #include <libsr2/ui/ui2Variable.h>
@@ -270,17 +271,17 @@ namespace sr2 {
             if (!field_0xbc) {
                 if (!name || !name[0] || srfeMovieBase::isWidgetAMovie(name)) {
                     if (field_0xbc == 1 || field_0xbc == 2) {
-                        // FUN_00207750(0x27);
-                        // FUN_00207750(0x28);
+                        audManager::playSound(0x27);
+                        audManager::playSound(0x28);
                     }
                 } else {
-                    // FUN_00207750(0x27);
-                    // FUN_00207750(0x28);
+                    audManager::playSound(0x27);
+                    audManager::playSound(0x28);
                 }
             } else {
                 if (field_0xbc == 1 || field_0xbc == 2) {
-                    // FUN_00207750(0x27);
-                    // FUN_00207750(0x28);
+                    audManager::playSound(0x27);
+                    audManager::playSound(0x28);
                 }
             }
         }

@@ -1,9 +1,9 @@
 #pragma once
 #include <libsr2/types.h>
-#include <libsr2/frontend/srfeUnknownScreen3.h>
+#include <libsr2/frontend/srfeBasicLayout2.h>
 
 namespace sr2 {
-    class srfeCredits : public srfeUnknownScreen3 {
+    class srfeCredits : public srfeBasicLayout2 {
         public:
             srfeCredits(const char* name, const WidgetRef<ui2Master>& master);
             ~srfeCredits();

@@ -1,11 +1,11 @@
 #pragma once
 #include <libsr2/types.h>
 #include <libsr2/ui/srui2TextMenu.h>
-#include <libsr2/frontend/srfeUnknownScreen4.h>
+#include <libsr2/frontend/srfeBasicLayout1.h>
 
 namespace sr2 {
     class srui2TextMenu;
-    class srfeExtras : public srfeUnknownScreen4 {
+    class srfeExtras : public srfeBasicLayout1 {
         public:
             srfeExtras(const char* name, const WidgetRef<ui2Master>& master);
             ~srfeExtras();

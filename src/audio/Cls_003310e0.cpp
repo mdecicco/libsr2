@@ -153,7 +153,8 @@ namespace sr2 {
                         strcpy(sampleFilename, indexedName);
                     }
 
-                    if (didRead && loop && bufType < 6) loop = 0;
+                    // todo? bufType is unspecified for music samples, so loop gets set to 0?
+                    // if (didRead && loop && bufType < 6) loop = 0;
                     if (!loadPsx) return true;
 
                     gat->setNextSampleRateCode(srcMap[bufType]);

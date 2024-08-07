@@ -474,8 +474,8 @@ namespace sr2 {
         bool isNotLanguageAtBoot = strcmp(someWidgetName, "LanguageAtBoot") != 0;
 
         if (datArgParser::GetBooleanArgument("nofmv") || (isNotMovie && isNotMemcardCheck && isNotLanguageAtBoot)) {
-            // FUN_00207750(0x27);
-            // FUN_00207750(0x28);
+            audManager::playSound(0x27);
+            audManager::playSound(0x28);
         }
 
         /*

@@ -207,6 +207,8 @@ namespace sr2 {
 
     void audSound::setFlags(u32 flags) {
         m_flags = flags;
+
+        if (m_player) m_player->setDoesLoop(flags & 1);
     }
 
     bool audSound::isUsed() {
