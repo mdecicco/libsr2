@@ -2,7 +2,7 @@
 #include <libsr2/types.h>
 
 namespace sr2 {
-    enum GAME_STATE {
+    enum class GAME_STATE : u32 {
         GAME_LOAD,
         IN_GAME,
         IN_GAME_PAUSED,

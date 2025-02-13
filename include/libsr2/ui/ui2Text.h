@@ -19,6 +19,7 @@ namespace sr2 {
             virtual void setBounds(i32 w, i32 h);
             virtual void setBoundsFromPos(i32 x, i32 y);
             virtual void setAlignment(i32 align);
+            virtual void setAdvanceX(i32 advanceX);
             virtual void setTextName(const char* txtName);
             virtual void setTextName(const WidgetRef<ASCIIStringEventData>& event);
         

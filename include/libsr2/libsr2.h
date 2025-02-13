@@ -12,7 +12,7 @@ namespace render {
 
 namespace sr2 {
     class gameFSM;
-    enum GAME_STATE;
+    enum class GAME_STATE : u32;
 
     extern u64 g_HostTimer;
     extern u64 g_FrameTimer;

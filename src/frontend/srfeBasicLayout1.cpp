@@ -103,25 +103,25 @@ namespace sr2 {
     
     void srfeBasicLayout1::method_0x128() {
         Widgets* w = WidgetsInstance;
-        w->bluebars_01->setVisibility(0);
-        w->bluebars_02->setVisibility(0);
-        w->bluebars_03->setVisibility(0);
-        w->bluebars_04->setVisibility(0);
-        w->bluebars_05->setVisibility(0);
-        w->bluebars_06->setVisibility(0);
-        w->bluebars_07->setVisibility(0);
-        w->bluebars_08->setVisibility(0);
-        w->bluebars_09->setVisibility(0);
-        w->bluebars_10->setVisibility(0);
-        w->bluebars_11->setVisibility(0);
+        w->bluebars_01->setVisibility(false);
+        w->bluebars_02->setVisibility(false);
+        w->bluebars_03->setVisibility(false);
+        w->bluebars_04->setVisibility(false);
+        w->bluebars_05->setVisibility(false);
+        w->bluebars_06->setVisibility(false);
+        w->bluebars_07->setVisibility(false);
+        w->bluebars_08->setVisibility(false);
+        w->bluebars_09->setVisibility(false);
+        w->bluebars_10->setVisibility(false);
+        w->bluebars_11->setVisibility(false);
 
         w->side_anim_begin_top->FUN_001f5db0(3);
         w->side_anim_begin_middle->FUN_001f5db0(3);
         w->side_anim_begin_bottom->FUN_001f5db0(3);
-        w->side_anim_loop_top->setVisibility(0);
-        w->side_anim_loop_middle->setVisibility(0);
-        w->side_anim_loop_bottom->setVisibility(0);
-        w->clock_top->setVisibility(0);
+        w->side_anim_loop_top->setVisibility(false);
+        w->side_anim_loop_middle->setVisibility(false);
+        w->side_anim_loop_bottom->setVisibility(false);
+        w->clock_top->setVisibility(false);
 
         w->side_anim_begin_top->FUN_001f5db0(3);
         w->side_anim_begin_middle->FUN_001f5db0(3);
@@ -199,16 +199,16 @@ namespace sr2 {
         w->bluebars_timer_11->addListener(w->bluebars_11, WidgetEventType::TimerFinished);
         w->bluebars_01->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
 
-        w->bluebars_02->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_03->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_04->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_05->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_06->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_07->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_08->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_09->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_10->FUN_0020ac08(w->bluebars_01, 2);
-        w->bluebars_11->FUN_0020ac08(w->bluebars_01, 2);
+        w->bluebars_02->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_03->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_04->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_05->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_06->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_07->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_08->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_09->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_10->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
+        w->bluebars_11->copyEventConfig(w->bluebars_01, EventConfig::CopyMappers);
 
         w->bluebars_table = new ui2Table("basicLayout1_bluebars_table", 5, 3, 0, 50, nullptr);
         w->bluebars_table->setColSizes(128, -1, -2);
@@ -227,8 +227,8 @@ namespace sr2 {
         w->select_text->setColorU32(0x80969696);
         w->back_text->setColorU32(0x80969696);
 
-        w->select_button_timer = new ui2Timer("basicLayout1_select_button_timer", 0.6f, 0, 0, nullptr);
-        w->back_button_timer = new ui2Timer("basicLayout1_back_button_timer", 0.45f, 0, 0, nullptr);
+        w->select_button_timer = new ui2Timer("basicLayout1_select_button_timer", 0.6f, false, false, nullptr);
+        w->back_button_timer = new ui2Timer("basicLayout1_back_button_timer", 0.45f, false, false, nullptr);
 
         w->select_button_timer->addListener(w->select_button, WidgetEventType::TimerFinished);
         w->select_button_timer->addListener(w->select_text, WidgetEventType::TimerFinished);
@@ -237,9 +237,9 @@ namespace sr2 {
         w->back_button_timer->addListener(w->back_text, WidgetEventType::TimerFinished);
 
         w->select_button->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
-        w->back_button->FUN_0020ac08(w->select_button, 2);
-        w->select_text->FUN_0020ac08(w->select_button, 2);
-        w->back_text->FUN_0020ac08(w->select_button, 2);
+        w->back_button->copyEventConfig(w->select_button, EventConfig::CopyMappers);
+        w->select_text->copyEventConfig(w->select_button, EventConfig::CopyMappers);
+        w->back_text->copyEventConfig(w->select_button, EventConfig::CopyMappers);
 
         w->side_anim_begin_top = new ui2Image("basicLayout1_side_anim_begin_top", "uibuggyzoom", 0x223, 0x72, 10, nullptr);
         w->side_anim_begin_middle = new ui2Image("basicLayout1_side_anim_begin_middle", "uibuggyzoom", 0x223, 0xab, 10, nullptr);
@@ -323,17 +323,16 @@ namespace sr2 {
         w->side_anim_begin_bottom_timer->addListener(w->side_anim_r_snd, WidgetEventType::TimerFinished);
 
         w->clock_top = new srui2Clock("basicLayout1_clock_top", 0x1db, 0x5c, 0, nullptr);
-        // todo:
-        // w->clock_top->method_0x170();
-        w->clock_top->setColorU32(0x80969696);
-        // w->clock_top->method_0x140();
-        // if (w->clock_top->FUN_001e26c8()) w->clock_top->FUN_001e2630(0xd, 0x39, 0, 0);
+        // w->clock_top->text->method_0x170("uiclock");
+        // w->clock_top->text->setColorU32(0x80969696);
+        // w->clock_top->text->setAdvanceX(10);
+        if (w->clock_top->updateTime()) w->clock_top->setTime(13, 57, 0, 0);
 
-        w->clock_top_timer = new ui2Timer("basicLayout1_clock_top_timer", 0.15, 0, 1, nullptr);
+        w->clock_top_timer = new ui2Timer("basicLayout1_clock_top_timer", 0.15, false, true, nullptr);
         w->clock_top_timer->addListener(w->clock_top, WidgetEventType::TimerFinished);
         w->clock_top->addEventMapper(WidgetEventType::TimerFinished, WidgetEventType::Show, nullptr);
 
-        w->show_ui_timer = new ui2Timer("basicLayout1_show_ui_timer", 0.75, 0, 1, nullptr);
+        w->show_ui_timer = new ui2Timer("basicLayout1_show_ui_timer", 0.75, false, true, nullptr);
 
         gm->popMaster();
 

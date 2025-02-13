@@ -22,7 +22,7 @@
 
 #include <math.h>
 #include <stdio.h>
-
+#include <string.h>
 namespace sr2 {
     /*
      * ragUnk0

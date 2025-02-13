@@ -3,6 +3,8 @@
 #include <libsr2/io/TaggedStream.h>
 #include <libsr2/io/stream.h>
 
+#include <string.h>
+
 namespace sr2 {
     CheckpointInfo::CheckpointInfo() {
         memset(&unk2, 0, 32);

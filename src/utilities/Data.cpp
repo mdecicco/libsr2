@@ -1,6 +1,6 @@
 #include <libsr2/utilities/Data.h>
 #include <libsr2/utilities/utils.h>
-#include <exception>
+#include <utils/Exception.h>
 
 namespace sr2 {
     Data::Data(u8* ptr, u64 size, bool copyData) {
@@ -28,11 +28,11 @@ namespace sr2 {
             fseek(fp, 0, SEEK_SET);
             m_data = new u8[m_size];
             if (fread(m_data, m_size, 1, fp) != 1) {
-                throw std::exception(format("Data::Data Failed to read %llu bytes from '%s'.", m_size, srcFilePath).c_str());
+                throw utils::Exception("Data::Data Failed to read %llu bytes from '%s'.", m_size, srcFilePath);
             }
             fclose(fp);
         } else {
-            throw std::exception(format("Data::Data Failed open '%s'.", srcFilePath).c_str());
+            throw utils::Exception("Data::Data Failed open '%s'.", srcFilePath);
         }
     }
 
@@ -44,7 +44,10 @@ namespace sr2 {
     void Data::read(void* dest, u64 sz) {
         if ((m_position + sz) > m_size) {
             u64 remain = m_size - m_position;
-            throw std::exception(format("Data::read Cannot read %llu bytes from Data. %s%llu byte%s remain%s between the current offset and the end of the data.", sz, remain, remain == 1 || remain == 0 ? "" : "Only ", remain == 1 ? "" : "s", remain == 1 ? "s" : "").c_str());
+            throw utils::Exception(
+                "Data::read Cannot read %llu bytes from Data. %s%llu byte%s remain%s between the current offset and the end of the data.",
+                sz, remain, remain == 1 || remain == 0 ? "" : "Only ", remain == 1 ? "" : "s", remain == 1 ? "s" : ""
+            );
         }
 
         memcpy(dest, m_data + m_position, sz);
@@ -64,7 +67,7 @@ namespace sr2 {
 
         if (len < bufSz) *str = 0;
         else {
-            throw std::exception(format("Data::read_str Destination string buffer size not large enough for string.").c_str());
+            throw utils::Exception("Data::read_str Destination string buffer size not large enough for string.");
         }
 
         return len;
@@ -76,7 +79,7 @@ namespace sr2 {
 
     void Data::position(u64 pos) {
         if (pos > m_size) {
-            throw std::exception(format("Data::position Cannot set Data position to %llu. Size is %llu.", pos, m_size).c_str());
+            throw utils::Exception("Data::position Cannot set Data position to %llu. Size is %llu.", pos, m_size);
         }
 
         m_position = pos;
@@ -89,7 +92,10 @@ namespace sr2 {
     Data* Data::isolate(u64 sz, bool copy) {
         if ((m_position + sz) > m_size) {
             u64 remain = m_size - m_position;
-            throw std::exception(format("Data::isolate Cannot read %llu bytes from Data. %s%llu byte%s remain%s between the current offset and the end of the data.", sz, remain, remain == 1 || remain == 0 ? "" : "Only ", remain == 1 ? "" : "s", remain == 1 ? "s" : "").c_str());
+            throw utils::Exception(
+                "Data::isolate Cannot read %llu bytes from Data. %s%llu byte%s remain%s between the current offset and the end of the data.",
+                sz, remain, remain == 1 || remain == 0 ? "" : "Only ", remain == 1 ? "" : "s", remain == 1 ? "s" : ""
+            );
         }
         return new Data(m_data + m_position, sz, copy);
     }

@@ -53,6 +53,7 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "semaphore": "cpp",
-        "mmx.h": "c"
+        "mmx.h": "c",
+        "*.tcc": "cpp"
     }
 }

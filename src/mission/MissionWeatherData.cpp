@@ -2,6 +2,8 @@
 #include <libsr2/io/parCsvFile.h>
 #include <libsr2/utilities/utils.h>
 
+#include <string.h>
+
 namespace sr2 {
     WEATHER_TYPE MissionWeatherData::CurrentWeatherType = weather_unk0;
     MissionWeatherData::MissionWeatherData() {

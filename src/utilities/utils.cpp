@@ -2,6 +2,7 @@
 #include <libsr2/managers/datAssetManager.h>
 #include <libsr2/io/stream.h>
 #include <stdarg.h>
+#include <string.h>
 
 namespace sr2 {
     std::string format(const char* fmt, ...) {

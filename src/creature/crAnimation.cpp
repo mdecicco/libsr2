@@ -3,6 +3,8 @@
 #include <libsr2/managers/datAssetManager.h>
 #include <libsr2/io/stream.h>
 
+#include <stdlib.h>
+
 namespace sr2 {
     std::unordered_map<const char*, crAnimation*> crAnimation::cachedAnims;
 

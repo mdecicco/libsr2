@@ -3,6 +3,7 @@
 #include <libsr2/globals.h>
 
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 namespace sr2 {

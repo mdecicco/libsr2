@@ -87,6 +87,11 @@ namespace sr2 {
         UNK64 = 0xc0002efe
     };
 
+    enum class EventConfig : u32 {
+        CopyListeners = 1,
+        CopyMappers = 2
+    };
+
     class ui2Widget : public ui2WidgetBase, public parFileIO {
         public:
             ui2Widget(const char* name, const WidgetRef<ui2Master>& master, bool doAssignMaster);
@@ -132,7 +137,7 @@ namespace sr2 {
             void setRenderPriority(i32 priority);
             void addToMasterUnk1();
             void removeFromMasterUnk1();
-            void FUN_0020ac08(const ui::NamedRef& p1, u64 p2);
+            void copyEventConfig(const ui::NamedRef& from, EventConfig mode);
             bool shouldBeLoaded();
 
             bool field_0x18;                       

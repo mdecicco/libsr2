@@ -21,6 +21,7 @@
 
 #include <utils/Window.h>
 #include <utils/Singleton.hpp>
+#include <utils/Exception.h>
 
 #include <render/utils/SimpleDebugDraw.h>
 #include <render/utils/ImGui.h>
@@ -47,7 +48,7 @@ namespace sr2 {
         instance = new GameEngine(argc, args);
 
         msgMsgSource::registerSink(instance, 0x84, 0x80);
-        instance->ChangeState(IN_MENU);
+        instance->ChangeState(GAME_STATE::IN_MENU);
 
         if (!gfx::g_SomeViewport) gfx::g_SomeViewport = gfx::pipeline::Viewport;
 
@@ -88,13 +89,13 @@ namespace sr2 {
 
         m_window = new utils::Window("Smuggler's Run 2", u32(gfx::pipeline::fWidth * debug_ui_scale), u32(gfx::pipeline::fHeight * debug_ui_scale));
         m_window->subscribe(&ioKeyboard::gKeyboard);
-        if (!m_window->setOpen(true)) throw std::exception("Failed to open window");
-        if (!initRendering(m_window)) throw std::exception("Failed to initialize renderer");
-        if (!initDebugDrawing()) throw std::exception("Failed to initialize debug drawer");
-        if (!initImGui()) throw std::exception("Failed to initialize ImGui");
+        if (!m_window->setOpen(true)) throw utils::Exception("Failed to open window");
+        if (!initRendering(m_window)) throw utils::Exception("Failed to initialize renderer");
+        if (!initDebugDrawing()) throw utils::Exception("Failed to initialize debug drawer");
+        if (!initImGui()) throw utils::Exception("Failed to initialize ImGui");
 
         utils::Singleton<uiRenderer>::Create();
-        if (!utils::Singleton<uiRenderer>::Get()->init(this)) throw std::exception("Failed to initialize ui renderer");
+        if (!utils::Singleton<uiRenderer>::Get()->init(this)) throw utils::Exception("Failed to initialize ui renderer");
         utils::Singleton<srAudMgr>::Create(0xc, 1);
     }
 
@@ -223,11 +224,11 @@ namespace sr2 {
 
         EndFrame();
 
-        if (should_pause) fsm->deferred_change(IN_GAME_PAUSED);
+        if (should_pause) fsm->deferred_change(GAME_STATE::IN_GAME_PAUSED);
 
         if (just_update) {
             if (GameLoadingScreen::get()->FUN_001c5540()) {
-                fsm->deferred_change(MENU_LOAD);
+                fsm->deferred_change(GAME_STATE::MENU_LOAD);
                 just_update = false;
             }
         }

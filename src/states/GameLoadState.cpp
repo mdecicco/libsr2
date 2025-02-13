@@ -15,6 +15,7 @@
 #include <libsr2/ui/ui2Base.h>
 
 #include <assert.h>
+#include <string.h>
 
 namespace sr2 {
     GameLoadState::GameLoadState() {

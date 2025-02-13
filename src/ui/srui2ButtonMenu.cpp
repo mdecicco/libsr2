@@ -181,4 +181,10 @@ namespace sr2 {
     void srui2ButtonMenu::interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
         // todo (function is at 001ebac8)
     }
+    
+    void srui2ButtonMenu::addOption(const char* name, u32 index, const char* value) {
+    }
+
+    void srui2ButtonMenu::FUN_001eadd8(u32 p1, u32 p2) {
+    }
 };

@@ -15,6 +15,8 @@
 #include <libsr2/audio/audImpact.h>
 #include <libsr2/math/math.h>
 
+#include <math.h>
+
 namespace sr2 {
     srActive::srActive() {
         group = nullptr;

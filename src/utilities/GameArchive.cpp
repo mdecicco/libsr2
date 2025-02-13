@@ -1,9 +1,11 @@
 #include <libsr2/utilities/GameArchive.h>
 #include <libsr2/utilities/Data.h>
 #include <libsr2/utilities/utils.h>
+#include <utils/Exception.h>
 
 #include <zlib.h>
 #define MINIZ_NO_ZLIB_COMPATIBLE_NAMES
+#include <cstring>
 #include <zip_file.hpp>
 
 #include <string.h>
@@ -55,12 +57,12 @@ namespace sr2 {
 					m_archive->read_str(name_buf, 128);
 					std::string filename = name_buf;
 
-					std::transform(filename.begin(), filename.end(), filename.begin(), std::tolower);
+					std::transform(filename.begin(), filename.end(), filename.begin(), [](unsigned char c) { return std::tolower(c); });
 					map[filename] = i;
 				}
 
 				m_archive->position(0);
-				//throw std::exception(format("'%s' is not a 'DAVE' archive", path).c_str());
+				// throw utils::Exception("'%s' is not a 'DAVE' archive", path);
 			} else {
 				m_archive->position(m_archive->size() - 22);
 				u32 u0 = m_archive->read<u32>();
@@ -158,7 +160,7 @@ namespace sr2 {
 
     Data* GameArchive::open(const char* path) {
 		std::string filename = path;
-		std::transform(filename.begin(), filename.end(), filename.begin(), std::tolower);
+		std::transform(filename.begin(), filename.end(), filename.begin(), [](unsigned char c) { return std::tolower(c); });
 		map_t& map = *(map_t*)m_fileMap;
 
 		auto it = map.find(filename);
@@ -191,14 +193,14 @@ namespace sr2 {
 		if (inflateInit2(&stream, -MAX_WBITS) != Z_OK) {
 			delete[] compressed;
 			delete[] decompressed;
-			throw std::exception(format("Failed to initialize zlib stream for file '%s'", filename.c_str()).c_str());
+			throw utils::Exception("Failed to initialize zlib stream for file '%s'", filename.c_str());
 			return nullptr;
 		}
 		i32 status = inflate(&stream, Z_NO_FLUSH);
 		if (status != Z_OK && status != Z_STREAM_END) {
 			delete[] compressed;
 			delete[] decompressed;
-			throw std::exception(format("Failed to inflate file '%s'", filename.c_str()).c_str());
+			throw utils::Exception("Failed to inflate file '%s'", filename.c_str());
 			return nullptr;
 		}
 

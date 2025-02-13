@@ -3,7 +3,7 @@
 
 namespace sr2 {
     template <typename T>
-    static T* InstanceAllocator::Alloc() {
+    T* InstanceAllocator::Alloc() {
         return new T();
     }
 }

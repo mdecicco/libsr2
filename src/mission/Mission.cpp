@@ -5,6 +5,8 @@
 #include <libsr2/io/stream.h>
 #include <libsr2/utilities/utils.h>
 
+#include <string.h>
+
 namespace sr2 {
     UnkMissionObj0::UnkMissionObj0() {
         unk2 = 1;

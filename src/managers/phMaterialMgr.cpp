@@ -1,6 +1,7 @@
 #include <libsr2/managers/phMaterialMgr.h>
 #include <libsr2/sim/phMaterial.h>
 #include <libsr2/utilities/HashTable.h>
+#include <string.h>
 
 namespace sr2 {
     phMaterialMgr* phMaterialMgr::instance = nullptr;

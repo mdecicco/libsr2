@@ -313,35 +313,35 @@ namespace sr2 {
         field_0x28 = 0;
     }
     
-    void ui2Widget::FUN_0020ac08(const ui::NamedRef& p1, u64 p2) {
+    void ui2Widget::copyEventConfig(const ui::NamedRef& from, EventConfig mode) {
         // I assume?
-        if (p2 & 1) {
-            for (u32 i = 0;i < p1->m_listeners.size();i++) {
+        if (u32(mode) & u32(EventConfig::CopyListeners)) {
+            for (u32 i = 0;i < from->m_listeners.size();i++) {
                 bool found = false;
                 for (u32 j = 0;j < m_listeners.size();j++) {
-                    if (m_listeners[j].type != p1->m_listeners[i].type) continue;
-                    if (m_listeners[j].acceptCallback != p1->m_listeners[i].acceptCallback) continue;
-                    if (m_listeners[j].widgetName != p1->m_listeners[i].widgetName) continue;
+                    if (m_listeners[j].type != from->m_listeners[i].type) continue;
+                    if (m_listeners[j].acceptCallback != from->m_listeners[i].acceptCallback) continue;
+                    if (m_listeners[j].widgetName != from->m_listeners[i].widgetName) continue;
                     found = true;
                     break;
                 }
 
-                if (!found) m_listeners.push(p1->m_listeners[i]);
+                if (!found) m_listeners.push(from->m_listeners[i]);
             }
         }
 
-        if (p2 & 2) {
-            for (u32 i = 0;i < p1->m_mappers.size();i++) {
+        if (u32(mode) & u32(EventConfig::CopyMappers)) {
+            for (u32 i = 0;i < from->m_mappers.size();i++) {
                 bool found = false;
                 for (u32 j = 0;j < m_mappers.size();j++) {
-                    if (m_mappers[j].event != p1->m_mappers[i].event) continue;
-                    if (m_mappers[j].incoming != p1->m_mappers[i].incoming) continue;
-                    if (m_mappers[j].outgoing != p1->m_mappers[i].outgoing) continue;
+                    if (m_mappers[j].event != from->m_mappers[i].event) continue;
+                    if (m_mappers[j].incoming != from->m_mappers[i].incoming) continue;
+                    if (m_mappers[j].outgoing != from->m_mappers[i].outgoing) continue;
                     found = true;
                     break;
                 }
 
-                if (!found) m_mappers.push(p1->m_mappers[i]);
+                if (!found) m_mappers.push(from->m_mappers[i]);
             }
         }
     }

@@ -8,6 +8,9 @@
 #include <libsr2/io/TaggedStream.h>
 #include <libsr2/gfx/gfxTexture.h>
 
+#include <math.h>
+#include <string.h>
+
 namespace sr2 {
     bool orTerrainGrid::load(const char* map, u32 lod_version, u32 lod_idx, mat3x3f* p_unk0, mat4x4f* p_unk1) {
         material_count = 0;
@@ -234,7 +237,7 @@ namespace sr2 {
     void orTerrainGrid::process_paths(Stream* fp) {
         // Game::lvlProgress::pushSubTask(7.0f, nullptr);
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct path_data_in {
             u8 cell_idx;
             u8 texture_idx;

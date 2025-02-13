@@ -9,41 +9,41 @@
 
 namespace sr2 {
     gameFSM::gameFSM() {
-        m_target = PRE_GAME;
-        m_current = PRE_GAME;
-        m_states[GAME_LOAD] = new GameLoadState();
-        m_states[IN_GAME] = new InGameState();
-        m_states[IN_GAME_PAUSED] = new InGamePausedState();
-        m_states[IN_MENU] = new InMenuState();
-        m_states[MENU_LOAD] = new MenuLoadState();
+        m_target = GAME_STATE::PRE_GAME;
+        m_current = GAME_STATE::PRE_GAME;
+        m_states[u32(GAME_STATE::GAME_LOAD)] = new GameLoadState();
+        m_states[u32(GAME_STATE::IN_GAME)] = new InGameState();
+        m_states[u32(GAME_STATE::IN_GAME_PAUSED)] = new InGamePausedState();
+        m_states[u32(GAME_STATE::IN_MENU)] = new InMenuState();
+        m_states[u32(GAME_STATE::MENU_LOAD)] = new MenuLoadState();
     }
 
     gameFSM::~gameFSM() {
-        delete m_states[GAME_LOAD];
-        delete m_states[IN_GAME];
-        delete m_states[IN_GAME_PAUSED];
-        delete m_states[IN_MENU];
-        delete m_states[MENU_LOAD];
+        delete m_states[u32(GAME_STATE::GAME_LOAD)];
+        delete m_states[u32(GAME_STATE::IN_GAME)];
+        delete m_states[u32(GAME_STATE::IN_GAME_PAUSED)];
+        delete m_states[u32(GAME_STATE::IN_MENU)];
+        delete m_states[u32(GAME_STATE::MENU_LOAD)];
     }
 
     GameState* gameFSM::current() const {
-        if (m_current == PRE_GAME) return nullptr;
-        return m_states[m_current];
+        if (m_current == GAME_STATE::PRE_GAME) return nullptr;
+        return m_states[u32(m_current)];
     }
     
     GameState* gameFSM::get(GAME_STATE state) const {
-        if (state == PRE_GAME) return nullptr;
-        return m_states[state];
+        if (state == GAME_STATE::PRE_GAME) return nullptr;
+        return m_states[u32(state)];
     }
 
     void gameFSM::change(GAME_STATE state) {
-        if (m_current != PRE_GAME) {
-            m_states[m_current]->Exit();
+        if (m_current != GAME_STATE::PRE_GAME) {
+            m_states[u32(m_current)]->Exit();
         }
 
         // FUN_00100d08(param_1, &local_30);
 
-        m_states[state]->Enter(GameEngine::Instance());
+        m_states[u32(state)]->Enter(GameEngine::Instance());
         m_target = state;
         m_current = state;
     }

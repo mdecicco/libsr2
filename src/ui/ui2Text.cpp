@@ -81,6 +81,10 @@ namespace sr2 {
         m_alignment = align;
     }
 
+    void ui2Text::setAdvanceX(i32 advanceX) {
+        m_textData.advanceX = advanceX;
+    }
+
     void ui2Text::setTextName(const char* txtName) {
     }
     

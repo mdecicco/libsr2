@@ -4,6 +4,7 @@
 #include <libsr2/utilities/utils.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 namespace sr2 {
     parCsvFile::parCsvFile(u32 bufSz) {

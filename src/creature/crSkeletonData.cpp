@@ -70,11 +70,11 @@ namespace sr2 {
     
     crBoneData* crSkeletonData::findBone(const char* name, char postfix, u32 nameIndex) {
         char buf[128];
-        if (nameIndex) snprintf(buf, 128, "%s_%02d", name, nameIndex);
-        else strncpy(buf, name, 128);
+        if (nameIndex) snprintf(buf, 127, "%s_%02d", name, nameIndex);
+        else strncpy(buf, name, 127);
 
-        if (postfix == 'l') strncat(buf, "_l", 128);
-        else if (postfix == 'r') strncat(buf, "_r", 128);
+        if (postfix == 'l') strncat(buf, "_l", 127);
+        else if (postfix == 'r') strncat(buf, "_r", 127);
 
         for (u32 i = 0;i < boneCount;i++) {
             if (strcmp(boneData[i].name, buf) == 0) return &boneData[i];
