@@ -26,7 +26,10 @@ namespace sr2 {
 
         if (active) {
             ActiveCount++;
-            if (ActiveCount == 1 && WidgetsInstance) WidgetsInstance->master->setActive(true);
+            if (WidgetsInstance) {
+                if (ActiveCount == 1) WidgetsInstance->master->setActive(true);
+                method_0x108();
+            }
         } else {
             ActiveCount--;
             if (ActiveCount == 0 && WidgetsInstance) WidgetsInstance->master->setActive(false);

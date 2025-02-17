@@ -11,6 +11,7 @@ namespace sr2 {
     class ui2String;
 
     enum class WidgetEventType : u32 {
+        Null = 0,
         MaybeAll = 0x80000001,
         UNK36 = 0x8000000a,
         UNK58 = 0x8000000b,
@@ -35,7 +36,7 @@ namespace sr2 {
         SetValueString = 0xa0002332,
         UNK43 = 0xa0002333,
         ClearValue = 0xa00023f0,
-        UNK42 = 0xa0002710,
+        EvaluateCondition = 0xa0002710,
         UNK65 = 0xa0002ee0,
         UNK48 = 0xa00032c8,
         UNK33 = 0xa00032c9,
@@ -44,6 +45,7 @@ namespace sr2 {
         UNK51 = 0xa00032cc,
         Activated = 0xc0000064,
         Deactivated = 0xc0000069,
+        UNK66 = 0xc000006e,
         UNK11 = 0xc00003e8,
         UNK13 = 0xc00003f2,
         UNK14 = 0xc00003fc,

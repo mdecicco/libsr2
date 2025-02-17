@@ -79,7 +79,7 @@ namespace sr2 {
         ui2Widget::draw();
 
         if (m_isActive) {
-            FUN_001fd138();
+            recalculateIfNecessary();
             
             u32 x = 0;
             for (u32 c = 0;c < m_colCount;c++) {
@@ -139,7 +139,7 @@ namespace sr2 {
     }
 
     void ui2Table::method_0x58() {
-        FUN_001fdd88();
+        forceRecalculate();
     }
     
     void ui2Table::configureParser(datParser* parser) {
@@ -174,7 +174,7 @@ namespace sr2 {
             }
         }
 
-        FUN_001fdd88();
+        forceRecalculate();
     }
 
 
@@ -194,7 +194,7 @@ namespace sr2 {
         dispatchEvent(WidgetEventType::UNK11, p1);
 
         m_needsRecalculation = true;
-        FUN_001fd138();
+        recalculateIfNecessary();
     }
     
     void ui2Table::FUN_001fc6f8(const ui::NamedRef& p1, u32 col, u32 row, WidgetEventCallback p4) {
@@ -387,10 +387,10 @@ namespace sr2 {
         *p2 = field_0xa0.y;
     }
 
-    bool ui2Table::FUN_001fd138() {
+    bool ui2Table::recalculateIfNecessary() {
         if (m_needsRecalculation) {
             recalculateOffsets();
-            FUN_001fd690();
+            applyPositioning();
             return true;
         }
 
@@ -398,7 +398,7 @@ namespace sr2 {
     }
 
     void ui2Table::FUN_001fd178(u32 col, u32 row) {
-        if (FUN_001fd138()) {
+        if (recalculateIfNecessary()) {
             FUN_001fd1d0(col, row);
         }
     }
@@ -447,7 +447,7 @@ namespace sr2 {
         m_needsRecalculation = false;
     }
 
-    void ui2Table::FUN_001fd690() {
+    void ui2Table::applyPositioning() {
         if (m_colCount < 1) {
             dispatchEvent(WidgetEventType::UNK30, nullptr);
             return;
@@ -498,8 +498,8 @@ namespace sr2 {
         dispatchEvent(WidgetEventType::UNK30, nullptr);
     }
 
-    bool ui2Table::FUN_001fdd88() {
+    bool ui2Table::forceRecalculate() {
         m_needsRecalculation = true;
-        return FUN_001fd138();
+        return recalculateIfNecessary();
     }
 };

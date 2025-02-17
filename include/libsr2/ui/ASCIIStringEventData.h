@@ -10,6 +10,7 @@ namespace sr2 {
 
             virtual const char* getTypeName() const;
             virtual bool isEqualTo(ui2EventData* p1);
+            virtual bool isLessThan(ui2EventData* p1);
 
             const char* data;
     };

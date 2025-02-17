@@ -50,6 +50,10 @@ namespace sr2 {
         }
     }
 
+    const char* ui2Variable::getType() const {
+        return "ui2Variable";
+    }
+
     void ui2Variable::setIntegerData(i32 data) {
         m_intEventData->data = data;
         setIntegerData(m_intEventData);
@@ -86,7 +90,7 @@ namespace sr2 {
         dispatchEvent(WidgetEventType::ValueCleared, nullptr);
     }
 
-    VariableType ui2Variable::getType() {
+    VariableType ui2Variable::getVariableType() {
         return m_type;
     }
 

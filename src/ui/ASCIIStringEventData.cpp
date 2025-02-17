@@ -17,4 +17,9 @@ namespace sr2 {
         if (getTypeName() != p1->getTypeName()) return false;
         return strcmp(data, ((ASCIIStringEventData*)p1)->data) == 0;
     }
+
+    bool ASCIIStringEventData::isLessThan(ui2EventData* p1) {
+        if (getTypeName() != p1->getTypeName()) return false;
+        return strcmp(data, ((ASCIIStringEventData*)p1)->data) < 0;
+    }
 };

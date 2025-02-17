@@ -378,10 +378,10 @@ namespace sr2 {
         m_widgets->NameInput = new srfeNameInput("NameInput", nullptr);
         m_widgets->SavegameSelect = new srfeSavegameSelect("SavegameSelect", nullptr);
 
-        m_widgets->PlayerSelCPR = new srfePlayerSel("PlayerSelCPR", "CheckpointRace", "MainMenu", 1, nullptr);
-        m_widgets->PlayerSelJoyriding = new srfePlayerSel("PlayerSelJoyriding", "Joyriding", "MainMenu", 0, nullptr);
-        m_widgets->PlayerSelTurfWars = new srfePlayerSel("PlayerSelTurfWars", "TurfWars", "MainMenu", 1, nullptr);
-        m_widgets->PlayerSelBonus = new srfePlayerSel("PlayerSelBonus", "BonusMissions", "Extras", 1, nullptr);
+        m_widgets->PlayerSelCPR = new srfePlayerSel("PlayerSelCPR", "CheckpointRace", "MainMenu", true, nullptr);
+        m_widgets->PlayerSelJoyriding = new srfePlayerSel("PlayerSelJoyriding", "Joyriding", "MainMenu", false, nullptr);
+        m_widgets->PlayerSelTurfWars = new srfePlayerSel("PlayerSelTurfWars", "TurfWars", "MainMenu", true, nullptr);
+        m_widgets->PlayerSelBonus = new srfePlayerSel("PlayerSelBonus", "BonusMissions", "Extras", true, nullptr);
         
         m_widgets->VehicleSelBonus = new srfeVehicleSel("VehicleSelBonus", "placeholder", "BonusMissions", nullptr);
         m_widgets->VehicleSelBombTag = new srfeVehicleSel("VehicleSelBombTag", "placeholder", "BombTag", nullptr);
@@ -554,7 +554,7 @@ namespace sr2 {
             } else {
                 strncpy(m_regularStartupScreenName, m_widgets->regularStartupScreen_var->getStringData(), 30);
 
-                if (m_widgets->videoStartupScreen_var->getType() == VariableType::String) {
+                if (m_widgets->videoStartupScreen_var->getVariableType() == VariableType::String) {
                     strncpy(m_videoStartupScreenName, m_widgets->videoStartupScreen_var->getStringData(), 30);
                     // HasVideoStartupScreen = true;
                 } else {
@@ -717,7 +717,7 @@ namespace sr2 {
     }
 
     i32 InMenuState::processTeamGameSelection() {
-        if (m_widgets->team_game_var->getType() != VariableType::Integer) return 0;
+        if (m_widgets->team_game_var->getVariableType() != VariableType::Integer) return 0;
         return m_widgets->team_game_var->getIntegerData();
     }
 
@@ -725,7 +725,7 @@ namespace sr2 {
         datArgParser::Remove("cars");
         datArgParser::Remove("teamAcars");
         datArgParser::Remove("teamBcars");
-        if (m_widgets->carPl1_var->getType() != VariableType::String) return;
+        if (m_widgets->carPl1_var->getVariableType() != VariableType::String) return;
 
         const char* carMate1Pl1 = "";
         const char* carMate2Pl1 = "";
@@ -798,7 +798,7 @@ namespace sr2 {
         datArgParser::Remove("skins");
         datArgParser::Remove("teamAskin");
         datArgParser::Remove("teamBskin");
-        if (isSinglePlayerMission || m_widgets->skin1_var->getType() != VariableType::String) return;
+        if (isSinglePlayerMission || m_widgets->skin1_var->getVariableType() != VariableType::String) return;
 
         strncpy(m_selections.teamSkinsP1, m_widgets->skin1_var->getStringData(), 30);
 
@@ -821,11 +821,11 @@ namespace sr2 {
 
     void InMenuState::processTransmissionSelections() {
         datArgParser::Remove("trans");
-        if (m_widgets->transmission1_var->getType() == VariableType::Integer) {
+        if (m_widgets->transmission1_var->getVariableType() == VariableType::Integer) {
             snprintf(m_selections.transmissions, 30, "%d", m_widgets->transmission1_var->getIntegerData());
 
             if (m_selections.humans[0] != '1') {
-                if (m_widgets->transmission2_var->getType() == VariableType::Integer) {
+                if (m_widgets->transmission2_var->getVariableType() == VariableType::Integer) {
                     char buf[32] = { 0 };
                     snprintf(buf, 32, "%s%d", m_selections.transmissions, m_widgets->transmission2_var->getIntegerData());
                     strncpy(m_selections.transmissions, buf, 30);
@@ -843,7 +843,7 @@ namespace sr2 {
         }
         
         u32 numAI = 0;
-        if (m_widgets->police_var->getType() != VariableType::Integer || m_widgets->police_var->getIntegerData() != 0) {
+        if (m_widgets->police_var->getVariableType() != VariableType::Integer || m_widgets->police_var->getIntegerData() != 0) {
             if (false /* INT_0035f2e0 == -1*/) {
                 numAI = 14;
                 if (m_selections.humans[0] == '1') numAI = 15;
@@ -871,7 +871,7 @@ namespace sr2 {
     }
     
     void InMenuState::processTimeOfDaySelection() {
-        if (false /* INT_0035f2e0 != -1 */ || m_widgets->timeOfDay_var->getType() != VariableType::Integer) {
+        if (false /* INT_0035f2e0 != -1 */ || m_widgets->timeOfDay_var->getVariableType() != VariableType::Integer) {
             datArgParser::Remove("variant");
             return;
         }

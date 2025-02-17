@@ -55,12 +55,12 @@ namespace sr2 {
             void FUN_001fd0f0(u32* outCol, u32* outRow);
             void FUN_001fd108(i32 p1, i32 p2);
             void FUN_001fd120(i32* p1, i32* p2);
-            bool FUN_001fd138();
+            bool recalculateIfNecessary();
             void FUN_001fd178(u32 col, u32 row);
             void FUN_001fd1d0(u32 col, u32 row);
             void recalculateOffsets();
-            void FUN_001fd690();
-            bool FUN_001fdd88();
+            void applyPositioning();
+            bool forceRecalculate();
         
         protected:
             u32 m_rowCount;

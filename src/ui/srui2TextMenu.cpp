@@ -349,8 +349,8 @@ namespace sr2 {
             m_menu->FUN_001f86c8(index, 0, WidgetEventType::SetValueString, event);
         }
 
-        m_allTbl->FUN_001fdd88();
-        m_menuItemsTbl->FUN_001fdd88();
+        m_allTbl->forceRecalculate();
+        m_menuItemsTbl->forceRecalculate();
         m_menu->FUN_001fa518();
 
         delete [] str0;
@@ -504,8 +504,8 @@ namespace sr2 {
             m_menuItemsTbl->setRowSize(m_lineSpacing[i], i);
         }
 
-        m_allTbl->FUN_001fdd88();
-        m_menuItemsTbl->FUN_001fdd88();
+        m_allTbl->forceRecalculate();
+        m_menuItemsTbl->forceRecalculate();
     }
 
     void srui2TextMenu::FUN_001e6948() {

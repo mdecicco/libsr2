@@ -66,7 +66,7 @@ namespace sr2 {
     }
 
     void srfeBackground::method_0x108() {
-        m_headingText->setVisibility(1);
+        m_headingText->setVisibility(true);
         WidgetsInstance->bluebar_l_snd->FUN_00207eb8();
         WidgetsInstance->bluebar_r_snd->FUN_00207eb8();
     }

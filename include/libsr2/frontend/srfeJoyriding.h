@@ -2,7 +2,7 @@
 #include <libsr2/types.h>
 #include <libsr2/frontend/srfeBasicLayout2.h>
 #include <libsr2/ui/srui2ButtonMenu.h>
-// #include <libsr2/ui/ui2UnknownMenu0.h>
+#include <libsr2/ui/ui2UnknownMenu0.h>
 #include <libsr2/ui/ui2Table.h>
 #include <libsr2/ui/ui2Condition.h>
 
@@ -19,11 +19,13 @@ namespace sr2 {
             virtual bool method_0x118();
             virtual void method_0x128();
 
+            void interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
+
         protected:
             WidgetRef<srui2ButtonMenu> m_levelBtnMenu;
             WidgetRef<srui2ButtonMenu> m_timeOfDayBtnMenu;
             WidgetRef<srui2ButtonMenu> m_policeBtnMenu;
-            // WidgetRef<ui2UnknownMenu0> m_menuMenu;
+            WidgetRef<ui2UnknownMenu0> m_menuMenu;
             WidgetRef<ui2Table> m_menuTable;
             WidgetRef<ui2Condition> m_nextScreenP1Cond;
     };

@@ -3,43 +3,58 @@
 #include <libsr2/ui/ui2Widget.h>
 
 namespace sr2 {
+    enum class CondComparator {
+        LessThan,
+        LessThanOrEqualTo,
+        GreaterThan,
+        GreaterThanOrEqualTo,
+        IsEqualTo,
+        IsNotEqualTo
+    };
+
     class ui2Condition : public ui2Widget {
         public:
             struct Data {
-                Data* next;
-                Data* last;
-                ui2String str;
-
-                ui::BaseRef field_0x8;
-                undefined4 field_0x10;
-                ui::BaseRef field_0x14;
-                undefined8 field_0x1c;
-
-                void FUN_002018f0();
+                ui2String targetName;
+                WidgetRef<ui2EventData> compareTo;
+                WidgetEventType eventType;
+                WidgetRef<ui2EventData> eventData;
+                WidgetEventCallback callback;
             };
 
             ui2Condition(
                 const char* name,
-                const char* p2,
-                undefined4 p3,
+                const char* variableName,
+                CondComparator defaultComparator,
                 const WidgetRef<ui2Master>& master
             );
             virtual ~ui2Condition();
 
             virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
 
-            void FUN_00200c40(const char* p1);
-            void FUN_00200c70(const ui::NamedRef& p1);
-            void FUN_00200cb8(const ui::BaseRef& p1, const ui::NamedRef& p2, undefined4 p3, ui::BaseRef& p4, u64 p5);
-            void FUN_00200d38(const ui::BaseRef& p1, const char* p2, undefined4 p3, ui::BaseRef& p4, u64 p5);
-            void FUN_00200fe8(u64 p1, const ui::BaseRef& p2);
-            void FUN_00201378(const ui::BaseRef& p1);
-            void FUN_002013b0();
+            void setVariableName(const char* p1);
+            void setVariable(const ui::NamedRef& p1);
+            void addTarget(
+                const WidgetRef<ui2EventData>& compareTo,
+                const ui::NamedRef& target,
+                WidgetEventType eventType,
+                const WidgetRef<ui2EventData>& eventData,
+                WidgetEventCallback callback
+            );
+            void addTarget(
+                const WidgetRef<ui2EventData>& compareTo,
+                const char* targetName,
+                WidgetEventType eventType,
+                const WidgetRef<ui2EventData>& eventData,
+                WidgetEventCallback callback
+            );
+            void evaluateEventData(CondComparator comparator, const WidgetRef<ui2EventData>& eventData);
+            void evaluateEventData(const WidgetRef<ui2EventData>& p1);
+            void evaluateEventData();
 
         protected:
-            Data* m_someObject;
-
+            utils::Array<Data> m_targets;
             ui2String m_variableName;
-            undefined4 field_0x88;
+            CondComparator m_defaultComparator;
     };
 };

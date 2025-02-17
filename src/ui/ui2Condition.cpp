@@ -1,94 +1,125 @@
 #include <libsr2/ui/ui2Condition.h>
 #include <libsr2/ui/ui2Base.h>
 #include <libsr2/ui/ui2Variable.h>
+#include <utils/Array.hpp>
 
 namespace sr2 {
-    void ui2Condition::Data::FUN_002018f0() {
-    }
-
-
     ui2Condition::ui2Condition(
         const char* name,
-        const char* p2,
-        undefined4 p3,
+        const char* variableName,
+        CondComparator defaultComparator,
         const WidgetRef<ui2Master>& master
     ) : ui2Widget(name, master, true) {
-        m_variableName.set(name);
-        field_0x88 = p3;
-
-        m_someObject = new Data();
-        m_someObject->next = m_someObject;
-        m_someObject->last = m_someObject;
+        m_variableName.set(variableName);
+        m_defaultComparator = defaultComparator;
     }
 
     ui2Condition::~ui2Condition() {
-        m_someObject->FUN_002018f0();
-        delete m_someObject;
     }
 
     void ui2Condition::onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
-        if (!m_isActive || event != WidgetEventType::UNK42) {
+        if (!m_isActive || event != WidgetEventType::EvaluateCondition) {
             ui2Widget::onEvent(source, event, data);
             return;
         }
 
-        FUN_00201378(nullptr);
+        evaluateEventData(nullptr);
     }
     
-    void ui2Condition::FUN_00200c40(const char* p1) {
+    void ui2Condition::setVariableName(const char* p1) {
         m_variableName.set(p1);
     }
     
-    void ui2Condition::FUN_00200c70(const ui::NamedRef& p1) {
+    void ui2Condition::setVariable(const ui::NamedRef& p1) {
         m_variableName.set(p1->getName());
     }
 
-    void ui2Condition::FUN_00200cb8(const ui::BaseRef& p1, const ui::NamedRef& p2, undefined4 p3, ui::BaseRef& p4, u64 p5) {
-        FUN_00200d38(p1, p2->getName(), p3, p4, p5);
+    void ui2Condition::addTarget(
+        const WidgetRef<ui2EventData>& compareTo,
+        const ui::NamedRef& target,
+        WidgetEventType eventType,
+        const WidgetRef<ui2EventData>& eventData,
+        WidgetEventCallback callback
+    ) {
+        addTarget(compareTo, target->getName(), eventType, eventData, callback);
     }
 
-    void ui2Condition::FUN_00200d38(const ui::BaseRef& p1, const char* p2, undefined4 p3, ui::BaseRef& p4, u64 p5) {
-        Data* obj = new Data();
-
-        // actually assigned to *(sp + 0x48), which is never actually assigned
-        obj->field_0x10 = 0;
-
-        // actually assigned to *(sp + 0x54), which is never actually assigned
-        obj->field_0x1c = 0;
-
-        obj->next = m_someObject->next;
-        obj->last = m_someObject->next->last;
-        
-        Data* next = m_someObject->next;
-        next->last->next = obj;
-        next->last = obj;
-
-        next->field_0x8 = p1;
-        next->field_0x10 = p3;
-        next->field_0x1c = p5;
-    }
-    
-    void ui2Condition::FUN_00200fe8(u64 p1, const ui::BaseRef& p2) {
-        // todo
+    void ui2Condition::addTarget(
+        const WidgetRef<ui2EventData>& compareTo,
+        const char* targetName,
+        WidgetEventType eventType,
+        const WidgetRef<ui2EventData>& eventData,
+        WidgetEventCallback callback
+    ) {
+        m_targets.emplace(Data());
+        Data& obj = m_targets.last();
+        obj.compareTo = compareTo;
+        obj.eventType = eventType;
+        obj.eventData = eventData;
+        obj.callback = callback;
+        obj.targetName.set(targetName);
     }
     
-    void ui2Condition::FUN_00201378(const ui::BaseRef& p1) {
+    void ui2Condition::evaluateEventData(CondComparator comparator, const WidgetRef<ui2EventData>& eventData) {
+        auto gm = ui2Base::getGlobalMaster();
+
+        for (u32 i = 0;i < m_targets.size();i++) {
+            Data& obj = m_targets[i];
+            bool test = false;
+            switch (comparator) {
+                case CondComparator::LessThan: {
+                    test = eventData->isLessThan(*obj.compareTo);
+                    break;
+                }
+                case CondComparator::LessThanOrEqualTo: {
+                    test = eventData->isLessThanOrEqualTo(*obj.compareTo);
+                    break;
+                }
+                case CondComparator::GreaterThan: {
+                    test = eventData->isGreaterThan(*obj.compareTo);
+                    break;
+                }
+                case CondComparator::GreaterThanOrEqualTo: {
+                    test = eventData->isGreaterThanOrEqualTo(*obj.compareTo);
+                    break;
+                }
+                case CondComparator::IsEqualTo: {
+                    test = eventData->isEqualTo(*obj.compareTo);
+                    break;
+                }
+                case CondComparator::IsNotEqualTo: {
+                    test = eventData->isNotEqualTo(*obj.compareTo);
+                    break;
+                }
+                default: return;
+            }
+
+            if (!test) continue;
+
+            ui::NamedRef w = gm->findWidget(obj.targetName.get()).cast<ui2Widget>();
+            if (!w) continue;
+
+            ((*w)->*obj.callback)(this, obj.eventType, obj.eventData);
+        }
+    }
+    
+    void ui2Condition::evaluateEventData(const WidgetRef<ui2EventData>& p1) {
         if (p1) {
-            FUN_00200fe8(field_0x88, p1);
+            evaluateEventData(m_defaultComparator, p1);
             return;
         }
 
-        FUN_002013b0();
+        evaluateEventData();
     }
 
-    void ui2Condition::FUN_002013b0() {
+    void ui2Condition::evaluateEventData() {
         WidgetRef<ui2Variable> var = ui2Base::getGlobalMaster()->findWidget(m_variableName.get()).cast<ui2Variable>();
 
         if (!var) {
-            FUN_00200fe8(field_0x88, nullptr);
+            evaluateEventData(m_defaultComparator, nullptr);
             return;
         }
 
-        FUN_00200fe8(field_0x88, var->getEvent());
+        evaluateEventData(m_defaultComparator, var->getEvent());
     }
 };

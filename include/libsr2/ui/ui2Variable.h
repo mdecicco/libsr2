@@ -18,13 +18,14 @@ namespace sr2 {
 
             void init();
             virtual void onEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
+            virtual const char* getType() const;
 
             void setIntegerData(i32 data);
             void setIntegerData(const WidgetRef<IntegerEventData>& data);
             void setStringData(const char* data);
             void setStringData(const WidgetRef<ASCIIStringEventData>& data);
             void maybeClearValue();
-            VariableType getType();
+            VariableType getVariableType();
             i32 getIntegerData();
             const char* getStringData();
             WidgetRef<ui2EventData> getEvent();
