@@ -18,6 +18,6 @@ namespace sr2 {
             f32 m_seconds;
             f32 m_invSeconds;
 
-            undefined4 field10_0x34;
+            undefined4 m_field10_0x34;
     };
 };
