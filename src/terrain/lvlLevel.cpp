@@ -18,4 +18,8 @@ namespace sr2 {
 
     void lvlLevel::moveToRoom(unkInstance0* instance, i16 roomIdx) {
     }
+
+    orTerrainGrid* lvlLevel::getTerrain() const {
+        return nullptr;
+    }
 };

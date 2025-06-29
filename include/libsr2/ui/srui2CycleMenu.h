@@ -27,6 +27,7 @@ namespace sr2 {
 
             void init(const char* p1, const char* p2, const char* p3, i32 x, i32 y, const char* p6);
             void interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data);
+            void addOption(const char* name, u32 index, const char* value);
         
         protected:
             vec2i m_pos;

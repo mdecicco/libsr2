@@ -8,6 +8,15 @@ namespace sr2 {
             x.z * rhs.x + rhs.y * y.z + rhs.z * z.z
         };
     }
+
+    vec3f mat3x3f::multTransposed(const vec3f& rhs) const {
+        return {
+            rhs.x * x.x + rhs.y * x.y + rhs.z * x.z,
+            rhs.x * y.x + rhs.y * y.y + rhs.z * y.z,
+            rhs.x * z.x + rhs.y * z.y + rhs.z * z.z
+        };
+    }
+
 	mat3x3f mat3x3f::inverse() const {
         f32 det = x.x * (y.y * z.z - z.y * y.z) - x.y * (y.x * z.z - y.z * z.x) + x.z * (y.x * z.y - y.y * z.x);
         f32 invdet = 1.0f / det;

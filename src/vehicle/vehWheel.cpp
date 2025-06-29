@@ -170,7 +170,7 @@ namespace sr2 {
             bool bVar2 = false;
             f32 fVar10 = 0.0f;
             if (suspension_limit < suspension_value) {
-                f32 fVar6 = ics->calcCollisionNoFriction(field_0x178, world_transform_1.y, ground_contact_pt.contact_point);
+                f32 fVar6 = ics->calcCollisionNoFriction(field_0x178, world_transform_1.y, ground_contact_pt.contactPoint);
                 bVar2 = fVar6 > 0.0f;
                 if (fVar6 > 0.0f) {
                     fVar10 = fVar6 * 0.25f * datTimeManager::InvSeconds;
@@ -181,7 +181,7 @@ namespace sr2 {
                 if (DAT_00363660 != 0) {
                     vec3f unk0;
                     math::mult(unk0, world_transform_1.y, (suspension_value - suspension_limit) * p2);
-                    ics->calcNetPush(unk0);
+                    ics->calcNetPush(unk0, vec3f());
                 }
 
                 bVar4 = true;
@@ -420,11 +420,11 @@ namespace sr2 {
             return;
         }
 
-        f32 fVar20 = math::dot(ground_contact_pt.field3_0x14, tform->y);
+        f32 fVar20 = math::dot(ground_contact_pt.normal, tform->y);
         bool bVar6 = false;
         if (fVar20 <= 0.02f) {
-            world_transform_1.w = ground_contact_pt.contact_point;
-            world_transform_1.y = ground_contact_pt.field3_0x14;
+            world_transform_1.w = ground_contact_pt.contactPoint;
+            world_transform_1.y = ground_contact_pt.normal;
             math::cross(world_transform_1.z, world_transform.x, world_transform_1.y);
 
             f32 magSq = math::magnitudeSq(world_transform_1.z);
@@ -433,7 +433,7 @@ namespace sr2 {
                 math::mult(world_transform_1.z, invMag);
                 math::cross(world_transform_1.x, world_transform_1.y, world_transform_1.z);
 
-                bVar6 = fabsf(ground_contact_pt.field3_0x14.y) < 0.001f;
+                bVar6 = fabsf(ground_contact_pt.normal.y) < 0.001f;
             } else has_intersection = false;
         } else has_intersection = false;
 
@@ -455,15 +455,15 @@ namespace sr2 {
 
         vec3f velocity;
         vec3f velocity2;
-        ics->getLocalFilteredVelocity2(ground_contact_pt.contact_point, velocity);
+        ics->getLocalFilteredVelocity2(ground_contact_pt.contactPoint, velocity);
 
-        if (!ground_contact_pt.field9_0x2c && ground_contact_pt.some_cell_idx) {
+        if (!ground_contact_pt.field9_0x2c && ground_contact_pt.someCellIdx) {
             phInst* inst = nullptr; // SpatialPartitioner::Instance->getPhInst(some_cell_idx);
-            // inst->getLocalVelocity(ground_contact_pt.contact_point, velocity2);
+            // inst->getLocalVelocity(ground_contact_pt.contactPoint, velocity2);
         } else {
             phInertialCS* ics = ground_contact_pt.field9_0x2c->ics;
             
-            if (ics) ics->getLocalVelocity(ground_contact_pt.contact_point, velocity2);
+            if (ics) ics->getLocalVelocity(ground_contact_pt.contactPoint, velocity2);
             else math::zero(velocity2);
         }
 

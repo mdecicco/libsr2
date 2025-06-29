@@ -138,4 +138,7 @@ namespace sr2 {
     void srui2CycleMenu::interceptEvent(const ui::NamedRef& source, WidgetEventType event, const WidgetRef<ui2EventData>& data) {
         // todo (function at 001efb30)
     }
+
+    void srui2CycleMenu::addOption(const char* name, u32 index, const char* value) {
+    }
 };

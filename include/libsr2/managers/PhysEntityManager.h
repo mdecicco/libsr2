@@ -22,6 +22,7 @@ namespace sr2 {
             u32 insert(phBound* bound, const std::string& hash);
             PhysEntity* getEntity(f32 u0, const char* name, i32 u1, i32* outIdx);
             void initEntity(f32 u0, u32 idx, phBound* bound, i32 u1);
+            void initEntity(PhysEntity* ent, phInertialCS* ics);
 
             PhysEntity* entities;
             u32 freeCount;

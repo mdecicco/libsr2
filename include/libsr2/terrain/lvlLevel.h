@@ -4,12 +4,14 @@
 namespace sr2 {
     class unkInstance0;
     class CullRoomData;
+    class orTerrainGrid;
 
     class lvlLevel {
         public:
             static lvlLevel* get();
             
             virtual void moveToRoom(unkInstance0* instance, i16 roomIdx);
+            orTerrainGrid* getTerrain() const;
 
         protected:
             lvlLevel();

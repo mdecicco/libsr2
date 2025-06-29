@@ -19,10 +19,12 @@ namespace sr2 {
             static void create();
             static void destroy();
             static missManager* get();
+
             missPlayer* getPlayer(u32 idx);
             u32 getHumanCount() const;
             u32 getAICount() const;
             u32 getParkedCount() const;
+            Mission* getCurrentMission() const;
 
             bool load(const std::string& map_name, const std::string& mission);
             bool loadScoring();
@@ -40,6 +42,7 @@ namespace sr2 {
             u32 m_aiCount;
             u32 m_humanCount;
             u32 m_parkedCount;
+            u32 m_currentMissionIdx;
             missPlayer m_players[16];
             u32 m_missionCount;
             Mission* m_missions[32];

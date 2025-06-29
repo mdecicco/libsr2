@@ -7,6 +7,9 @@ namespace sr2 {
     class datAsciiTokenizer;
     class datBinTokenizer;
     class phMaterial;
+    struct phSegment;
+    struct phIntersectionPoint;
+
 
     class phBound : public IDebugDrawable {
         public:
@@ -25,7 +28,12 @@ namespace sr2 {
             virtual bool parseBinary(datBinTokenizer& tok);
             bool parse(datAsciiTokenizer& tok, u32 unk);
             bool parse(datBinTokenizer& tok, u32 unk);
+            vec3f getCenter(const mat3x4f& transform);
             void FUN_0028ce20(vec3f& outPosition, const mat3x4f& tform);
+
+            virtual bool testSphere(const vec3f& center, f32 radius, vec3f& outProjection, vec3f& outDirNormal, f32& outPenetration);
+            virtual bool testSegmentPoint(phSegment& seg, f32 radius, phIntersectionPoint* out);
+            virtual bool testSphere(f32 radius, const vec3f& center, vec3f& outProjection, vec3f& outDirNormal, f32& outPenetration);
 
             static phBound* load(const char* filename);
             static phBound* parse(datAsciiTokenizer& tok);

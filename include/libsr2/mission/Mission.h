@@ -32,6 +32,7 @@ namespace sr2 {
             virtual bool load(TaggedStream* tsv) = 0;
             virtual void method_0x40() = 0;
             virtual void method_0x50() = 0;
+            virtual void onImpact(f32 p1, f32 p2, u8 p3, const mat3x4f& p4);
             void FUN_0019c698();
 
 

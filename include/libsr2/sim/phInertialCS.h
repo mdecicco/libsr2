@@ -13,12 +13,12 @@ namespace sr2 {
             virtual void zero();
             virtual void freeze();
             virtual void init(f32 mass, f32 Ixx, f32 Iyy, f32 Izz);
-            virtual void initFromValues();
+            virtual void initFromValues(f32 mass, f32 invMass, const vec3f& angInertia, const vec3f& invAngInertia);
             virtual void update();
             virtual void updateInner(f32 dt);
             virtual void updateImplicit();
             virtual void method_0x40();
-            virtual void calcNetPush(const vec3f& unk);
+            virtual void calcNetPush(const vec3f& p1, const vec3f& p2);
             virtual void moveICS();
             virtual void getLocalVelocity(vec3f& some_position, vec3f& velocity);
             virtual void getLocalAcceleration(vec3f* param_1, vec3f* param_2);
@@ -38,7 +38,7 @@ namespace sr2 {
 
             mat3x4f* addInertia(mat3x4f* param_1, f32 param_2, vec3f* param_4, vec3f* param_5);
             mat3x4f* addInertia(mat3x4f *param_1, f32 param_2, vec3f *param_4, mat3x4f *param_5);
-            void applyContactForce(vec3f* param_1, vec3f* param_2, mat3x4f* param_3, vec3f* param_4);
+            void applyContactForce(const vec3f& force, const vec3f& maybeContactPoint, const mat3x4f& param_3, vec3f* param_4);
             mat3x4f* findPrincipalAxes(mat3x4f* param_2, f32 param_3, f32 param_4, f32 param_5);
             void getCMFilteredVelocity(vec3f* velocity);
             void getLocalFilteredVelocity2(vec3f& out0, vec3f& out1);
@@ -71,7 +71,8 @@ namespace sr2 {
             vec3f angular_momentum;
             vec3f force;
             vec3f torque;
-            vec3f oversample_force;
+            vec3f oversampleForce;
+            vec3f oversampleTorque;
             vec3f impulse;
             vec3f angular_impulse;
             vec3f push;
@@ -93,7 +94,6 @@ namespace sr2 {
             undefined field_0x5d;
             undefined field_0x5e;
             undefined field_0x5f;
-            vec3f field_0xcc;
             undefined4 field_0x128;
             undefined field_0x12c;
             undefined field_0x12d;

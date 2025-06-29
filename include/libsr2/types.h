@@ -131,6 +131,7 @@ namespace sr2 {
 		vec3f x, y, z;
 
 		vec3f operator*(const vec3f& rhs) const;
+		vec3f multTransposed(const vec3f& rhs) const;
 		mat3x3f inverse() const;
 		mat3x3f transposed() const;
 		
@@ -147,6 +148,9 @@ namespace sr2 {
 
 		vec3f operator[](u8 axis) const;
 		vec3f& operator[](u8 axis);
+
+		const mat3x3f& basis() const;
+		mat3x3f& basis();
 
 		static const mat3x4f identity;
 	};

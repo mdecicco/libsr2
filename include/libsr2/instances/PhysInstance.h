@@ -9,6 +9,8 @@ namespace sr2 {
             PhysInstance();
             ~PhysInstance();
 
+            virtual mat3x4f getTransform() const;
+            virtual void setTransform(const mat3x4f& transform);
             virtual f32 phinst_method_0x30();
 
             f32 unk0, unk2;

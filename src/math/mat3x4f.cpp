@@ -420,4 +420,12 @@ namespace sr2 {
     vec3f& mat3x4f::operator[](u8 axis) {
         return (&x)[axis];
     }
+
+	const mat3x3f& mat3x4f::basis() const {
+		return *reinterpret_cast<const mat3x3f*>(&x);
+	}
+
+	mat3x3f& mat3x4f::basis() {
+		return *reinterpret_cast<mat3x3f*>(&x);
+	}
 };

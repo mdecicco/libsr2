@@ -13,6 +13,8 @@ namespace sr2 {
         template <typename T> constexpr T min(T a, T b) { return a < b ? a : b; }
         template <typename T> constexpr T max(T a, T b) { return a < b ? b : a; }
         template <typename T> constexpr T clamp(T val, T lower, T upper) { return min(max(val, lower), upper); }
+        template <typename T> constexpr T abs(T val) { return val < 0 ? -val : val; }
+        vec3f abs(const vec3f& v);
 
         f32 RealCubic(f32 a, f32 b, f32 c, f32 d, f32* result_0, f32* result_1, f32* result_2);
         f32 CubeRoot(f32 x);

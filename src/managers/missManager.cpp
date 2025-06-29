@@ -39,6 +39,7 @@ namespace sr2 {
 
     missManager::missManager() {
         m_scoring.is_loaded_I_guess = 0;
+        m_currentMissionIdx = 0;
         m_aiCount = m_humanCount = m_parkedCount = 0;
         m_missionCount = 0;
         m_contrabandCount = 0;
@@ -69,6 +70,10 @@ namespace sr2 {
 
     u32 missManager::getParkedCount() const {
         return m_parkedCount;
+    }
+    
+    Mission* missManager::getCurrentMission() const {
+        return m_missions[m_currentMissionIdx];
     }
 
     bool missManager::load(const std::string& map_name, const std::string& mission) {

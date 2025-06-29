@@ -93,7 +93,7 @@ namespace sr2 {
     }
 
     // todo
-    void phInertialCS::initFromValues() {
+    void phInertialCS::initFromValues(f32 mass, f32 invMass, const vec3f& angInertia, const vec3f& invAngInertia) {
 
     }
 
@@ -116,8 +116,8 @@ namespace sr2 {
     void phInertialCS::method_0x40() {
     }
 
-    void phInertialCS::calcNetPush(const vec3f& unk) {
-        math::FUN_0031b2f8(push, unk);
+    void phInertialCS::calcNetPush(const vec3f& p1, const vec3f& p2) {
+        math::FUN_0031b2f8(push, p1);
     }
     
     // todo
@@ -333,8 +333,8 @@ namespace sr2 {
     void phInertialCS::zeroForces() {
         math::zero(force);
         math::zero(torque);
-        math::zero(oversample_force);
-        math::zero(field_0xcc);
+        math::zero(oversampleForce);
+        math::zero(oversampleTorque);
         math::zero(impulse);
         math::zero(angular_impulse);
         math::zero(field_0x130);
@@ -493,27 +493,27 @@ namespace sr2 {
         return param_1;
     }
 
-    void phInertialCS::applyContactForce(vec3f* param_1, vec3f* param_2, mat3x4f* param_3, vec3f* param_4) {
+    void phInertialCS::applyContactForce(const vec3f& force, const vec3f& maybeContactPoint, const mat3x4f& param_3, vec3f* param_4) {
         vec3f local_80;
         mat3x4f local_70;
 
         field_0x128 = 1;
-        math::add(oversample_force, *param_1);
+        math::add(oversampleForce, force);
 
         if (param_4 == nullptr) {
             param_4 = &local_80;
-            math::sub(local_80, *param_2, world_transform.w);
+            math::sub(local_80, maybeContactPoint, world_transform.w);
         }
 
         needs_oversampling = true;
         vec3f u0;
-        math::cross(u0, *param_4, *param_1);
-        math::add(field_0xcc, u0);
+        math::cross(u0, *param_4, force);
+        math::add(oversampleTorque, u0);
 
-        math::add(field_0x130.x, param_3->x);
-        math::add(field_0x130.y, param_3->y);
-        math::add(field_0x130.z, param_3->z);
-        math::add(field_0x130.w, param_3->w);
+        math::add(field_0x130.x, param_3.x);
+        math::add(field_0x130.y, param_3.y);
+        math::add(field_0x130.z, param_3.z);
+        math::add(field_0x130.w, param_3.w);
 
         local_70.x.x =  0.0f;
         local_70.x.y = -param_4->z;
@@ -527,7 +527,7 @@ namespace sr2 {
         local_70.z.y =  param_4->x;
         local_70.z.z =  0.0f;
 
-        math::mult(local_70, *param_3);
+        math::mult(local_70, param_3);
         //mat3x4f::addEq(&field_0x160, &local_70);
         //mat3x4f::Dot3x3CrossProdTranspose(&local_70, param_4);
         //mat3x4f::addEq(&field_0x190 ,&local_70);

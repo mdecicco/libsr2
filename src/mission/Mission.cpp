@@ -38,8 +38,10 @@ namespace sr2 {
     Mission::~Mission() {
     }
 
-    void Mission::FUN_0019c698() {
+    void Mission::onImpact(f32 p1, f32 p2, u8 p3, const mat3x4f& p4) {
+    }
 
+    void Mission::FUN_0019c698() {
     }
 
     void Mission::debugPrintBaseState() {

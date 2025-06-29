@@ -49,9 +49,9 @@ namespace sr2 {
         policeVar->maybeClearValue();
 
         m_menuMenu = new ui2UnknownMenu0("Joyriding_menuMenu_menu", 1, 3, nullptr);
-        m_menuMenu->FUN_001f8218(m_levelBtnMenu, 0, 0, 1, &ui2Widget::onEvent);
-        m_menuMenu->FUN_001f8218(m_timeOfDayBtnMenu, 0, 1, 1, &ui2Widget::onEvent);
-        m_menuMenu->FUN_001f8218(m_policeBtnMenu, 0, 2, 1, &ui2Widget::onEvent);
+        m_menuMenu->FUN_001f8218(m_levelBtnMenu, 0, 0, 1, &ui2Widget::acceptEvent);
+        m_menuMenu->FUN_001f8218(m_timeOfDayBtnMenu, 0, 1, 1, &ui2Widget::acceptEvent);
+        m_menuMenu->FUN_001f8218(m_policeBtnMenu, 0, 2, 1, &ui2Widget::acceptEvent);
         m_menuMenu->FUN_001fa518();
 
         m_input->addListener(m_menuMenu, WidgetEventType::AnyInput);
@@ -67,11 +67,11 @@ namespace sr2 {
 
         WidgetRef<ASCIIStringEventData> eventData = new ASCIIStringEventData();
         eventData->data = "1";
-        m_nextScreenP1Cond->addTarget(eventData, "VehicleSelJoyriding", WidgetEventType::UNK28, nullptr, &ui2Widget::onEvent);
+        m_nextScreenP1Cond->addTarget(eventData, "VehicleSelJoyriding", WidgetEventType::UNK28, nullptr, &ui2Widget::acceptEvent);
 
         eventData = new ASCIIStringEventData();
         eventData->data = "2";
-        m_nextScreenP1Cond->addTarget(eventData, "VehicleSel2PlJoyriding", WidgetEventType::UNK28, nullptr, &ui2Widget::onEvent);
+        m_nextScreenP1Cond->addTarget(eventData, "VehicleSel2PlJoyriding", WidgetEventType::UNK28, nullptr, &ui2Widget::acceptEvent);
 
         m_nextScreenP1Cond->addEventMapper(WidgetEventType::AcceptPressed, WidgetEventType::EvaluateCondition, nullptr);
 
@@ -84,9 +84,9 @@ namespace sr2 {
 
         m_menuTable = new ui2Table("Joyriding_menuTable_tbl", 1, 3, 30, 130, nullptr);
         m_menuTable->setRowSizes(60, -1, -2);
-        m_menuTable->FUN_001fc6f8(m_levelBtnMenu, 0, 0, &ui2Widget::onEvent);
-        m_menuTable->FUN_001fc6f8(m_timeOfDayBtnMenu, 0, 1, &ui2Widget::onEvent);
-        m_menuTable->FUN_001fc6f8(m_policeBtnMenu, 0, 2, &ui2Widget::onEvent);
+        m_menuTable->FUN_001fc6f8(m_levelBtnMenu, 0, 0, &ui2Widget::acceptEvent);
+        m_menuTable->FUN_001fc6f8(m_timeOfDayBtnMenu, 0, 1, &ui2Widget::acceptEvent);
+        m_menuTable->FUN_001fc6f8(m_policeBtnMenu, 0, 2, &ui2Widget::acceptEvent);
 
         m_menuTable->forceRecalculate();
     }

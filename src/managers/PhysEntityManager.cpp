@@ -323,6 +323,10 @@ namespace sr2 {
         entities[idx].invAngInertia = ics.inv_ang_inertia;
     }
 
+    void PhysEntityManager::initEntity(PhysEntity* ent, phInertialCS* ics) {
+        ics->initFromValues(ent->mass, ent->invMass, ent->angInertia, ent->invAngInertia);
+    }
+
     PhysEntityManager* PhysEntityManager::create(u32 capacity) {
         if (instance) return instance;
         instance = new PhysEntityManager(capacity);

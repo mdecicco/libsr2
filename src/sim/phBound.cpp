@@ -6,6 +6,8 @@
 #include <libsr2/sim/phBoundGeometry.h>
 #include <libsr2/sim/phBoundOTGrid.h>
 #include <libsr2/sim/phBoundComposite.h>
+#include <libsr2/sim/phSegment.h>
+#include <libsr2/sim/phIntersectionPoint.h>
 #include <libsr2/managers/datAssetManager.h>
 #include <libsr2/io/datAsciiTokenizer.h>
 #include <libsr2/io/datBinTokenizer.h>
@@ -124,14 +126,34 @@ namespace sr2 {
         return false;
     }
 
+    vec3f phBound::getCenter(const mat3x4f& transform) {
+        if (!centroidIsSet) return transform.w;
+
+        return transform * centroid;
+    }
+
     void phBound::FUN_0028ce20(vec3f& outPosition, const mat3x4f& tform) {
-        if (centroidIsSet) {
+        if (!centroidIsSet) {
             math::copy(outPosition, tform.w);
             return;
         }
         
         math::mult(outPosition, tform, centroid);
         math::add(outPosition, tform.w);
+    }
+
+    bool phBound::testSphere(const vec3f& center, f32 radius, vec3f& outProjection, vec3f& outDirNormal, f32& outPenetration) {
+        return false;
+    }
+
+    bool phBound::testSegmentPoint(phSegment& seg, f32 radius, phIntersectionPoint* out) {
+        // todo
+        return false;
+    }
+
+    bool phBound::testSphere(f32 radius, const vec3f& center, vec3f& outProjection, vec3f& outDirNormal, f32& outPenetration) {
+        // todo
+        return false;
     }
 
     phBound* phBound::parse(datAsciiTokenizer& tok) {

@@ -10,6 +10,7 @@ namespace sr2 {
             ~phBoundSphere();
 
             void setRadius(f32 radius);
+            bool testSphere(const vec3f& center, f32 radius, vec3f& outProjection, vec3f& outDirNormal, f32& outPenetration);
 
             phMaterial* material;
     };

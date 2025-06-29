@@ -4,6 +4,10 @@
 
 namespace sr2 {
     namespace math {
+        vec3f abs(const vec3f& v) {
+            return { abs(v.x), abs(v.y), abs(v.z) };
+        }
+
         f32 RealCubic(f32 a, f32 b, f32 c, f32 d, f32* result_0, f32* result_1, f32* result_2) { 
             undefined4 uVar1;
             float fVar2;

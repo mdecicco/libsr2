@@ -347,7 +347,7 @@ namespace sr2 {
         m_mainRepeaters[index]->addListener(m_crossImages[index], WidgetEventType::MaybeAll);
         m_mainRepeaters[index]->addListener(m_userRepeaters[index], WidgetEventType::MaybeAll);
 
-        m_menu->FUN_001f8218(m_mainRepeaters[index], index, 0, 1, &ui2Widget::onEvent);
+        m_menu->FUN_001f8218(m_mainRepeaters[index], index, 0, 1, &ui2Widget::acceptEvent);
 
         if (value) {
             m_values[index].set(value);
@@ -356,9 +356,9 @@ namespace sr2 {
             m_menu->FUN_001f86c8(index, 0, WidgetEventType::SetValueString, eventData);
         }
 
-        m_menuItemsTbl->FUN_001fc6f8(m_buttonImages[index], index, 0, &ui2Widget::onEvent);
-        m_menuItemsTbl->FUN_001fc6f8(m_crossImages[index], index, 1, &ui2Widget::onEvent);
-        m_menuItemsTbl->FUN_001fc6f8(m_labels[index], index, 2, &ui2Widget::onEvent);
+        m_menuItemsTbl->FUN_001fc6f8(m_buttonImages[index], index, 0, &ui2Widget::acceptEvent);
+        m_menuItemsTbl->FUN_001fc6f8(m_crossImages[index], index, 1, &ui2Widget::acceptEvent);
+        m_menuItemsTbl->FUN_001fc6f8(m_labels[index], index, 2, &ui2Widget::acceptEvent);
 
         if (field_0x158 == 0) {
             m_menuItemsTbl->setCellOffset(  0,   3, index, 0);
